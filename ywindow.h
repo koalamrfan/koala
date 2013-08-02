@@ -10,7 +10,6 @@ namespace ui
     {    
     public:
         Window() {
-           fake_widget_ = new QWidget;
         }
     };
 } // namespace ui

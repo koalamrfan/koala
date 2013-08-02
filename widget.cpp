@@ -1,15 +1,10 @@
 #include "widget.h"
-#include <QWidget>
-#include <QTimer>
-#include <QObject>
-#include <QMessageBox>
 #include <vector>
 #include "layout.h"
 
 namespace ui
 {
 Widget::Widget():parent_(nullptr),
-        fake_widget_(nullptr),
         parent_layout_(nullptr){
 
 }
@@ -21,13 +16,10 @@ Widget::~Widget() {
 void Widget::AddChild(Widget* widget) {
     auto iter = children_.begin();
     while (iter != children_.end()) {
-	if(*iter == widget) {
-	    return ;
-	}
-	iter++;
-    }
-    if(fake_widget_ != nullptr) {
-	widget->GetFakeWidget()->setParent(fake_widget_);
+        if(*iter == widget) {
+            return ;
+        }
+        iter++;
     }
     children_.push_back(widget);
     widget->SetParent(this);
@@ -56,14 +48,7 @@ uint32_t Widget::ChildrenNum() const {
 }
 
 void Widget::SetParent(Widget* parent) {
-    if(fake_widget_ != nullptr) {
-      if(parent) {
-	fake_widget_->setParent(parent->GetFakeWidget());
-	parent->AddChild(this);
-      } else {
-	fake_widget_->setParent(nullptr);
-      }
-    }
+    parent->AddChild(this);
     parent_ = parent;
 }
 
@@ -80,45 +65,28 @@ Layout* Widget::ParentLayout() const {
 }
 
 void Widget::SetGeometry(int32_t x, int32_t y, uint32_t width, uint32_t height) {
-    fake_widget_->setGeometry(x, y, width, height);
     LayoutBaseItem::SetGeometry(x, y, width, height);
 }
 
 void Widget::Show() {
-    fake_widget_->show();
     UpNotifyRelayout();
 }
 
 void Widget::Hide() {
-    fake_widget_->hide();
     UpNotifyRelayout();
 }
 
 bool Widget::IsVisible() const{
-    return fake_widget_->isVisible();
-}
-
-//Fake remove later
-Widget::FakeWidget* Widget::GetFakeWidget() {
-    return fake_widget_;
+    return true;
 }
 
 void Widget::SetLayout(Layout* layout) {
     if(layer_.size() > 0) {
-	layer_[0] = layout;
+        layer_[0] = layout;
     } else {
-	layer_.push_back(layout);
+        layer_.push_back(layout);
     }
     layout->SetParentWidget(this);
-}
-
-uint32_t Widget::Width() {
-    return fake_widget_->width();
-}
-
-uint32_t Widget::Height() {
-  
-    return fake_widget_->height();
 }
 
 void Widget::ResetPreferLimitSize(bool deep) {
@@ -138,12 +106,11 @@ void Widget::ResetPreferLimitSize(bool deep) {
 
 void Widget::Relayout() {
     if(BaseLayout()) {
-	if(Parent() == nullptr) {
-	  ResetPreferLimitSize();
-	}
-	BaseLayout()->SetGeometry(0, 0, Width(), Height());
-	BaseLayout()->Relayout();
-	fake_widget_->update();
+        if(Parent() == nullptr) {
+            ResetPreferLimitSize();
+        }
+        BaseLayout()->SetGeometry(0, 0, Width(), Height());
+        BaseLayout()->Relayout();
     }
 }
 
@@ -160,8 +127,8 @@ void Widget::RelayoutToAdapt() {
     } else {
       ResizeAdaptLimitSize();
       if(BaseLayout()) {
-	BaseLayout()->SetGeometry(0, 0, Width(), Height());
-	BaseLayout()->Relayout();
+        BaseLayout()->SetGeometry(0, 0, Width(), Height());
+        BaseLayout()->Relayout();
       }
     }
 }
@@ -215,7 +182,7 @@ void Widget::SetLimitMaxHeight(uint32_t height) {
 
 Layout* Widget::BaseLayout() const {
     if(layer_.size() > 0 && layer_[0]) {
-	return layer_[0];
+        return layer_[0];
     }
     return nullptr;
 }

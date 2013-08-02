@@ -1,78 +1,84 @@
-#include <QApplication>
-#include <QLayout>
+#include <windows.h>
+#include <tchar.h>
 
-#include "box_layout.h"
-#include "hboxlayout.h"
-#include "ywindow.h"
-#include "button.h"
-#include "vboxlayout.h"
-#include "layout_space.h"
+LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
+    switch (message) {
+        case WM_DESTROY:
+            PostQuitMessage(0);
+        return 0;
+    }
+    return DefWindowProc(hWnd, message, wParam, lParam);
+}
 
-#include <QImage>
-#include <QTimer>
-#include <QObject>
-#include "timer.h"
-#include <iostream>
+HINSTANCE hInst;
+TCHAR szTitle[] = _T("Koala");
+TCHAR szWindowClass[] = _T("Koala");
 
-int main(int argc, char *argv[])
+ATOM MyRegisterClass(HINSTANCE hInstance)
 {
-    QApplication app(argc, argv);
+    WNDCLASSEX wcex;
 
-    ui::Window win;
-    
-    win.SetGeometry(100, 100, 300, 200);
-    
-    ui::HBoxLayout hbox;
-    win.SetLayout(&hbox);
-    
-    ui::LayoutSpace space;
-    ui::Button btn1,btn2,btn3,btn4;
-    
-    btn1.SetText("A");
-    btn2.SetText("B");
-    btn3.SetText("C");
-    btn4.SetText("D");
-    
-    hbox.AddWidget(&btn1);
-    hbox.AddSpace(&space);
-    hbox.AddWidget(&btn2);
-    hbox.SetStrongElastic(&space);
-    hbox.SetStrechFactor(&btn1, 0);
-    hbox.SetEastSpace(&btn2, 0);
-    hbox.SetWestSpace(&btn2, 0);
-    
-    ui::VBoxLayout vbox;
-    hbox.AddLayout(&vbox);
-    hbox.SetStrechFactor(&vbox, 0);
-    vbox.AddWidget(&btn3);
-    vbox.AddWidget(&btn4);
-    
-    /*ui::Button btn1,btn2,btn3,btn4;
-    btn1.SetText("A");
-    btn2.SetText("B");
-    btn3.SetText("C");
-    btn4.SetText("D");
-    
-    ui::BoxLayout box;
-    win.SetLayout(&box);
-    box.AddWidget(&btn1);
-    box.AddWidget(&btn2);
-    box.AddWidget(&btn3);
-    box.AddWidget(&btn4);
-    box.SetWestSpace(&btn1, 0);
-    box.SetEastSpace(&btn2, 0);
-    box.SetNorthSpace(&btn3, 0);
-    box.SetSouthSpace(&btn4, 0);*/
-    //hbox.RemoveLayout(&vbox);
-    
-    win.Show();
-    win.Relayout();
-    
-    /* Ä£Äâ onsize */
-    Timer c(&win, &btn4, &btn1);
-    QTimer *timer = new QTimer();
-    QObject::connect(timer, SIGNAL(timeout()), &c, SLOT(Update()));
-    timer->start(200);
+    wcex.cbSize = sizeof(WNDCLASSEX);
 
-    return app.exec();
+    wcex.style            = CS_HREDRAW | CS_VREDRAW;
+    wcex.lpfnWndProc    = WndProc;
+    wcex.cbClsExtra        = 0;
+    wcex.cbWndExtra        = 0;
+    wcex.hInstance        = hInstance;
+    wcex.hIcon            = NULL;
+    wcex.hCursor        = NULL;
+    wcex.hbrBackground    = (HBRUSH)(COLOR_WINDOW+1);
+    wcex.lpszMenuName    = NULL;
+    wcex.lpszClassName    = szWindowClass;
+    wcex.hIconSm        = NULL;
+
+    return RegisterClassEx(&wcex);
+}
+
+BOOL InitInstance(HINSTANCE hInstance, int nCmdShow, LPTSTR lpCmdLine)
+{
+    hInst = hInstance; // Store instance handle in our global variable
+
+    HWND hWnd = CreateWindow(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
+        CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, NULL, NULL, hInstance, NULL);
+
+    if (!hWnd) {
+        return FALSE;
+    }
+
+    ShowWindow(hWnd, nCmdShow);
+    UpdateWindow(hWnd);
+
+    return TRUE;
+}
+
+int APIENTRY _tWinMain(HINSTANCE hInstance,
+                       HINSTANCE hPrevInstance,
+                       LPTSTR    lpCmdLine,
+                       int       nCmdShow)
+{
+    UNREFERENCED_PARAMETER(hPrevInstance);
+
+    MSG msg;
+
+    // Initialize global strings
+    MyRegisterClass(hInstance);
+
+    // Perform application initialization:
+    if (!InitInstance (hInstance, nCmdShow, lpCmdLine))
+    {
+        return FALSE;
+    }
+
+    // Main message loop:
+    while (GetMessage(&msg, NULL, 0, 0))
+    {
+        if (true)
+        {
+            TranslateMessage(&msg);
+            DispatchMessage(&msg);
+        }
+    }
+
+    return (int) msg.wParam;
 }

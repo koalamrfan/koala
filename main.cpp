@@ -1,5 +1,6 @@
 #include <windows.h>
 #include <tchar.h>
+#include "texture_pool.h"
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
     switch (message) {
@@ -14,6 +15,8 @@ HINSTANCE hInst;
 TCHAR szTitle[] = _T("Koala");
 TCHAR szWindowClass[] = _T("Koala");
 
+
+
 ATOM MyRegisterClass(HINSTANCE hInstance)
 {
     WNDCLASSEX wcex;
@@ -21,18 +24,22 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
     wcex.cbSize = sizeof(WNDCLASSEX);
 
     wcex.style            = CS_HREDRAW | CS_VREDRAW;
-    wcex.lpfnWndProc    = WndProc;
-    wcex.cbClsExtra        = 0;
-    wcex.cbWndExtra        = 0;
+    wcex.lpfnWndProc      = WndProc;
+    wcex.cbClsExtra       = 0;
+    wcex.cbWndExtra       = 0;
     wcex.hInstance        = hInstance;
     wcex.hIcon            = NULL;
-    wcex.hCursor        = NULL;
+    wcex.hCursor          = NULL;
     wcex.hbrBackground    = (HBRUSH)(COLOR_WINDOW+1);
-    wcex.lpszMenuName    = NULL;
+    wcex.lpszMenuName     = NULL;
     wcex.lpszClassName    = szWindowClass;
-    wcex.hIconSm        = NULL;
+    wcex.hIconSm          = NULL;
 
     return RegisterClassEx(&wcex);
+}
+
+void KoalaInit(HWND hwnd) {
+    TexturePool::GetInstance()->Init(hwnd);
 }
 
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow, LPTSTR lpCmdLine)
@@ -46,6 +53,8 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow, LPTSTR lpCmdLine)
         return FALSE;
     }
 
+    KoalaInit(hWnd);
+    
     ShowWindow(hWnd, nCmdShow);
     UpdateWindow(hWnd);
 
@@ -65,16 +74,13 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
     MyRegisterClass(hInstance);
 
     // Perform application initialization:
-    if (!InitInstance (hInstance, nCmdShow, lpCmdLine))
-    {
+    if (!InitInstance (hInstance, nCmdShow, lpCmdLine)) {
         return FALSE;
     }
 
     // Main message loop:
-    while (GetMessage(&msg, NULL, 0, 0))
-    {
-        if (true)
-        {
+    while (GetMessage(&msg, NULL, 0, 0)) {
+        if (true) {
             TranslateMessage(&msg);
             DispatchMessage(&msg);
         }

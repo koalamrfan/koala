@@ -2,13 +2,16 @@
 #define TEXTURE_H
 
 class SkCanvas;
+
+namespace ui
+{
 class Texture
 {
 public:
-    void Draw();
+    virtual void Draw();
 protected:
-    virtual void Draw(SkCanvas* canvas) = 0; 
-
+    virtual void OnDraw(SkCanvas* canvas) = 0;
+    void CanvasToScreen();
 };
-
+} // namespace ui
 #endif

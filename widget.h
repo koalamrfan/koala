@@ -3,12 +3,13 @@
 
 #include <vector>
 #include "layout_base_item.h"
+#include "texture.h"
 
 namespace ui
 {
 
 class Layout;
-class Widget:public LayoutBaseItem
+class Widget:public LayoutBaseItem, public Texture
 {
 public:
     Widget();
@@ -43,6 +44,8 @@ public:
     virtual void SetLimitMinHeight(uint32_t height) override;
     virtual void SetLimitMaxWidth(uint32_t width) override;
     virtual void SetLimitMaxHeight(uint32_t height) override;
+
+    virtual void Draw() override;
 protected:
     std::vector<Widget*> children_;
     std::vector<Layout*> layer_;

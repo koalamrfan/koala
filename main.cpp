@@ -1,11 +1,11 @@
 #include <windows.h>
 #include <tchar.h>
-#include "texture_pool.h"
+#include "app.h"
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
     switch (message) {
-        case WM_DESTROY:
-            PostQuitMessage(0);
+    case WM_DESTROY:
+        PostQuitMessage(0);
         return 0;
     }
     return DefWindowProc(hWnd, message, wParam, lParam);
@@ -38,10 +38,6 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
     return RegisterClassEx(&wcex);
 }
 
-void KoalaInit(HWND hwnd) {
-    TexturePool::GetInstance()->Init(hwnd);
-}
-
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow, LPTSTR lpCmdLine)
 {
     hInst = hInstance; // Store instance handle in our global variable
@@ -53,7 +49,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow, LPTSTR lpCmdLine)
         return FALSE;
     }
 
-    KoalaInit(hWnd);
+    App::GetInstance()->Init(hWnd);
     
     ShowWindow(hWnd, nCmdShow);
     UpdateWindow(hWnd);

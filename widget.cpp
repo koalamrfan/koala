@@ -186,4 +186,12 @@ Layout* Widget::BaseLayout() const {
     }
     return nullptr;
 }
+
+void Widget::Draw() {
+    auto iter = children_.begin();
+    while (iter != children_.end()) {
+        (*iter)->Texture::Draw();
+        iter++;
+    }
+}
 } // namespace ui

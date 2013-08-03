@@ -1,10 +1,10 @@
 #ifndef TEXTURE_POOL
 #define TEXTURE_POOL
 
+#include "SkCanvas.h"
+#include "SkBitmap.h"
 #include <memory>
 
-class SkCanvas;
-class SkBitmap;
 namespace ui
 {
 class TexturePool

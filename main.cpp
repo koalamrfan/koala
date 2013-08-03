@@ -50,10 +50,10 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow, LPTSTR lpCmdLine)
     }
 
     App::GetInstance()->Init(hWnd);
-    
+
     ShowWindow(hWnd, nCmdShow);
     UpdateWindow(hWnd);
-
+    
     return TRUE;
 }
 

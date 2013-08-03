@@ -1,6 +1,4 @@
 #include "texture_pool.h"
-#include "SkCanvas.h"
-#include "SkBitmap.h"
 #include "app.h"
 
 namespace ui

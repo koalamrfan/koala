@@ -188,6 +188,7 @@ Layout* Widget::BaseLayout() const {
 }
 
 void Widget::Draw() {
+    Texture::Draw();
     auto iter = children_.begin();
     while (iter != children_.end()) {
         (*iter)->Texture::Draw();

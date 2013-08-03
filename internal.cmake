@@ -16,14 +16,14 @@ macro (set_default_compiler_linker_config)
       set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DWIN32 -DUNICODE -D_UNICODE -D_WINDOWS") # Windows/Unicode etc.
       set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_VARIADIC_MAX=10") # make varidic elments(tupple/bind/etc.) wide support
       set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS}")
-      set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -MTd") # link to multi thread static library
+      set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -MDd") # link to multi thread static library
       set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -RTC1") # enable runtime check
       set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Od") # disable optimize
       set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Gm") # enable minimal rebuild
       set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -GS") # check for buffer overruns
       set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -ZI") # edit and continue
       set(common_cxx_release_flag "${common_cxx_release_flag} -DNDEBUG") # some macro only in release
-      set(common_cxx_release_flag "${common_cxx_release_flag} -MT") # link to multi thread static library
+      set(common_cxx_release_flag "${common_cxx_release_flag} -MD") # link to multi thread static library
       set(common_cxx_release_flag "${common_cxx_release_flag} -GF") # string pooling
       set(common_cxx_release_flag "${common_cxx_release_flag} -Oy") # omit frame pointers
       set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS} ${common_cxx_release_flag}")

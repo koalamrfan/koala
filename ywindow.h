@@ -3,7 +3,6 @@
 
 #include <windows.h>
 #include "widget.h"
-#include "app.h"
 
 class SkCanvas;
 namespace ui

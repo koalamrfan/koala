@@ -1,5 +1,6 @@
 #include "ywindow.h"
 #include "SkCanvas.h"
+#include "texture_pool.h"
 
 namespace ui
 {
@@ -13,13 +14,11 @@ LRESULT CALLBACK Proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) {
     return CallWindowProc(window->oldProc_, hwnd, message, wParam, lParam);
 }
 
-Window::Window() {
-    
-}
-
-void Window::Init() {
-    SetWindowLong(App::GetInstance()->GetHwnd(), GWL_USERDATA, (LONG)this);
-    oldProc_ = (WNDPROC)SetWindowLong(App::GetInstance()->GetHwnd(), GWL_WNDPROC, (LONG)Proc);
+Window::Window(HWND hwnd) {
+    SetWindowLong(hwnd, GWL_USERDATA, (LONG)this);
+    oldProc_ = (WNDPROC)SetWindowLong(hwnd, GWL_WNDPROC, (LONG)Proc);
+    hwnd_ = hwnd;
+    TexturePool::GetInstance()->Init(this);
 }
 
 void Window::OnDraw(SkCanvas* canvas) {

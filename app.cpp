@@ -8,8 +8,5 @@ App* App::GetInstance() {
 }
 
 void App::Init(HWND hwnd) {
-    hwnd_ = hwnd;
-
-    ui::Window *window = new ui::Window;
-    window->Init();
+    ui::Window *window = new ui::Window(hwnd);
 }

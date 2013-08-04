@@ -12,8 +12,7 @@ void Texture::Draw() {
 } 
 
 void Texture::CanvasToScreen() {
-    PAINTSTRUCT ps;
-    HDC hdc = BeginPaint(App::GetInstance()->GetHwnd(), &ps);
+    auto scope_hdc = TexturePool::GetInstance()->GetScopeHdc();
     SkBitmap* bitmap = TexturePool::GetInstance()->GetBitmap();
     BITMAPINFO bmi;
     memset(&bmi, 0, sizeof(bmi));
@@ -36,7 +35,7 @@ void Texture::CanvasToScreen() {
     //       buffer before passing to SetDIBitsToDevice().
     SkASSERT(bitmap->width() * bitmap->bytesPerPixel() == bitmap->rowBytes());
     bitmap->lockPixels();
-    int ret = SetDIBitsToDevice(hdc,
+    int ret = SetDIBitsToDevice(scope_hdc->GetHdc(),
         0, 0,
         bitmap->width(), bitmap->height(),
         0, 0,
@@ -46,6 +45,5 @@ void Texture::CanvasToScreen() {
         DIB_RGB_COLORS);
     (void)ret; // we're ignoring potential failures for now.
     bitmap->unlockPixels();
-    EndPaint(App::GetInstance()->GetHwnd(), &ps);
 }
 } // namespace ui

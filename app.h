@@ -9,14 +9,8 @@ public:
     static App* GetInstance();
 
     void Init(HWND hwnd);
-    HWND GetHwnd() const {
-        return hwnd_;
-    }
 protected:
     App() {}
-
-private:
-    HWND hwnd_;
 };
 
 #endif

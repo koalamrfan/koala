@@ -11,15 +11,18 @@ namespace ui
 class Window:public Widget
 {
 public:
-    Window();
-    void Init();
+    Window(HWND hwnd);
+
+    HWND GetHwnd() const {
+        return hwnd_;
+    }
     virtual void OnDraw(SkCanvas* canvas) override;
 protected:
 
     friend LRESULT CALLBACK Proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
 private:
     WNDPROC oldProc_;
-
+    HWND hwnd_;
 };
 } // namespace ui
 

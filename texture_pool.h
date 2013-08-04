@@ -16,6 +16,8 @@ public:
     
     void Init(Window* window);
 
+    void ResizeCanvas(uint32_t width, uint32_t height);
+
     SkCanvas* GetCanvas();
     SkBitmap* GetBitmap();
     std::shared_ptr<ScopeHdc> GetScopeHdc() const;

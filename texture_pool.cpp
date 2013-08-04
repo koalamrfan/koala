@@ -22,16 +22,25 @@ SkCanvas* TexturePool::GetCanvas() {
 SkBitmap* TexturePool::GetBitmap() {
     if(bitmap_ == nullptr) {
         bitmap_ = std::make_shared<SkBitmap>();
-        RECT rect;
-        GetClientRect(window_->GetHwnd(), &rect);
-        bitmap_->setConfig(SkBitmap::kARGB_8888_Config, rect.right - rect.left, rect.bottom - rect.top);
+        bitmap_->setConfig(SkBitmap::kARGB_8888_Config, window_->Width(), window_->Height());
         bitmap_->allocPixels();
     }
+    
     return bitmap_.get();
 }
 
 std::shared_ptr<ScopeHdc> TexturePool::GetScopeHdc() const {
     return std::make_shared<ScopeHdc>(window_);
+}
+
+void TexturePool::ResizeCanvas(uint32_t width, uint32_t height) {
+    if(bitmap_) {
+        bitmap_ = std::make_shared<SkBitmap>();
+        bitmap_->setConfig(SkBitmap::kARGB_8888_Config, width, height);
+        bitmap_->allocPixels();
+
+        canvas_ = std::make_shared<SkCanvas>(*GetBitmap());
+    }
 }
 
 ScopeHdc::ScopeHdc(Window* window) {

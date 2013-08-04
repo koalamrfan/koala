@@ -4,21 +4,19 @@
 
 #include "layout_item.h"
 #include "widget.h"
-#include <QPushButton>
 
 namespace ui
 {
-class Button:public Widget
+class Panel:public Widget
 {
 public:
-    Button() {
+    Panel() {
         SetPreferWidth(200);
         SetPreferHeight(100);
     }
 
-    virtual void SetText(const std::string& text) {
-       
-    }
+    virtual void OnDraw(SkCanvas* canvas) override;
+    
 };
 } // namespace UI
 

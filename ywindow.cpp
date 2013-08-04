@@ -14,6 +14,7 @@ LRESULT CALLBACK Proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) {
         RECT rect;
         GetClientRect(hwnd, &rect);
         window->SetGeometry(rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top);
+        window->Relayout();
         break;
     }
     return CallWindowProc(window->oldProc_, hwnd, message, wParam, lParam);
@@ -25,7 +26,9 @@ Window::Window(HWND hwnd) {
     hwnd_ = hwnd;
     TexturePool::GetInstance()->Init(this);
 
-    
+    RECT rect;
+    GetClientRect(hwnd, &rect);
+    SetGeometry(rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top);
 }
 
 void Window::OnDraw(SkCanvas* canvas) {
@@ -36,6 +39,8 @@ void Window::OnDraw(SkCanvas* canvas) {
         SkIntToScalar(Width()), SkIntToScalar(Height())
     };
     canvas->drawRect(rect, paint);
+
+    Widget::OnDraw(canvas);
 }
 
 void Window::SetGeometry(int32_t x, int32_t y, uint32_t width, uint32_t height) {

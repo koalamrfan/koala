@@ -187,11 +187,10 @@ Layout* Widget::BaseLayout() const {
     return nullptr;
 }
 
-void Widget::Draw() {
-    Texture::Draw();
+void Widget::OnDraw(SkCanvas* canvas) {
     auto iter = children_.begin();
     while (iter != children_.end()) {
-        (*iter)->Texture::Draw();
+        (*iter)->OnDraw(canvas);
         iter++;
     }
 }

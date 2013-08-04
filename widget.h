@@ -45,7 +45,7 @@ public:
     virtual void SetLimitMaxWidth(uint32_t width) override;
     virtual void SetLimitMaxHeight(uint32_t height) override;
 
-    virtual void Draw() override;
+    virtual void OnDraw(SkCanvas* canvas) override;
 protected:
     std::vector<Widget*> children_;
     std::vector<Layout*> layer_;

@@ -1,5 +1,6 @@
 #include "texture_pool.h"
 #include "ywindow.h"
+#include "SkImageDecoder.h"
 
 namespace ui
 {
@@ -27,6 +28,18 @@ SkBitmap* TexturePool::GetBitmap() {
     }
     
     return bitmap_.get();
+}
+
+std::shared_ptr<SkBitmap> TexturePool::GetBitmap(const std::string& source) {
+    if(source2bitmap_.find(source) != source2bitmap_.end()) {
+        return source2bitmap_[source];
+    }
+
+    auto bm = std::make_shared<SkBitmap>();
+    source2bitmap_[source] = bm;
+    SkImageDecoder::DecodeFile(source.c_str(), bm.get(), SkBitmap::kARGB_8888_Config,
+        SkImageDecoder::kDecodePixels_Mode);
+    return bm;
 }
 
 std::shared_ptr<ScopeHdc> TexturePool::GetScopeHdc() const {

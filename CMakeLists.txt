@@ -7,6 +7,8 @@ set_default_compiler_linker_config()
 include_directories (${CMAKE_CURRENT_SOURCE_DIR}/include/core)
 include_directories (${CMAKE_CURRENT_SOURCE_DIR}/include/effects)
 include_directories (${CMAKE_CURRENT_SOURCE_DIR}/include/config)
+include_directories (${CMAKE_CURRENT_SOURCE_DIR}/include/lazy)
+
 link_directories(${CMAKE_CURRENT_SOURCE_DIR}/lib)
 # Tell CMake to create the executable
 

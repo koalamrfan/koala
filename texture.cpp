@@ -46,4 +46,12 @@ void Texture::CanvasToScreen() {
     (void)ret; // we're ignoring potential failures for now.
     bitmap->unlockPixels();
 }
+
+void Texture::SetSource(const std::string& source) {
+    source_ = source;
+}
+
+SkBitmap* Texture::Bitmap() {
+    return TexturePool::GetInstance()->GetBitmap(source_).get();
+}
 } // namespace ui

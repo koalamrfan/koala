@@ -3,6 +3,8 @@
 
 #include "SkCanvas.h"
 #include "SkBitmap.h"
+#include <string>
+#include <map>
 #include <memory>
 
 namespace ui
@@ -22,6 +24,7 @@ public:
     SkBitmap* GetBitmap();
     std::shared_ptr<ScopeHdc> GetScopeHdc() const;
 
+    std::shared_ptr<SkBitmap> GetBitmap(const std::string& source);
 protected:
     TexturePool():canvas_(nullptr) {}
 
@@ -29,6 +32,7 @@ private:
     std::shared_ptr<SkCanvas> canvas_;
     std::shared_ptr<SkBitmap> bitmap_;
     Window* window_;
+    std::map<std::string, std::shared_ptr<SkBitmap>> source2bitmap_;
 };
 
 class ScopeHdc

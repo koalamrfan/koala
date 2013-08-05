@@ -11,6 +11,7 @@ namespace ui
 {
 class Window;
 class ScopeHdc;
+class BmpRenderTactics;
 class TexturePool
 {
 public:
@@ -22,9 +23,11 @@ public:
 
     SkCanvas* GetCanvas();
     SkBitmap* GetBitmap();
-    std::shared_ptr<ScopeHdc> GetScopeHdc() const;
 
-    std::shared_ptr<SkBitmap> GetBitmap(const std::string& source);
+    std::shared_ptr<ScopeHdc> CreateScopeHdc() const;
+    SkBitmap* CreateBitmapFromSource(const std::string& source);
+    std::shared_ptr<BmpRenderTactics> CreatePng9Tactics();
+    std::shared_ptr<BmpRenderTactics> CreateNormalTactics();
 protected:
     TexturePool():canvas_(nullptr) {}
 
@@ -48,6 +51,21 @@ private:
     Window* window_;
     PAINTSTRUCT ps_;
     HDC hdc_;
+};
+
+class BmpRenderTactics {
+public:
+    virtual void Draw(SkBitmap* bitmap, const SkRect& rect, const SkPaint& paint) = 0;
+};
+
+class NormalTactics : public BmpRenderTactics {
+public:
+    virtual void Draw(SkBitmap* bitmap, const SkRect& rect, const SkPaint& paint) override;
+};
+
+class Png9Tactics : public BmpRenderTactics {
+public:
+    virtual void Draw(SkBitmap* bitmap, const SkRect& rect, const SkPaint& paint) override;
 };
 }
 #endif

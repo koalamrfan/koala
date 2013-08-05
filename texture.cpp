@@ -1,18 +1,20 @@
 #include "texture.h"
 #include "SkCanvas.h"
-#include "texture_pool.h"
 #include "app.h"
 #include <windows.h>
 
 namespace ui
 {
 void Texture::Draw() {
-    OnDraw(TexturePool::GetInstance()->GetCanvas());
+    auto canvas = TexturePool::GetInstance()->GetCanvas();
+    canvas->save();
+    OnDraw(canvas);
+    canvas->restore();
     CanvasToScreen();
 } 
 
 void Texture::CanvasToScreen() {
-    auto scope_hdc = TexturePool::GetInstance()->GetScopeHdc();
+    auto scope_hdc = TexturePool::GetInstance()->CreateScopeHdc();
     SkBitmap* bitmap = TexturePool::GetInstance()->GetBitmap();
     BITMAPINFO bmi;
     memset(&bmi, 0, sizeof(bmi));
@@ -52,6 +54,17 @@ void Texture::SetSource(const std::string& source) {
 }
 
 SkBitmap* Texture::Bitmap() {
-    return TexturePool::GetInstance()->GetBitmap(source_).get();
+    return TexturePool::GetInstance()->CreateBitmapFromSource(source_);
+}
+
+std::shared_ptr<BmpRenderTactics> Texture::GetRenderTactics() {
+    auto extentd = source_.substr(source_.size() - 6);
+    std::shared_ptr<BmpRenderTactics> tactics;
+    if(extentd == ".9.png") {
+        tactics = TexturePool::GetInstance()->CreatePng9Tactics();
+    }else {
+        tactics = TexturePool::GetInstance()->CreateNormalTactics();
+    }
+    return tactics;
 }
 } // namespace ui

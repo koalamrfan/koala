@@ -6,7 +6,9 @@ void main(uint32_t argc, TCHAR** argv) {
     ui::Window* window = App::GetInstance()->GetMainWindow();
     ui::Panel* panel1 = new ui::Panel;
     ui::Panel* panel2 = new ui::Panel;
-    
+    //window->SetSource("C:\\Users\\fanfei\\Desktop\\mac.9.png");
+    panel1->SetSource("C:\\Users\\fanfei\\Desktop\\mac.9.png");
+    panel2->SetSource("C:\\Users\\fanfei\\Desktop\\mac.9.png");
     ui::HBoxLayout *hbox = new ui::HBoxLayout;
     window->SetLayout(hbox);
     hbox->AddWidget(panel1);

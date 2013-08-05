@@ -7,6 +7,8 @@ namespace ui
 LRESULT CALLBACK Proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) {
     Window* window = (Window*)GetWindowLong(hwnd, GWL_USERDATA);
     switch (message) {
+    case  WM_ERASEBKGND:
+        return true;
     case WM_PAINT:
         window->Draw();
         break;
@@ -33,12 +35,15 @@ Window::Window(HWND hwnd) {
 
 void Window::OnDraw(SkCanvas* canvas) {
     SkPaint paint;
+    paint.setFilterLevel(SkPaint::kMedium_FilterLevel);
     paint.setColor(SK_ColorBLACK);
     SkRect rect = {
         SkIntToScalar(0), SkIntToScalar(0),
         SkIntToScalar(Width()), SkIntToScalar(Height())
     };
-    canvas->drawRect(rect, paint);
+
+    Bitmap() ? GetRenderTactics()->Draw(Bitmap(), rect, paint) :
+        canvas->drawRect(rect, paint);
 
     Widget::OnDraw(canvas);
 }

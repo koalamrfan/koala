@@ -7,6 +7,7 @@
 class SkCanvas;
 namespace ui
 {
+class EventTarget;
 class Window:public Widget
 {
 public:
@@ -16,10 +17,10 @@ public:
         return hwnd_;
     }
     virtual void OnDraw(SkCanvas* canvas) override;
-
+    virtual bool DoEvent(Event* event) override;
     virtual void SetGeometry(int32_t x, int32_t y, uint32_t width, uint32_t height) override;
 protected:
-
+    
     friend LRESULT CALLBACK Proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
 private:
     WNDPROC oldProc_;

@@ -7,6 +7,7 @@
 
 namespace ui
 {
+class Event;
 class Panel:public Widget
 {
 public:
@@ -16,6 +17,7 @@ public:
     }
 
     virtual void OnDraw(SkCanvas* canvas) override;
+    virtual bool DoEvent(Event* event) override;
     
 };
 } // namespace UI

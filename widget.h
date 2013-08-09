@@ -4,12 +4,13 @@
 #include <vector>
 #include "layout_base_item.h"
 #include "texture.h"
+#include "event_target.h"
+#include "SkRegion.h"
 
 namespace ui
 {
-
 class Layout;
-class Widget:public LayoutBaseItem, public Texture
+class Widget:public LayoutBaseItem, public Texture, public EventTarget
 {
 public:
     Widget();
@@ -45,12 +46,26 @@ public:
     virtual void SetLimitMaxWidth(uint32_t width) override;
     virtual void SetLimitMaxHeight(uint32_t height) override;
 
-    virtual void OnDraw(SkCanvas* canvas) override;
+    virtual void Draw() override;
+
+    void SetRegion(const SkRegion& region);
+    SkRegion Region() const {
+        return region_;
+    }
+
+    virtual uint32_t GetInnerBitmapWidth() override;
+    virtual uint32_t GetInnerBitmapHeight() override;
+
+    EventTarget* HiTest(int32_t x, int32_t y);
 protected:
+    bool PointInRegion(int32_t x, int32_t y);
+
     std::vector<Widget*> children_;
     std::vector<Layout*> layer_;
     Widget* parent_;
     Layout* parent_layout_;
+private:
+    SkRegion region_;
 };
 } // namespace ui
 

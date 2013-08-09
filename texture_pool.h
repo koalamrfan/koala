@@ -28,6 +28,8 @@ public:
     SkBitmap* CreateBitmapFromSource(const std::string& source);
     std::shared_ptr<BmpRenderTactics> CreatePng9Tactics();
     std::shared_ptr<BmpRenderTactics> CreateNormalTactics();
+
+    void CanvasToScreen();
 protected:
     TexturePool():canvas_(nullptr) {}
 
@@ -55,17 +57,17 @@ private:
 
 class BmpRenderTactics {
 public:
-    virtual void Draw(SkBitmap* bitmap, const SkRect& rect, const SkPaint& paint) = 0;
+    virtual void Draw(SkCanvas* canvas, SkBitmap* bitmap, const SkRect& rect, const SkPaint& paint) = 0;
 };
 
 class NormalTactics : public BmpRenderTactics {
 public:
-    virtual void Draw(SkBitmap* bitmap, const SkRect& rect, const SkPaint& paint) override;
+    virtual void Draw(SkCanvas* canvas, SkBitmap* bitmap, const SkRect& rect, const SkPaint& paint) override;
 };
 
 class Png9Tactics : public BmpRenderTactics {
 public:
-    virtual void Draw(SkBitmap* bitmap, const SkRect& rect, const SkPaint& paint) override;
+    virtual void Draw(SkCanvas* canvas, SkBitmap* bitmap, const SkRect& rect, const SkPaint& paint) override;
 };
 }
 #endif

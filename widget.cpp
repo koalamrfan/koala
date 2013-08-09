@@ -1,12 +1,13 @@
 #include "widget.h"
 #include <vector>
 #include "layout.h"
+#include "SkBitmap.h"
 
 namespace ui
 {
 Widget::Widget():parent_(nullptr),
-        parent_layout_(nullptr){
-
+        parent_layout_(nullptr) {
+    
 }
 
 Widget::~Widget() {
@@ -187,11 +188,60 @@ Layout* Widget::BaseLayout() const {
     return nullptr;
 }
 
-void Widget::OnDraw(SkCanvas* canvas) {
+void Widget::Draw() {
+    Texture::Draw();
+    if (children_.empty()) {
+        return ;
+    }
     auto iter = children_.begin();
     while (iter != children_.end()) {
-        (*iter)->OnDraw(canvas);
+         (*iter)->Draw();
+         iter++;
+    }
+}
+
+void Widget::SetRegion(const SkRegion& region) {
+    region_ = region;
+}
+
+bool Widget::PointInRegion(int32_t x, int32_t y) {
+    if(RegionMode() == VisualRegionMode::kAuto) {
+        SkIRect rect = SkIRect::MakeXYWH(X(), Y(), Width(), Height());
+        if(rect.contains(x, y)) {
+            return PointInInnerBitmap(x, y);
+        }
+    } else if(RegionMode() == VisualRegionMode::kCustom){
+        return region_.contains(x, y);
+    } else {
+        SkIRect rect = SkIRect::MakeXYWH(X(), Y(), Width(), Height());
+        if(rect.contains(x, y)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+EventTarget* Widget::HiTest(int32_t x, int32_t y) {
+    auto iter = children_.rbegin();
+    while (iter != children_.rend()) {
+        if((*iter)->PointInRegion(x, y)) {
+            return *iter;
+        }
         iter++;
     }
+    
+    if(PointInRegion(x, y)) {
+        return (EventTarget*)this;
+    }
+
+    return nullptr;
+}
+
+uint32_t Widget::GetInnerBitmapWidth() {
+    return Width();
+}
+
+uint32_t Widget::GetInnerBitmapHeight() {
+    return Height();
 }
 } // namespace ui

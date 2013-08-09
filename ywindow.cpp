@@ -1,6 +1,8 @@
 #include "ywindow.h"
 #include "SkCanvas.h"
 #include "texture_pool.h"
+#include "event_factory.h"
+#include "event_target.h"
 
 namespace ui
 {
@@ -11,6 +13,7 @@ LRESULT CALLBACK Proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) {
         return true;
     case WM_PAINT:
         window->Draw();
+        TexturePool::GetInstance()->CanvasToScreen();
         break;
     case WM_SIZE:
         RECT rect;
@@ -18,6 +21,11 @@ LRESULT CALLBACK Proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) {
         window->SetGeometry(rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top);
         window->Relayout();
         break;
+    default:
+        auto event = EventFactory::GetInstance()->CreateEvent(message, wParam, lParam);
+        if(event) {
+            window->DoEvent(event.get());
+        }
     }
     return CallWindowProc(window->oldProc_, hwnd, message, wParam, lParam);
 }
@@ -42,14 +50,24 @@ void Window::OnDraw(SkCanvas* canvas) {
         SkIntToScalar(Width()), SkIntToScalar(Height())
     };
 
-    Bitmap() ? GetRenderTactics()->Draw(Bitmap(), rect, paint) :
+    Bitmap() ? GetRenderTactics()->Draw(canvas, Bitmap(), rect, paint) :
         canvas->drawRect(rect, paint);
-
-    Widget::OnDraw(canvas);
 }
 
 void Window::SetGeometry(int32_t x, int32_t y, uint32_t width, uint32_t height) {
     TexturePool::GetInstance()->ResizeCanvas(width, height);
     Widget::SetGeometry(x, y, width, height);
 }
+
+bool Window::DoEvent(Event* event) {
+    if(event->Type() == EventType::kMouseEvent) {
+        MouseEvent* mouse_event = reinterpret_cast<MouseEvent*>(event);
+        EventTarget* target =  HiTest(mouse_event->X(), mouse_event->Y());
+        if(target && target != this) {
+            target->DoEvent(mouse_event);
+        }
+    }
+    return true;
+}
+
 } // namespace ui

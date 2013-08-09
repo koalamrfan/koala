@@ -40,6 +40,8 @@ SkBitmap* TexturePool::CreateBitmapFromSource(const std::string& source) {
     bool decode = SkImageDecoder::DecodeFile(source.c_str(), bm.get(), SkBitmap::kARGB_8888_Config,
         SkImageDecoder::kDecodePixels_Mode);
 
+    bm->setIsOpaque(true);
+
     if(decode) {
         source2bitmap_[source] = bm;
         return bm.get();
@@ -71,6 +73,42 @@ void TexturePool::ResizeCanvas(uint32_t width, uint32_t height) {
     }
 }
 
+void TexturePool::CanvasToScreen() {
+    auto scope_hdc = TexturePool::GetInstance()->CreateScopeHdc();
+    SkBitmap* bitmap = TexturePool::GetInstance()->GetBitmap();
+    BITMAPINFO bmi;
+    memset(&bmi, 0, sizeof(bmi));
+    bmi.bmiHeader.biSize        = sizeof(BITMAPINFOHEADER);
+    bmi.bmiHeader.biWidth       = bitmap->width();
+    bmi.bmiHeader.biHeight      = -bitmap->height(); // top-down image
+    bmi.bmiHeader.biPlanes      = 1;
+    bmi.bmiHeader.biBitCount    = 32;
+    bmi.bmiHeader.biCompression = BI_RGB;
+    bmi.bmiHeader.biSizeImage   = 0;
+
+    //
+    // Do the SetDIBitsToDevice.
+    //
+    // TODO(wjmaclean):
+    //       Fix this call to handle SkBitmaps that have rowBytes != width,
+    //       i.e. may have padding at the end of lines. The SkASSERT below
+    //       may be ignored by builds, and the only obviously safe option
+    //       seems to be to copy the bitmap to a temporary (contiguous)
+    //       buffer before passing to SetDIBitsToDevice().
+    SkASSERT(bitmap->width() * bitmap->bytesPerPixel() == bitmap->rowBytes());
+    bitmap->lockPixels();
+    int ret = SetDIBitsToDevice(scope_hdc->GetHdc(),
+        0, 0,
+        bitmap->width(), bitmap->height(),
+        0, 0,
+        0, bitmap->height(),
+        bitmap->getPixels(),
+        &bmi,
+        DIB_RGB_COLORS);
+    (void)ret; // we're ignoring potential failures for now.
+    bitmap->unlockPixels();
+}
+
 ScopeHdc::ScopeHdc(Window* window) {
     hdc_ = BeginPaint(window->GetHwnd(), &ps_);
     window_ = window;
@@ -80,21 +118,17 @@ ScopeHdc::~ScopeHdc() {
     EndPaint(window_->GetHwnd(), &ps_);
 }
 
-void NormalTactics::Draw(SkBitmap* bitmap, const SkRect& rect, const SkPaint& paint) {
-    auto canvas = TexturePool::GetInstance()->GetCanvas();
+void NormalTactics::Draw(SkCanvas* canvas, SkBitmap* bitmap, const SkRect& rect, const SkPaint& paint) {
     canvas->save();
-
     canvas->drawBitmapRect(*bitmap, rect, &paint);
-
     canvas->restore();
 }
 
-void Png9Tactics::Draw(SkBitmap* bitmap, const SkRect& rect, const SkPaint& paint) {
+void Png9Tactics::Draw(SkCanvas* canvas, SkBitmap* bitmap, const SkRect& rect, const SkPaint& paint) {
     if(bitmap == nullptr) {
         return ;
     }
 
-    auto canvas = TexturePool::GetInstance()->GetCanvas();
     canvas->save();
 
     int i = 0, j = 0;
@@ -134,4 +168,5 @@ void Png9Tactics::Draw(SkBitmap* bitmap, const SkRect& rect, const SkPaint& pain
     canvas->drawBitmapNine(*bitmap, center_rect, offset_rect, &paint);
     canvas->restore();
 }
+
 } // namespace ui

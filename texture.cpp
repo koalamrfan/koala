@@ -5,49 +5,28 @@
 
 namespace ui
 {
+Texture::Texture():
+    auto_region_active_(true),
+    region_mode_(VisualRegionMode::kAuto){
+
+}
+
+
 void Texture::Draw() {
     auto canvas = TexturePool::GetInstance()->GetCanvas();
     canvas->save();
+    if(auto_region_active_) {
+        inner_bitmap_ = std::make_shared<SkBitmap>();
+        inner_bitmap_->setConfig(SkBitmap::kARGB_8888_Config, GetInnerBitmapWidth(), GetInnerBitmapHeight());
+        inner_bitmap_->allocPixels();
+        inner_canvas_ = std::make_shared<SkCanvas>(*inner_bitmap_);
+        inner_canvas_->clear(SK_AlphaTRANSPARENT);
+        OnDraw(inner_canvas_.get());
+        auto_region_active_ = false;
+    }
     OnDraw(canvas);
     canvas->restore();
-    CanvasToScreen();
 } 
-
-void Texture::CanvasToScreen() {
-    auto scope_hdc = TexturePool::GetInstance()->CreateScopeHdc();
-    SkBitmap* bitmap = TexturePool::GetInstance()->GetBitmap();
-    BITMAPINFO bmi;
-    memset(&bmi, 0, sizeof(bmi));
-    bmi.bmiHeader.biSize        = sizeof(BITMAPINFOHEADER);
-    bmi.bmiHeader.biWidth       = bitmap->width();
-    bmi.bmiHeader.biHeight      = -bitmap->height(); // top-down image
-    bmi.bmiHeader.biPlanes      = 1;
-    bmi.bmiHeader.biBitCount    = 32;
-    bmi.bmiHeader.biCompression = BI_RGB;
-    bmi.bmiHeader.biSizeImage   = 0;
-
-    //
-    // Do the SetDIBitsToDevice.
-    //
-    // TODO(wjmaclean):
-    //       Fix this call to handle SkBitmaps that have rowBytes != width,
-    //       i.e. may have padding at the end of lines. The SkASSERT below
-    //       may be ignored by builds, and the only obviously safe option
-    //       seems to be to copy the bitmap to a temporary (contiguous)
-    //       buffer before passing to SetDIBitsToDevice().
-    SkASSERT(bitmap->width() * bitmap->bytesPerPixel() == bitmap->rowBytes());
-    bitmap->lockPixels();
-    int ret = SetDIBitsToDevice(scope_hdc->GetHdc(),
-        0, 0,
-        bitmap->width(), bitmap->height(),
-        0, 0,
-        0, bitmap->height(),
-        bitmap->getPixels(),
-        &bmi,
-        DIB_RGB_COLORS);
-    (void)ret; // we're ignoring potential failures for now.
-    bitmap->unlockPixels();
-}
 
 void Texture::SetSource(const std::string& source) {
     source_ = source;
@@ -66,5 +45,14 @@ std::shared_ptr<BmpRenderTactics> Texture::GetRenderTactics() {
         tactics = TexturePool::GetInstance()->CreateNormalTactics();
     }
     return tactics;
+}
+
+void Texture::UpdateAutoRegion() {
+    auto_region_active_ = true;
+    Draw();
+}
+
+bool Texture::PointInInnerBitmap(int32_t x, int32_t y) {
+    return 0 != *(inner_bitmap_->getAddr32(x, y));
 }
 } // namespace ui

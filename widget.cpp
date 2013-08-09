@@ -66,6 +66,7 @@ Layout* Widget::ParentLayout() const {
 }
 
 void Widget::SetGeometry(int32_t x, int32_t y, uint32_t width, uint32_t height) {
+    UpdateAutoRegion();
     LayoutBaseItem::SetGeometry(x, y, width, height);
 }
 
@@ -208,7 +209,7 @@ bool Widget::PointInRegion(int32_t x, int32_t y) {
     if(RegionMode() == VisualRegionMode::kAuto) {
         SkIRect rect = SkIRect::MakeXYWH(X(), Y(), Width(), Height());
         if(rect.contains(x, y)) {
-            return PointInInnerBitmap(x, y);
+            return PointInInnerBitmap(x - X(), y - Y());
         }
     } else if(RegionMode() == VisualRegionMode::kCustom){
         return region_.contains(x, y);
@@ -222,8 +223,8 @@ bool Widget::PointInRegion(int32_t x, int32_t y) {
 }
 
 EventTarget* Widget::HiTest(int32_t x, int32_t y) {
-    auto iter = children_.rbegin();
-    while (iter != children_.rend()) {
+    auto iter = children_.begin();
+    while (iter != children_.end()) {
         if((*iter)->PointInRegion(x, y)) {
             return *iter;
         }
@@ -237,11 +238,13 @@ EventTarget* Widget::HiTest(int32_t x, int32_t y) {
     return nullptr;
 }
 
-uint32_t Widget::GetInnerBitmapWidth() {
-    return Width();
+SkRect Widget::GetInnerBitmapRect() {
+    return SkRect::MakeXYWH(
+        SkIntToScalar(X()),
+        SkIntToScalar(Y()), 
+        SkIntToScalar(Width()), 
+        SkIntToScalar(Height())
+        );
 }
 
-uint32_t Widget::GetInnerBitmapHeight() {
-    return Height();
-}
 } // namespace ui

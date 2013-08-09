@@ -9,14 +9,12 @@ namespace ui
 void Panel::OnDraw(SkCanvas* canvas) {
     SkPaint paint;
     paint.setFilterLevel(SkPaint::kMedium_FilterLevel);
-    paint.setStyle(SkPaint::kFill_Style);
-    paint.setColor(SK_ColorRED);
     SkRect rect = SkRect::MakeXYWH(
         SkIntToScalar(X()), SkIntToScalar(Y()),
         SkIntToScalar(Width()), SkIntToScalar(Height()));
 
     Bitmap() ? GetRenderTactics()->Draw(canvas, Bitmap(), rect, paint) :
-        canvas->drawRect(rect, paint);
+        canvas->clear(SK_AlphaTRANSPARENT);
     Widget::OnDraw(canvas);
 }
 

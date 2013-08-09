@@ -44,14 +44,13 @@ Window::Window(HWND hwnd) {
 void Window::OnDraw(SkCanvas* canvas) {
     SkPaint paint;
     paint.setFilterLevel(SkPaint::kMedium_FilterLevel);
-    paint.setColor(SK_ColorBLACK);
     SkRect rect = {
         SkIntToScalar(0), SkIntToScalar(0),
         SkIntToScalar(Width()), SkIntToScalar(Height())
     };
 
     Bitmap() ? GetRenderTactics()->Draw(canvas, Bitmap(), rect, paint) :
-        canvas->drawRect(rect, paint);
+        canvas->clear(SK_AlphaTRANSPARENT);
 }
 
 void Window::SetGeometry(int32_t x, int32_t y, uint32_t width, uint32_t height) {

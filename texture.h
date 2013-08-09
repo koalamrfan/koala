@@ -30,8 +30,8 @@ public:
         return source_;
     }
 
-    virtual uint32_t GetInnerBitmapWidth() = 0;
-    virtual uint32_t GetInnerBitmapHeight() = 0;
+    virtual SkRect GetInnerBitmapRect() = 0;
+
 protected:
     virtual void OnDraw(SkCanvas* canvas) {}
 

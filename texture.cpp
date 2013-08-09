@@ -17,10 +17,12 @@ void Texture::Draw() {
     canvas->save();
     if(auto_region_active_) {
         inner_bitmap_ = std::make_shared<SkBitmap>();
-        inner_bitmap_->setConfig(SkBitmap::kARGB_8888_Config, GetInnerBitmapWidth(), GetInnerBitmapHeight());
+        SkRect rect = GetInnerBitmapRect();
+        inner_bitmap_->setConfig(SkBitmap::kARGB_8888_Config, SkScalarFloorToInt(rect.width()), SkScalarFloorToInt(rect.height()));
         inner_bitmap_->allocPixels();
         inner_canvas_ = std::make_shared<SkCanvas>(*inner_bitmap_);
         inner_canvas_->clear(SK_AlphaTRANSPARENT);
+        inner_canvas_->translate(SkIntToScalar(-rect.x()), SkIntToScalar(-rect.y()));
         OnDraw(inner_canvas_.get());
         auto_region_active_ = false;
     }
@@ -49,7 +51,6 @@ std::shared_ptr<BmpRenderTactics> Texture::GetRenderTactics() {
 
 void Texture::UpdateAutoRegion() {
     auto_region_active_ = true;
-    Draw();
 }
 
 bool Texture::PointInInnerBitmap(int32_t x, int32_t y) {

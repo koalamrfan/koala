@@ -53,8 +53,7 @@ public:
         return region_;
     }
 
-    virtual uint32_t GetInnerBitmapWidth() override;
-    virtual uint32_t GetInnerBitmapHeight() override;
+    virtual SkRect GetInnerBitmapRect() override;
 
     EventTarget* HiTest(int32_t x, int32_t y);
 protected:

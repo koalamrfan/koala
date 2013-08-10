@@ -38,6 +38,7 @@ protected:
     std::shared_ptr<BmpRenderTactics> GetRenderTactics();
     SkBitmap* Bitmap();
 
+    void SetRegionMode(VisualRegionMode region_mode);
     VisualRegionMode RegionMode() const {
         return region_mode_;
     }

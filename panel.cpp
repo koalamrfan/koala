@@ -3,6 +3,7 @@
 #include "texture_pool.h"
 #include "event_target.h"
 #include "event.h"
+#include "mouse_event.h"
 
 namespace ui
 {
@@ -20,7 +21,9 @@ void Panel::OnDraw(SkCanvas* canvas) {
 
 bool Panel::DoEvent(Event* event) {
     if(event->Type() == EventType::kMouseEvent) {
-        MessageBox(NULL, L"Clicked", L"Clicked", MB_OK);
+        MouseEvent* mouse_event = (MouseEvent*)event;
+        SkDebugf("Button:%d\n", mouse_event->Button());
+        SkDebugf("Action:%d\n", mouse_event->Action());
     }
     return true;
 }

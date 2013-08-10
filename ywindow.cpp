@@ -3,6 +3,7 @@
 #include "texture_pool.h"
 #include "event_factory.h"
 #include "event_target.h"
+#include "mouse_event.h"
 
 namespace ui
 {
@@ -22,9 +23,11 @@ LRESULT CALLBACK Proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) {
         window->Relayout();
         break;
     default:
-        auto event = EventFactory::GetInstance()->CreateEvent(message, wParam, lParam);
-        if(event) {
-            window->DoEvent(event.get());
+        auto events = EventFactory::GetInstance()->CreateEvent(message, wParam, lParam);
+        for (auto event:events) {
+            if(event && event->Target()) {
+                event->Target()->DoEvent(event.get());
+            }
         }
     }
     return CallWindowProc(window->oldProc_, hwnd, message, wParam, lParam);
@@ -35,6 +38,8 @@ Window::Window(HWND hwnd) {
     oldProc_ = (WNDPROC)SetWindowLong(hwnd, GWL_WNDPROC, (LONG)Proc);
     hwnd_ = hwnd;
     TexturePool::GetInstance()->Init(this);
+
+    SetRegionMode(VisualRegionMode::kEntirely);
 
     RECT rect;
     GetClientRect(hwnd, &rect);
@@ -59,13 +64,6 @@ void Window::SetGeometry(int32_t x, int32_t y, uint32_t width, uint32_t height) 
 }
 
 bool Window::DoEvent(Event* event) {
-    if(event->Type() == EventType::kMouseEvent) {
-        MouseEvent* mouse_event = reinterpret_cast<MouseEvent*>(event);
-        EventTarget* target =  HiTest(mouse_event->X(), mouse_event->Y());
-        if(target && target != this) {
-            target->DoEvent(mouse_event);
-        }
-    }
     return true;
 }
 

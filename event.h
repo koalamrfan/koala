@@ -1,7 +1,10 @@
 #ifndef EVENT_H_
 #define EVENT_H_
 
+#include <windows.h>
 #include <stdint.h>
+#include <memory>
+#include <vector>
 
 namespace ui
 {
@@ -25,23 +28,6 @@ private:
     EventTarget* target_;
 
 };
-
-class MouseEvent : public Event
-{
-public:
-    MouseEvent(int32_t x, int32_t y);
-
-    int32_t X();
-    int32_t Y();
-
-    virtual EventType Type() const override {
-        return EventType::kMouseEvent;
-    }
-private:
-    int32_t x_;
-    int32_t y_;
-};
-
 } // namespace ui
 
 #endif

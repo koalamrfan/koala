@@ -34,7 +34,7 @@ void Texture::SetSource(const std::string& source) {
     source_ = source;
 }
 
-SkBitmap* Texture::Bitmap() {
+std::vector<SkBitmap*> Texture::Bitmap() {
     return TexturePool::GetInstance()->CreateBitmapFromSource(source_);
 }
 

@@ -14,9 +14,9 @@ void Panel::OnDraw(SkCanvas* canvas) {
         SkIntToScalar(X()), SkIntToScalar(Y()),
         SkIntToScalar(Width()), SkIntToScalar(Height()));
 
-    Bitmap() ? GetRenderTactics()->Draw(canvas, Bitmap(), rect, paint) :
+    auto bitmaps = Bitmap();
+    !bitmaps.empty() ? GetRenderTactics()->Draw(canvas, bitmaps[0], rect, paint) :
         canvas->clear(SK_AlphaTRANSPARENT);
-    Widget::OnDraw(canvas);
 }
 
 bool Panel::DoEvent(Event* event) {

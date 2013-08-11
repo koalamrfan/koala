@@ -36,7 +36,7 @@ protected:
     virtual void OnDraw(SkCanvas* canvas) {}
 
     std::shared_ptr<BmpRenderTactics> GetRenderTactics();
-    SkBitmap* Bitmap();
+    std::vector<SkBitmap*> Bitmap();
 
     void SetRegionMode(VisualRegionMode region_mode);
     VisualRegionMode RegionMode() const {

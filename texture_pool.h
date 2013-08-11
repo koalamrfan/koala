@@ -6,6 +6,7 @@
 #include <string>
 #include <map>
 #include <memory>
+#include <vector>
 
 namespace ui
 {
@@ -25,7 +26,7 @@ public:
     SkBitmap* GetBitmap();
 
     std::shared_ptr<ScopeHdc> CreateScopeHdc() const;
-    SkBitmap* CreateBitmapFromSource(const std::string& source);
+    std::vector<SkBitmap*> CreateBitmapFromSource(const std::string& source);
     std::shared_ptr<BmpRenderTactics> CreatePng9Tactics();
     std::shared_ptr<BmpRenderTactics> CreateNormalTactics();
 
@@ -68,6 +69,16 @@ public:
 class Png9Tactics : public BmpRenderTactics {
 public:
     virtual void Draw(SkCanvas* canvas, SkBitmap* bitmap, const SkRect& rect, const SkPaint& paint) override;
+};
+
+class Storage
+{
+public:
+    static Storage* GetInstance();
+    std::vector<std::string> GetActualSource(const std::string& source);
+
+private:
+    Storage() {}
 };
 }
 #endif

@@ -1,6 +1,7 @@
 #include "texture_pool.h"
 #include "ywindow.h"
 #include "SkImageDecoder.h"
+#include <sstream>
 
 namespace ui
 {
@@ -31,23 +32,29 @@ SkBitmap* TexturePool::GetBitmap() {
     return bitmap_.get();
 }
 
-SkBitmap* TexturePool::CreateBitmapFromSource(const std::string& source) {
-    if(source2bitmap_.find(source) != source2bitmap_.end()) {
-        return source2bitmap_[source].get();
+std::vector<SkBitmap*> TexturePool::CreateBitmapFromSource(const std::string& source) {
+    std::vector<SkBitmap*> bitmaps;
+    auto sources = Storage::GetInstance()->GetActualSource(source);
+
+    for(auto which_source : sources) {
+        if(source2bitmap_.find(which_source) != source2bitmap_.end()) {
+            bitmaps.push_back(source2bitmap_[which_source].get());
+            continue;
+        }
+
+        auto bm = std::make_shared<SkBitmap>();
+        bool decode = SkImageDecoder::DecodeFile(which_source.c_str(), bm.get(), SkBitmap::kARGB_8888_Config,
+            SkImageDecoder::kDecodePixels_Mode);
+
+        bm->setIsOpaque(true);
+
+        if(decode) {
+            source2bitmap_[source] = bm;
+            bitmaps.push_back(bm.get());
+        }
     }
 
-    auto bm = std::make_shared<SkBitmap>();
-    bool decode = SkImageDecoder::DecodeFile(source.c_str(), bm.get(), SkBitmap::kARGB_8888_Config,
-        SkImageDecoder::kDecodePixels_Mode);
-
-    bm->setIsOpaque(true);
-
-    if(decode) {
-        source2bitmap_[source] = bm;
-        return bm.get();
-    }
-
-    return nullptr;
+    return bitmaps;
 }
 
 std::shared_ptr<ScopeHdc> TexturePool::CreateScopeHdc() const {
@@ -169,4 +176,21 @@ void Png9Tactics::Draw(SkCanvas* canvas, SkBitmap* bitmap, const SkRect& rect, c
     canvas->restore();
 }
 
+Storage* Storage::GetInstance() {
+    static Storage storage;
+    return &storage;
+}
+
+std::vector<std::string> Storage::GetActualSource(const std::string& source) {
+    std::vector<std::string> tokens;
+    char tmp_source[1024];
+    strncpy_s(tmp_source, source.c_str(), source.size());
+    char *p = nullptr;
+    char *token = strtok_s(tmp_source, ":", &p);
+    while (token != NULL) {
+        tokens.push_back(std::string("res\\") + std::string(token));
+        token = strtok_s(NULL, ":", &p);
+    }
+    return tokens;
+}
 } // namespace ui

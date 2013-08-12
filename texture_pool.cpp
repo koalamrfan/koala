@@ -46,7 +46,7 @@ std::vector<SkBitmap*> TexturePool::CreateBitmapFromSource(const std::string& so
         bool decode = SkImageDecoder::DecodeFile(which_source.c_str(), bm.get(), SkBitmap::kARGB_8888_Config,
             SkImageDecoder::kDecodePixels_Mode);
 
-        bm->setIsOpaque(true);
+        bm->setIsOpaque(false);
 
         if(decode) {
             source2bitmap_[source] = bm;

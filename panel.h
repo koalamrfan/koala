@@ -1,5 +1,5 @@
-#ifndef BUTTON_H_
-#define BUTTON_H_
+#ifndef PANEL_H_
+#define PANEL_H_
 
 
 #include "layout_item.h"

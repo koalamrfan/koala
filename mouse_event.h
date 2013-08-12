@@ -2,6 +2,7 @@
 #define MOUSE_EVENT_H_
 
 #include "event.h"
+#include <vector>
 
 namespace ui
 {
@@ -30,7 +31,6 @@ enum class MouseAction
     kDragOver
 };
 
-class Window;
 class MouseEvent : public Event
 {
 public:

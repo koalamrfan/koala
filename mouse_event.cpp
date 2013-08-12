@@ -35,12 +35,15 @@ std::vector<std::shared_ptr<Event>> MouseEvent::CreateEvent(UINT message, WPARAM
     } else if(message == WM_LBUTTONUP) {
         mouse_event->SetButton(MouseButton::kLeftButton);
         mouse_event->SetAction(MouseAction::kRelease);
+        mouse_events.push_back(mouse_event);
         if(pre_event
             && pre_event->Type() == EventType::kMouseEvent 
             && event_target == pre_event->Target()
             && ((MouseEvent *)pre_event.get())->Action() == MouseAction::kPress
             ) {
-                mouse_event->SetAction(MouseAction::kClick);
+                auto cp_mouse_event = std::static_pointer_cast<MouseEvent>(mouse_event->Clone());
+                cp_mouse_event->SetAction(MouseAction::kClick);
+                mouse_events.push_back(cp_mouse_event);
         }
     } else if(message == WM_RBUTTONDOWN) {
         mouse_event->SetButton(MouseButton::kRightButton);
@@ -138,6 +141,7 @@ std::shared_ptr<Event> MouseEvent::Clone() const{
     event->SetXY(x_, y_);
     event->SetButton(button_);
     event->SetAction(action_);
+    event->SetTarget(Target());
     return event;
 }
 } // namespace ui

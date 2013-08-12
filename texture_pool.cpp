@@ -49,7 +49,7 @@ std::vector<SkBitmap*> TexturePool::CreateBitmapFromSource(const std::string& so
         bm->setIsOpaque(false);
 
         if(decode) {
-            source2bitmap_[source] = bm;
+            source2bitmap_[which_source] = bm;
             bitmaps.push_back(bm.get());
         }
     }
@@ -80,9 +80,11 @@ void TexturePool::ResizeCanvas(uint32_t width, uint32_t height) {
     }
 }
 
-void TexturePool::CanvasToScreen() {
+void TexturePool::CanvasToScreen(SkBitmap* bitmap) {
     auto scope_hdc = TexturePool::GetInstance()->CreateScopeHdc();
-    SkBitmap* bitmap = TexturePool::GetInstance()->GetBitmap();
+    if(bitmap == nullptr) {
+        bitmap = TexturePool::GetInstance()->GetBitmap();
+    }
     BITMAPINFO bmi;
     memset(&bmi, 0, sizeof(bmi));
     bmi.bmiHeader.biSize        = sizeof(BITMAPINFOHEADER);

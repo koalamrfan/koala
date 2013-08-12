@@ -11,24 +11,32 @@ Texture::Texture():
 
 }
 
-
+void Texture::MakeInnerBitmap() {
+    inner_bitmap_ = std::make_shared<SkBitmap>();
+    SkRect rect = GetInnerBitmapRect();
+    inner_bitmap_->setConfig(SkBitmap::kARGB_8888_Config, SkScalarFloorToInt(rect.width()), SkScalarFloorToInt(rect.height()));
+    inner_bitmap_->allocPixels();
+    inner_canvas_ = std::make_shared<SkCanvas>(*inner_bitmap_);
+    inner_canvas_->clear(SK_AlphaTRANSPARENT);
+    inner_canvas_->translate(SkIntToScalar(-rect.x()), SkIntToScalar(-rect.y()));
+    OnDraw(inner_canvas_.get());
+}
 void Texture::Draw() {
     auto canvas = TexturePool::GetInstance()->GetCanvas();
     canvas->save();
-    if(auto_region_active_) {
-        inner_bitmap_ = std::make_shared<SkBitmap>();
-        SkRect rect = GetInnerBitmapRect();
-        inner_bitmap_->setConfig(SkBitmap::kARGB_8888_Config, SkScalarFloorToInt(rect.width()), SkScalarFloorToInt(rect.height()));
-        inner_bitmap_->allocPixels();
-        inner_canvas_ = std::make_shared<SkCanvas>(*inner_bitmap_);
-        inner_canvas_->clear(SK_AlphaTRANSPARENT);
-        inner_canvas_->translate(SkIntToScalar(-rect.x()), SkIntToScalar(-rect.y()));
-        OnDraw(inner_canvas_.get());
+    if(auto_region_active_ && region_mode_ == VisualRegionMode::kAuto) {
+        MakeInnerBitmap();
         auto_region_active_ = false;
     }
     OnDraw(canvas);
     canvas->restore();
 } 
+
+void Texture::Update() {
+    //MakeInnerBitmap();
+    //TexturePool::GetInstance()->CanvasToScreen(inner_bitmap_.get());
+    InvalidateRect(App::GetInstance()->GetMainWindow()->GetHwnd(),NULL,false);
+}
 
 void Texture::SetSource(const std::string& source) {
     source_ = source;

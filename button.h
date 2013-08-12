@@ -6,12 +6,22 @@
 
 namespace ui
 {
+const int state_num = 3;
+enum class ButtonState
+{
+    kNormal,
+    kOver,
+    kDownd,
+};
+
 class Button : public Panel
 {
 public:
-    void SetNormalTexture(const std::string& normal);
-    void SetOverTexture(const std::string& over);
-    void SetPressTexture(const std::string& press);
+    Button();
+
+    void SetTexture(const std::string& normal,
+                    const std::string& over,
+                    const std::string& press);
     
     std::string NormalTexture() const {
         return normal_texture_;
@@ -31,6 +41,8 @@ private:
     std::string normal_texture_;
     std::string over_texture_;
     std::string press_texture_;
+
+    ButtonState state_;
 };
 } // namespace ui
 

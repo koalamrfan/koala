@@ -3,6 +3,9 @@
 
 namespace ui
 {
+Event::Event():target_(nullptr) {
+
+}
 
 void Event::SetTarget(EventTarget* target) {
     target_ = target;

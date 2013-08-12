@@ -18,6 +18,8 @@ class EventTarget;
 class Event
 {
 public:
+    Event();
+
     void SetTarget(EventTarget* target);
     EventTarget* Target() const {
         return target_;

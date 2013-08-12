@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <memory>
 
 #include "texture_pool.h"
 
@@ -25,6 +26,8 @@ public:
     Texture();
 
     virtual void Draw();
+
+    void Update();
     void SetSource(const std::string& source);
     std::string Source() const {
         return source_;
@@ -34,6 +37,7 @@ public:
 
 protected:
     virtual void OnDraw(SkCanvas* canvas) {}
+    void MakeInnerBitmap();
 
     std::shared_ptr<BmpRenderTactics> GetRenderTactics();
     std::vector<SkBitmap*> Bitmap();

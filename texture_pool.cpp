@@ -26,7 +26,7 @@ SkBitmap* TexturePool::GetBitmap() {
         bitmap_ = std::make_shared<SkBitmap>();
         bitmap_->setConfig(SkBitmap::kARGB_8888_Config, window_->Width(), window_->Height());
         bitmap_->allocPixels();
-        bitmap_->setIsOpaque(true);
+        bitmap_->setIsOpaque(false);
     }
     
     return bitmap_.get();
@@ -74,7 +74,7 @@ void TexturePool::ResizeCanvas(uint32_t width, uint32_t height) {
         bitmap_ = std::make_shared<SkBitmap>();
         bitmap_->setConfig(SkBitmap::kARGB_8888_Config, width, height);
         bitmap_->allocPixels();
-        bitmap_->setIsOpaque(true);
+        bitmap_->setIsOpaque(false);
 
         canvas_ = std::make_shared<SkCanvas>(*GetBitmap());
     }

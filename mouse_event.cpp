@@ -132,4 +132,12 @@ void MouseEvent::SetButton(MouseButton button) {
 void MouseEvent::SetAction(MouseAction action) {
     action_ = action;
 }
+
+std::shared_ptr<Event> MouseEvent::Clone() const{
+    auto event = std::make_shared<MouseEvent>();
+    event->SetXY(x_, y_);
+    event->SetButton(button_);
+    event->SetAction(action_);
+    return event;
+}
 } // namespace ui

@@ -36,6 +36,8 @@ class MouseEvent : public Event
 public:
     MouseEvent();
 
+    virtual std::shared_ptr<Event> Clone() const;
+
     static std::vector<std::shared_ptr<Event>> CreateEvent(UINT message, WPARAM wParam, LPARAM lParam);
 
     int32_t X();

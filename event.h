@@ -23,6 +23,7 @@ public:
         return target_;
     }
 
+    virtual std::shared_ptr<Event> Clone() const = 0;
     virtual EventType Type() const = 0;
 private:
     EventTarget* target_;

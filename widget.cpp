@@ -225,12 +225,20 @@ bool Widget::PointInRegion(int32_t x, int32_t y) {
 EventTarget* Widget::HiTest(int32_t x, int32_t y) {
     auto iter = children_.rbegin();
     while (iter != children_.rend()) {
+        if(IgnoreHitest()) {
+            iter++;
+            continue;
+        }
         if((*iter)->PointInRegion(x, y)) {
             return *iter;
         }
         iter++;
     }
     
+    if(IgnoreHitest()) {
+        return nullptr;
+    }
+
     if(PointInRegion(x, y)) {
         return (EventTarget*)this;
     }

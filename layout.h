@@ -40,7 +40,7 @@ public:
     virtual void Empty();
     virtual bool IsEmpty();
     
-    virtual void ResetPreferLimitSize(bool deep = true) override;
+    virtual void ResetPreferLimitSize(bool deep) override;
     
     virtual void UpNotifyRelayout() override;
     virtual void RelayoutToAdapt() override;

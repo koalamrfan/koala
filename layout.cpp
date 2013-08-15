@@ -53,7 +53,7 @@ Layout::SharedLayoutItem Layout::ItemAt(uint32_t  index) {
 void Layout::ResetPreferLimitSize(bool deep) {
     if(deep) {
       for(auto item:layout_items_) {
-	item->ResetPreferLimitSize();
+        item->ResetPreferLimitSize(deep);
       }
     }
     SetLimitMinWidth(CalculateLimitMinWidth());

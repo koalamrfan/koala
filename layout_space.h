@@ -9,7 +9,7 @@ namespace ui
 class LayoutSpace:public LayoutBaseItem
 {
 public:
-    virtual void ResetPreferLimitSize(bool deep = true) override {}
+    virtual void ResetPreferLimitSize(bool deep) override {}
     virtual void Relayout() override {}
     virtual void UpNotifyRelayout() {}
     virtual void RelayoutToAdapt() {}

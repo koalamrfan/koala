@@ -31,7 +31,7 @@ public:
     bool IsVisible() const;
     void SetLayout(Layout* layout);
     
-    virtual void ResetPreferLimitSize(bool deep = true) override;
+    virtual void ResetPreferLimitSize(bool deep) override;
     virtual void Relayout() override;
     
     virtual void UpNotifyRelayout() override;

@@ -109,7 +109,7 @@ void Widget::ResetPreferLimitSize(bool deep) {
 void Widget::Relayout() {
     if(BaseLayout()) {
         if(Parent() == nullptr) {
-            ResetPreferLimitSize();
+            ResetPreferLimitSize(true);
         }
         BaseLayout()->SetGeometry(0, 0, Width(), Height());
         BaseLayout()->Relayout();
@@ -216,7 +216,7 @@ bool Widget::PointInRegion(int32_t x, int32_t y) {
     } else {
         SkIRect rect = SkIRect::MakeXYWH(X(), Y(), Width(), Height());
         if(rect.contains(x, y)) {
-            return true;
+            return true; 
         }
     }
     return false;

@@ -47,7 +47,7 @@ public:
     virtual uint32_t LimitMaxHeight() override ;
 
     virtual void Relayout()  override ;
-    virtual void ResetPreferLimitSize(bool deep = true)  override ;
+    virtual void ResetPreferLimitSize(bool deep)  override ;
 
     virtual void UpNotifyRelayout() override;
     virtual void RelayoutToAdapt() override;

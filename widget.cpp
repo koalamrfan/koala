@@ -189,14 +189,14 @@ Layout* Widget::BaseLayout() const {
     return nullptr;
 }
 
-void Widget::Draw() {
-    Texture::Draw();
+void Widget::Draw(const SkRect& clip_rect) {
+    Texture::Draw(clip_rect);
     if (children_.empty()) {
         return ;
     }
     auto iter = children_.begin();
     while (iter != children_.end()) {
-         (*iter)->Draw();
+         (*iter)->Draw(clip_rect);
          iter++;
     }
 }

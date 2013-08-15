@@ -21,7 +21,10 @@ void Texture::MakeInnerBitmap() {
     inner_canvas_->translate(SkIntToScalar(-rect.x()), SkIntToScalar(-rect.y()));
     OnDraw(inner_canvas_.get());
 }
-void Texture::Draw() {
+void Texture::Draw(const SkRect& clip_rect) {
+    if(!clip_rect.contains(GetInnerBitmapRect())) {
+        return ;
+    }
     auto canvas = TexturePool::GetInstance()->GetCanvas();
     canvas->save();
     if(auto_region_active_ && region_mode_ == VisualRegionMode::kAuto) {
@@ -33,9 +36,13 @@ void Texture::Draw() {
 } 
 
 void Texture::Update() {
-    //MakeInnerBitmap();
-    //TexturePool::GetInstance()->CanvasToScreen(inner_bitmap_.get());
-    InvalidateRect(App::GetInstance()->GetMainWindow()->GetHwnd(),NULL,false);
+    RECT rect;
+    SkRect sk_rect = GetInnerBitmapRect();
+    rect.left = SkScalarFloorToInt(sk_rect.fLeft);
+    rect.top = SkScalarFloorToInt(sk_rect.fTop);
+    rect.right = SkScalarFloorToInt(sk_rect.fRight);
+    rect.bottom = SkScalarFloorToInt(sk_rect.fBottom);
+    InvalidateRect(App::GetInstance()->GetMainWindow()->GetHwnd(), &rect, FALSE);
 }
 
 void Texture::SetSource(const std::string& source) {

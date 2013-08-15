@@ -25,7 +25,7 @@ class Texture
 public:
     Texture();
 
-    virtual void Draw();
+    virtual void Draw(const SkRect& clip_rect);
 
     void Update();
     void SetSource(const std::string& source);

@@ -4,6 +4,7 @@
 #include "event_factory.h"
 #include "event_target.h"
 #include "mouse_event.h"
+#include "SkRect.h"
 
 namespace ui
 {
@@ -13,14 +14,24 @@ LRESULT CALLBACK Proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) {
     case  WM_ERASEBKGND:
         return true;
     case WM_PAINT:
-        window->Draw();
-        TexturePool::GetInstance()->CanvasToScreen();
+        {
+            RECT rect;
+            GetUpdateRect(hwnd, &rect, FALSE);
+            window->Draw(SkRect::MakeXYWH(
+                SkIntToScalar(rect.left), 
+                SkIntToScalar(rect.top), 
+                SkIntToScalar(rect.right - rect.left),
+                SkIntToScalar(rect.bottom - rect.top)));
+            TexturePool::GetInstance()->CanvasToScreen();
+        }
         break;
     case WM_SIZE:
-        RECT rect;
-        GetClientRect(hwnd, &rect);
-        window->SetGeometry(rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top);
-        window->Relayout();
+        {
+            RECT rect;
+            GetClientRect(hwnd, &rect);
+            window->SetGeometry(rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top);
+            window->Relayout();
+        }
         break;
     default:
         auto events = EventFactory::GetInstance()->CreateEvent(message, wParam, lParam);

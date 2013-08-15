@@ -46,7 +46,7 @@ public:
     virtual void SetLimitMaxWidth(uint32_t width) override;
     virtual void SetLimitMaxHeight(uint32_t height) override;
 
-    virtual void Draw() override;
+    virtual void Draw(const SkRect& clip_rect) override;
 
     void SetRegion(const SkRegion& region);
     SkRegion Region() const {

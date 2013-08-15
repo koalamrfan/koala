@@ -7,7 +7,7 @@
 
 namespace ui
 {
-void Panel::OnDraw(SkCanvas* canvas) {
+void Panel::OnDraw(SkCanvas* canvas, const SkRect& clip_rect) {
     SkPaint paint;
     paint.setFilterLevel(SkPaint::kMedium_FilterLevel);
     SkRect rect = SkRect::MakeXYWH(

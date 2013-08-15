@@ -36,8 +36,8 @@ public:
     virtual SkRect GetInnerBitmapRect() = 0;
 
 protected:
-    virtual void OnDraw(SkCanvas* canvas) {}
-    void MakeInnerBitmap();
+    virtual void OnDraw(SkCanvas* canvas, const SkRect& clip_rect) = 0;
+    void MakeInnerBitmap(const SkRect& clip_rect);
 
     std::shared_ptr<BmpRenderTactics> GetRenderTactics();
     std::vector<SkBitmap*> Bitmap();

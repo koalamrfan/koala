@@ -190,6 +190,15 @@ Layout* Widget::BaseLayout() const {
 }
 
 void Widget::Draw(const SkRect& clip_rect) {
+    SkRect rect = SkRect::MakeXYWH(
+        SkIntToScalar(X()),
+        SkIntToScalar(Y()), 
+        SkIntToScalar(Width()), 
+        SkIntToScalar(Height())
+        );
+    if(!rect.contains(clip_rect)) {
+        return ;
+    }
     Texture::Draw(clip_rect);
     if (children_.empty()) {
         return ;

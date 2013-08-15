@@ -16,7 +16,7 @@ public:
         SetPreferHeight(100);
     }
 
-    virtual void OnDraw(SkCanvas* canvas) override;
+    virtual void OnDraw(SkCanvas* canvas, const SkRect& clip_rect) override;
     virtual bool DoEvent(Event* event) override;
     
 };

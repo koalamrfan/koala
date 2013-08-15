@@ -19,7 +19,7 @@ void Button::SetTexture(const std::string& normal,
     SetSource(source);
 }
 
-void Button::OnDraw(SkCanvas* canvas) {
+void Button::OnDraw(SkCanvas* canvas, const SkRect& clip_rect) {
     SkPaint paint;
     paint.setFilterLevel(SkPaint::kMedium_FilterLevel);
     SkRect rect = SkRect::MakeXYWH(

@@ -57,7 +57,7 @@ Window::Window(HWND hwnd) {
     SetGeometry(rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top);
 }
 
-void Window::OnDraw(SkCanvas* canvas) {
+void Window::OnDraw(SkCanvas* canvas, const SkRect& clip_rect) {
     SkPaint paint;
     paint.setFilterLevel(SkPaint::kMedium_FilterLevel);
     SkRect rect = {

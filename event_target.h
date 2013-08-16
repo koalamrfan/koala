@@ -7,6 +7,8 @@ class Event;
 class EventTarget
 {
 public:
+    EventTarget();
+
     virtual bool DoEvent(Event* event);
 
     void SetIgnoreHitest(bool ignore_hitest = true) {

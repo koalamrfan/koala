@@ -196,7 +196,7 @@ void Widget::Draw(const SkRect& clip_rect) {
         SkIntToScalar(Width()), 
         SkIntToScalar(Height())
         );
-    if(!rect.contains(clip_rect)) {
+    if(!rect.intersect(clip_rect)) {
         return ;
     }
     Texture::Draw(clip_rect);

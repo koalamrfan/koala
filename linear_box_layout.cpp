@@ -45,9 +45,7 @@ bool LinearBoxLayout::InsertWidget(uint32_t index, Widget *widget) {
     parent->AddChild(widget);
     return Layout::InsertItem(index, std::make_shared<LinearBoxLayoutItem>(widget));
 }
-void SetStrechFactor(LayoutBaseItem* item, uint32_t strech_factor);
-    void SetStrongElastic(LayoutBaseItem* item);
-    void SetWeakElastic(LayoutBaseItem* item);
+
 bool LinearBoxLayout::RemoveWidget(Widget *widget) {
     Widget* parent = ParentWidget();
     assert(parent);

@@ -15,7 +15,7 @@ public:
         ignore_hitest_ = ignore_hitest;
     }
 
-    bool IgnoreHitest() const {
+    bool IgnoreHitTest() const {
         return ignore_hitest_;
     }
 private:

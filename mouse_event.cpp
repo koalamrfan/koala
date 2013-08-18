@@ -22,7 +22,7 @@ std::vector<std::shared_ptr<Event>> MouseEvent::CreateEvent(UINT message, WPARAM
     auto pre_event = EventFactory::GetInstance()->PreEvent();
     auto mouse_event = std::make_shared<MouseEvent>();
     mouse_event->SetXY(LOWORD(lParam), HIWORD(lParam));
-    auto event_target = window->HiTest(mouse_event->X(), mouse_event->Y());
+    auto event_target = window->HitTest(mouse_event->X(), mouse_event->Y());
     if(!event_target) {
         return mouse_events;
     }

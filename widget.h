@@ -55,7 +55,7 @@ public:
 
     virtual SkRect GetInnerBitmapRect() override;
 
-    EventTarget* HiTest(int32_t x, int32_t y);
+    EventTarget* HitTest(int32_t x, int32_t y);
 protected:
     bool PointInRegion(int32_t x, int32_t y);
 

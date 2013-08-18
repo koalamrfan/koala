@@ -210,9 +210,9 @@ void Widget::SetRegion(const SkRegion& region) {
 
 bool Widget::PointInRegion(int32_t x, int32_t y) {
     if(RegionMode() == VisualRegionMode::kAuto) {
-        SkIRect rect = SkIRect::MakeXYWH(X(), Y(), Width(), Height());
-        if(rect.contains(x, y)) {
-            return PointInInnerBitmap(x - X(), y - Y());
+        SkRect rect = GetInnerBitmapRect();
+        if(rect.contains(SkIntToScalar(x), SkIntToScalar(y))) {
+            return PointInInnerBitmap(x - SkScalarFloorToInt(rect.x()), y - SkScalarFloorToInt(rect.y()));
         }
     } else if(RegionMode() == VisualRegionMode::kCustom){
         return region_.contains(x, y);
@@ -225,20 +225,20 @@ bool Widget::PointInRegion(int32_t x, int32_t y) {
     return false;
 }
 
-EventTarget* Widget::HiTest(int32_t x, int32_t y) {
+EventTarget* Widget::HitTest(int32_t x, int32_t y) {
     auto iter = children_.rbegin();
     while (iter != children_.rend()) {
-        if(IgnoreHitest()) {
+        if(IgnoreHitTest()) {
             iter++;
             continue;
         }
-        if((*iter)->PointInRegion(x, y)) {
+        if((*iter)->HitTest(x, y)) {
             return *iter;
         }
         iter++;
     }
     
-    if(IgnoreHitest()) {
+    if(IgnoreHitTest()) {
         return nullptr;
     }
 

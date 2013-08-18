@@ -53,7 +53,7 @@ public:
         return region_;
     }
 
-    virtual SkRect GetInnerBitmapRect() override;
+    virtual SkRect GetAbsoluteRect() override;
 
     EventTarget* HitTest(int32_t x, int32_t y);
 protected:

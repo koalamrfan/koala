@@ -2,6 +2,7 @@
 #define LAYOUT_BASE_ITEM_H_
 
 #include <stdint.h>
+#include "SkRect.h"
 
 namespace ui
 {
@@ -25,6 +26,7 @@ public:
     virtual int32_t Y();
     virtual uint32_t Width();
     virtual uint32_t Height();
+    SkRect  Geometry();
     virtual void SetPreferWidth(uint32_t width);
     virtual uint32_t PreferWidth();
     virtual void SetPreferHeight(uint32_t height);

@@ -33,7 +33,7 @@ public:
         return source_;
     }
 
-    virtual SkRect GetInnerBitmapRect() = 0;
+    virtual SkRect GetAbsoluteRect() = 0;
 
 protected:
     virtual void OnDraw(SkCanvas* canvas, const SkRect& clip_rect) = 0;

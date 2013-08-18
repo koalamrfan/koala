@@ -210,7 +210,7 @@ void Widget::SetRegion(const SkRegion& region) {
 
 bool Widget::PointInRegion(int32_t x, int32_t y) {
     if(RegionMode() == VisualRegionMode::kAuto) {
-        SkRect rect = GetInnerBitmapRect();
+        SkRect rect = GetAbsoluteRect();
         if(rect.contains(SkIntToScalar(x), SkIntToScalar(y))) {
             return PointInInnerBitmap(x - SkScalarFloorToInt(rect.x()), y - SkScalarFloorToInt(rect.y()));
         }
@@ -228,10 +228,6 @@ bool Widget::PointInRegion(int32_t x, int32_t y) {
 EventTarget* Widget::HitTest(int32_t x, int32_t y) {
     auto iter = children_.rbegin();
     while (iter != children_.rend()) {
-        if(IgnoreHitTest()) {
-            iter++;
-            continue;
-        }
         if((*iter)->HitTest(x, y)) {
             return *iter;
         }
@@ -249,7 +245,7 @@ EventTarget* Widget::HitTest(int32_t x, int32_t y) {
     return nullptr;
 }
 
-SkRect Widget::GetInnerBitmapRect() {
+SkRect Widget::GetAbsoluteRect() {
     int32_t x = X(), y= Y();
     Widget* parent = Parent();
     while(parent) {

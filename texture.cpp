@@ -13,16 +13,17 @@ Texture::Texture():
 
 void Texture::MakeInnerBitmap(const SkRect& clip_rect) {
     inner_bitmap_ = std::make_shared<SkBitmap>();
-    SkRect rect = GetInnerBitmapRect();
+    SkRect rect = GetAbsoluteRect();
     inner_bitmap_->setConfig(SkBitmap::kARGB_8888_Config, SkScalarFloorToInt(rect.width()), SkScalarFloorToInt(rect.height()));
     inner_bitmap_->allocPixels();
     inner_canvas_ = std::make_shared<SkCanvas>(*inner_bitmap_);
     inner_canvas_->clear(SK_AlphaTRANSPARENT);
     OnDraw(inner_canvas_.get(), clip_rect);
-    auto canvas = TexturePool::GetInstance()->GetCanvas();
+    /*auto canvas = TexturePool::GetInstance()->GetCanvas();
     SkPaint paint;
-    canvas->drawBitmapRect(*inner_bitmap_, rect, &paint);
+    canvas->drawBitmapRect(*inner_bitmap_, rect, &paint);*/
 }
+
 void Texture::Draw(const SkRect& clip_rect) {
     auto canvas = TexturePool::GetInstance()->GetCanvas();
     canvas->save();
@@ -30,15 +31,15 @@ void Texture::Draw(const SkRect& clip_rect) {
         MakeInnerBitmap(clip_rect);
         auto_region_active_ = false;
     }
-    SkRect rect = GetInnerBitmapRect();
+    SkRect rect = GetAbsoluteRect();
     canvas->translate(SkIntToScalar(rect.x()), SkIntToScalar(rect.y()));
-    //OnDraw(canvas, clip_rect);
+    OnDraw(canvas, clip_rect);
     canvas->restore();
 } 
 
 void Texture::Update() {
     RECT rect;
-    SkRect sk_rect = GetInnerBitmapRect();
+    SkRect sk_rect = GetAbsoluteRect();
     rect.left = SkScalarFloorToInt(sk_rect.fLeft);
     rect.top = SkScalarFloorToInt(sk_rect.fTop);
     rect.right = SkScalarFloorToInt(sk_rect.fRight);

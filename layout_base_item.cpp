@@ -51,6 +51,15 @@ uint32_t LayoutBaseItem::Height() {
     return height_;
 }
 
+SkRect  LayoutBaseItem::Geometry() {
+    return SkRect::MakeXYWH(
+        SkIntToScalar(X()),
+        SkIntToScalar(X()), 
+        SkIntToScalar(Width()), 
+        SkIntToScalar(Height())
+        );
+}
+
 void LayoutBaseItem::SetPreferWidth(uint32_t width) {
     prefer_width_ = width;
 }

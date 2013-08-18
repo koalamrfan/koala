@@ -5,17 +5,20 @@
 
 void main(uint32_t argc, TCHAR** argv) {
     ui::Window* window = App::GetInstance()->GetMainWindow();
-    ui::Button* button1 = new ui::Button;
+    ui::Panel* panel1 = new ui::Panel;
     ui::Panel* panel2 = new ui::Panel;
-    button1->SetTexture("normal.png", "hover.png", "press.png");
-    //panel2->SetSource("mario.png");
+    //button1->SetTexture("normal.png", "hover.png", "press.png");
+    panel1->SetSource("mario.png");
+    panel2->SetSource("mario.png");
     ui::HBoxLayout *hbox = new ui::HBoxLayout;
     window->SetLayout(hbox);
-    hbox->AddWidget(button1);
-    hbox->SetWestSpace(button1, 0);
-    hbox->SetSouthSpace(button1, 0);
-    //hbox->AddWidget(panel2);
-    //hbox->SetAround(panel2, 0, 0, 0, 0);
-    //hbox->SetStrongElastic(panel2);
+
+    ui::HBoxLayout *hbox2 = new ui::HBoxLayout;
+    panel1->SetLayout(hbox2);
+
+    hbox->AddWidget(panel1);
+    hbox->SetAround(panel1, 100, 100, 100, 100);
+    hbox2->AddWidget(panel2);
+    hbox2->SetAround(panel2, 100, 100, 100, 100);
     window->Relayout();
 }

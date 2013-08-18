@@ -18,7 +18,6 @@ void Texture::MakeInnerBitmap(const SkRect& clip_rect) {
     inner_bitmap_->allocPixels();
     inner_canvas_ = std::make_shared<SkCanvas>(*inner_bitmap_);
     inner_canvas_->clear(SK_AlphaTRANSPARENT);
-    inner_canvas_->translate(SkIntToScalar(-rect.x()), SkIntToScalar(-rect.y()));
     OnDraw(inner_canvas_.get(), clip_rect);
 }
 void Texture::Draw(const SkRect& clip_rect) {
@@ -28,6 +27,8 @@ void Texture::Draw(const SkRect& clip_rect) {
         MakeInnerBitmap(clip_rect);
         auto_region_active_ = false;
     }
+    SkRect rect = GetInnerBitmapRect();
+    canvas->translate(SkIntToScalar(rect.x()), SkIntToScalar(rect.y()));
     OnDraw(canvas, clip_rect);
     canvas->restore();
 } 

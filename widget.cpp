@@ -6,7 +6,8 @@
 namespace ui
 {
 Widget::Widget():parent_(nullptr),
-        parent_layout_(nullptr) {
+        parent_layout_(nullptr),
+        layout_(nullptr) {
     
 }
 
@@ -83,12 +84,8 @@ bool Widget::IsVisible() const{
 }
 
 void Widget::SetLayout(Layout* layout) {
-    if(layer_.size() > 0) {
-        layer_[0] = layout;
-    } else {
-        layer_.push_back(layout);
-    }
-    layout->SetParentWidget(this);
+    layout_ = layout;
+    layout_->SetParentWidget(this);
 }
 
 void Widget::ResetPreferLimitSize(bool deep) {
@@ -183,10 +180,7 @@ void Widget::SetLimitMaxHeight(uint32_t height) {
 }
 
 Layout* Widget::BaseLayout() const {
-    if(layer_.size() > 0 && layer_[0]) {
-        return layer_[0];
-    }
-    return nullptr;
+    return layout_;
 }
 
 void Widget::Draw(const SkRect& clip_rect) {
@@ -256,9 +250,16 @@ EventTarget* Widget::HiTest(int32_t x, int32_t y) {
 }
 
 SkRect Widget::GetInnerBitmapRect() {
+    int32_t x = X(), y= Y();
+    Widget* parent = Parent();
+    while(parent) {
+        x += parent->X();
+        y += parent->Y();
+        parent = parent->Parent();
+    }
     return SkRect::MakeXYWH(
-        SkIntToScalar(X()),
-        SkIntToScalar(Y()), 
+        SkIntToScalar(x),
+        SkIntToScalar(y), 
         SkIntToScalar(Width()), 
         SkIntToScalar(Height())
         );

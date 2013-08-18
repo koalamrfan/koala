@@ -11,7 +11,7 @@ void Panel::OnDraw(SkCanvas* canvas, const SkRect& clip_rect) {
     SkPaint paint;
     paint.setFilterLevel(SkPaint::kMedium_FilterLevel);
     SkRect rect = SkRect::MakeXYWH(
-        SkIntToScalar(X()), SkIntToScalar(Y()),
+        SkIntToScalar(0), SkIntToScalar(0),
         SkIntToScalar(Width()), SkIntToScalar(Height()));
 
     auto bitmaps = Bitmap();

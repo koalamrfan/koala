@@ -60,7 +60,7 @@ protected:
     bool PointInRegion(int32_t x, int32_t y);
 
     std::vector<Widget*> children_;
-    std::vector<Layout*> layer_;
+    Layout* layout_;
     Widget* parent_;
     Layout* parent_layout_;
 private:

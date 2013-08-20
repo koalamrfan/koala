@@ -8,7 +8,7 @@
 * refactory layout
 * layout unittest
 * layout add more (framelayout, stacklayout, gridlayout)
-* relative position
+* layout detach
 * animation
 * timer
 * config xml

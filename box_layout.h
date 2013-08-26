@@ -13,7 +13,6 @@ class LinearBoxLayoutItem;
 
 class BoxLayout:public Layout
 {  
-    friend class LinearBoxLayoutItem;
 public:
     BoxLayout();
 

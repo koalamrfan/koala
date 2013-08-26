@@ -1,16 +1,30 @@
 #ifndef WIDGET_H_
 #define WIDGET_H_
 
-#include <vector>
 #include "layout_base_item.h"
-#include "texture.h"
 #include "event_target.h"
+#include "texture_pool.h"
 #include "SkRegion.h"
+#include <string>
+#include <memory>
+#include <vector>
+
+class SkCanvas;
+class SkBitmap;
+class SkRegion;
 
 namespace ui
 {
+enum class HitRegionMode
+{
+    kEntirely = 0,
+    kAuto,
+    kCustom,
+    kNothing
+};
+
 class Layout;
-class Widget:public LayoutBaseItem, public Texture, public EventTarget
+class Widget:public LayoutBaseItem, public EventTarget
 {
 public:
     Widget();
@@ -44,21 +58,33 @@ public:
     virtual void SetLimitMaxWidth(uint32_t width) override;
     virtual void SetLimitMaxHeight(uint32_t height) override;
 
-    virtual void Draw(const SkRect& clip_rect) override;
+    virtual void Draw(const SkRect& clip_rect);
 
     void SetRegion(const SkRegion& region);
-    SkRegion Region() const {
-        return region_;
-    }
+    SkRegion Region() const;
 
-    virtual SkRect GetAbsoluteRect() override;
+    SkRect GetAbsoluteRect();
+
+    void UpdateAutoRegion();
+    void Update();
+    void SetSource(const std::string& source);
+    std::string Source() const;
+
+    void SetRegionMode(HitRegionMode region_mode);
+    HitRegionMode RegionMode() const;
+
+    std::vector<SkBitmap*> Bitmap();
 
     EventTarget* HitTest(int32_t x, int32_t y);
 protected:
     virtual void AddChild(Widget* widget);
     virtual void RemoveChild(Widget* widget);
-
+    virtual void OnDraw(SkCanvas* canvas, const SkRect& clip_rect) = 0;
+    void MakeInnerBitmap(const SkRect& clip_rect);
+    std::shared_ptr<BmpRenderTactics> GetRenderTactics();
+    
     bool PointInRegion(int32_t x, int32_t y);
+    bool PointInInnerBitmap(int32_t x, int32_t y);
 
     std::vector<Widget*> children_;
     Layout* layout_;
@@ -66,6 +92,11 @@ protected:
     Layout* parent_layout_;
 private:
     SkRegion region_;
+    std::string source_;
+    HitRegionMode region_mode_;
+    std::shared_ptr<SkCanvas> inner_canvas_;
+    std::shared_ptr<SkBitmap> inner_bitmap_;
+    bool auto_region_active_;
 };
 } // namespace ui
 

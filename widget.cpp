@@ -1,13 +1,17 @@
 #include "widget.h"
-#include <vector>
+#include "app.h"
 #include "layout.h"
 #include "SkBitmap.h"
+#include <vector>
+
 
 namespace ui
 {
 Widget::Widget():parent_(nullptr),
         parent_layout_(nullptr),
-        layout_(nullptr) {
+        layout_(nullptr),
+        auto_region_active_(true),
+        region_mode_(HitRegionMode::kAuto) {
     
 }
 
@@ -184,16 +188,16 @@ Layout* Widget::BaseLayout() const {
 }
 
 void Widget::Draw(const SkRect& clip_rect) {
-    SkRect rect = SkRect::MakeXYWH(
-        SkIntToScalar(X()),
-        SkIntToScalar(Y()), 
-        SkIntToScalar(Width()), 
-        SkIntToScalar(Height())
-        );
-    if(!rect.intersect(clip_rect)) {
-        return ;
+    auto canvas = TexturePool::GetInstance()->GetCanvas();
+    canvas->save();
+    if(auto_region_active_ && region_mode_ == HitRegionMode::kAuto) {
+        MakeInnerBitmap(clip_rect);
+        auto_region_active_ = false;
     }
-    Texture::Draw(clip_rect);
+    SkRect rect = GetAbsoluteRect();
+    canvas->translate(SkIntToScalar(rect.x()), SkIntToScalar(rect.y()));
+    OnDraw(canvas, clip_rect);
+    canvas->restore();
     if (children_.empty()) {
         return ;
     }
@@ -209,12 +213,12 @@ void Widget::SetRegion(const SkRegion& region) {
 }
 
 bool Widget::PointInRegion(int32_t x, int32_t y) {
-    if(RegionMode() == VisualRegionMode::kAuto) {
+    if(RegionMode() == HitRegionMode::kAuto) {
         SkRect rect = GetAbsoluteRect();
         if(rect.contains(SkIntToScalar(x), SkIntToScalar(y))) {
             return PointInInnerBitmap(x - SkScalarFloorToInt(rect.x()), y - SkScalarFloorToInt(rect.y()));
         }
-    } else if(RegionMode() == VisualRegionMode::kCustom){
+    } else if(RegionMode() == HitRegionMode::kCustom){
         return region_.contains(x, y);
     } else {
         SkIRect rect = SkIRect::MakeXYWH(X(), Y(), Width(), Height());
@@ -261,4 +265,71 @@ SkRect Widget::GetAbsoluteRect() {
         );
 }
 
+SkRegion Widget::Region() const {
+    return region_;
+}
+
+void Widget::SetSource( const std::string& source ) {
+    source_ = source;
+}
+
+std::string Widget::Source() const {
+    return source_;
+}
+
+void Widget::Update() {
+    RECT rect;
+    SkRect sk_rect = GetAbsoluteRect();
+    rect.left = SkScalarFloorToInt(sk_rect.fLeft);
+    rect.top = SkScalarFloorToInt(sk_rect.fTop);
+    rect.right = SkScalarFloorToInt(sk_rect.fRight);
+    rect.bottom = SkScalarFloorToInt(sk_rect.fBottom);
+    InvalidateRect(App::GetInstance()->GetMainWindow()->GetHwnd(), &rect, FALSE);
+}
+
+void Widget::SetRegionMode(HitRegionMode region_mode) {
+    region_mode_ = region_mode;
+}
+
+ui::HitRegionMode Widget::RegionMode() const {
+    return region_mode_;
+}
+
+void Widget::MakeInnerBitmap(const SkRect& clip_rect) {
+    inner_bitmap_ = std::make_shared<SkBitmap>();
+    SkRect rect = GetAbsoluteRect();
+    inner_bitmap_->setConfig(SkBitmap::kARGB_8888_Config, SkScalarFloorToInt(rect.width()), SkScalarFloorToInt(rect.height()));
+    inner_bitmap_->allocPixels();
+    inner_canvas_ = std::make_shared<SkCanvas>(*inner_bitmap_);
+    inner_canvas_->clear(SK_AlphaTRANSPARENT);
+    OnDraw(inner_canvas_.get(), clip_rect);
+    /*auto canvas = TexturePool::GetInstance()->GetCanvas();
+    SkPaint paint;
+    canvas->drawBitmapRect(*inner_bitmap_, rect, &paint);*/
+}
+
+std::vector<SkBitmap*> Widget::Bitmap() {
+    return TexturePool::GetInstance()->CreateBitmapFromSource(source_);
+}
+
+
+
+std::shared_ptr<BmpRenderTactics> Widget::GetRenderTactics() {
+    auto extentd = source_.substr(source_.size() - 6);
+    std::shared_ptr<BmpRenderTactics> tactics;
+    if(extentd == ".9.png") {
+        tactics = TexturePool::GetInstance()->CreatePng9Tactics();
+    }else {
+        tactics = TexturePool::GetInstance()->CreateNormalTactics();
+    }
+    return tactics;
+}
+
+void Widget::UpdateAutoRegion() {
+    auto_region_active_ = true;
+}
+
+bool Widget::PointInInnerBitmap(int32_t x, int32_t y) {
+    return 0 != *(inner_bitmap_->getAddr32(x, y));
+}
 } // namespace ui

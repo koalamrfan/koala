@@ -16,8 +16,6 @@ public:
     Widget();
     virtual ~Widget();
 
-    virtual void AddChild(Widget* widget);
-    virtual void RemoveChild(Widget* widget);
     Widget* ChildAt(uint32_t index);
     uint32_t ChildrenNum() const;
     void SetParent(Widget* parent);
@@ -31,7 +29,7 @@ public:
     bool IsVisible() const;
     void SetLayout(Layout* layout);
     
-    virtual void ResetPreferLimitSize(bool deep) override;
+    virtual void AdjustSizes(bool deep) override;
     virtual void Relayout() override;
     
     virtual void UpNotifyRelayout() override;
@@ -57,6 +55,9 @@ public:
 
     EventTarget* HitTest(int32_t x, int32_t y);
 protected:
+    virtual void AddChild(Widget* widget);
+    virtual void RemoveChild(Widget* widget);
+
     bool PointInRegion(int32_t x, int32_t y);
 
     std::vector<Widget*> children_;

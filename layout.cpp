@@ -11,50 +11,62 @@ void Layout::AddItem(SharedLayoutItem item) {
 }
 
 bool Layout::InsertItem(uint32_t index, SharedLayoutItem item) {
-    if(index < 0 || index > layout_items_.size())
-	return false;
-    auto iter = layout_items_.begin();
-    while (iter != layout_items_.end()) {
-	if(*iter == item) {
-	    return false;
-	}
-	iter++;
+    if(index < 0) {
+        index += Count();
+    }
+    if(index < 0 || index > Count())
+        return false;
+    if(FindItem(item->GetLayoutBaseItem())) {
+        return false;
     }
     layout_items_.insert(layout_items_.begin()+index, item);
-    
-    if(item->GetWidget()) {
-      item->GetWidget()->SetParentLayout(this);
-    } else if(item->GetLayout()) {
-      item->GetLayout()->SetParentLayout(this);
+    if(Widget* widget = item->GetWidget()) {
+        if(widget->ParentLayout()) {
+            assert(widget->ParentLayout()->RemoveWidget(widget));
+        }
+        widget->SetParent(ParentWidget());
+        widget->SetParentLayout(this);
+    } else if(Layout* layout = item->GetLayout()) {
+        if(layout->ParentLayout()) {
+            assert(layout->ParentLayout()->RemoveLayout(layout));
+        }
+        layout->SetParentWidget(ParentWidget());
+        layout->SetParentLayout(this);
     }
     return true;
 }
 
-bool Layout::RemoveItem(SharedLayoutItem item) {
+bool Layout::RemoveItem(LayoutBaseItem *item) {
     auto iter = layout_items_.begin();
     while (iter != layout_items_.end()) {
-	if(*iter == item) {
-	    layout_items_.erase(iter);
-	    return true;
-	}
-	iter++;
+        if((*iter)->GetLayoutBaseItem() == item) {
+            layout_items_.erase(iter);
+            return true;
+        }
+        iter++;
     }
-    
-    
     return false;
 }
 
+uint32_t Layout::Count() const {
+    return layout_items_.size();
+}
+
 Layout::SharedLayoutItem Layout::ItemAt(uint32_t  index) {
-    if(index < 0 || index > layout_items_.size())
-	return nullptr;
+    if (index < 0) {
+        index += Count();
+    }
+    if (index < 0 || index > Count()) {
+        return nullptr;
+    }
     return layout_items_[index];
 }
 
-void Layout::ResetPreferLimitSize(bool deep) {
+void Layout::AdjustSizes(bool deep) {
     if(deep) {
-      for(auto item:layout_items_) {
-        item->ResetPreferLimitSize(deep);
-      }
+        for(auto item:layout_items_) {
+            item->AdjustSizes(deep);
+        }
     }
     SetLimitMinWidth(CalculateLimitMinWidth());
     SetLimitMinHeight(CalculateLimitMinHeight());
@@ -101,6 +113,19 @@ void Layout::SetLimitMaxHeight(uint32_t height) {
 }
 
 void Layout::SetParentWidget(Widget* widget) {
+    if(parent_widget_ == widget) {
+        return ;
+    }
+    auto iter = layout_items_.begin();
+    while(iter != layout_items_.end()) {
+        auto item = (*iter);
+        if(item->GetWidget()) {
+            item->GetWidget()->SetParent(widget);
+        } else if(item->GetLayout()) {
+            item->GetLayout()->SetParentWidget(widget);
+        }
+        iter++;
+    }
     parent_widget_ = widget;
 }
 
@@ -116,39 +141,23 @@ Layout* Layout::ParentLayout() const {
     return parent_layout_;
 }
 
-void Layout::Empty() {
-    auto iter = layout_items_.begin();
-    while(iter != layout_items_.end()) {
-	auto item = (*iter);
-
-	if(item->GetWidget()) {
-	    item->GetWidget()->SetParent(nullptr);
-	} else if(item->GetLayout()) {
-	    item->GetLayout()->SetParentWidget(nullptr);
-	    item->GetLayout()->Empty();
-	}
-	iter++;
-    }
-    layout_items_.clear();
-}
-
 bool Layout::IsEmpty() {
     return layout_items_.empty();
 }
 
 void Layout::UpNotifyRelayout() {
     if(ParentLayout()) {
-      ParentLayout()->RelayoutToAdapt();
+        ParentLayout()->RelayoutToAdapt();
     } else if(ParentWidget()) {
-      ParentWidget()->RelayoutToAdapt();
+        ParentWidget()->RelayoutToAdapt();
     }
 }
 
 void Layout::RelayoutToAdapt() {
     if(NeedUpNotify()) {
-      UpNotifyRelayout();
+        UpNotifyRelayout();
     } else {
-      Relayout();
+        Relayout();
     }
 }
 
@@ -159,9 +168,9 @@ bool Layout::NeedUpNotify() {
     uint32_t limit_min_height = LimitMinHeight();
     uint32_t limit_max_width = LimitMaxWidth();
     uint32_t limit_max_height = LimitMaxHeight();
-    
-    ResetPreferLimitSize(false);
-    
+
+    AdjustSizes(false);
+
     if(prefer_width != PreferWidth()) return true;
     if(prefer_height != PreferHeight()) return true;
     if(limit_min_width != LimitMinWidth()) return true;
@@ -174,11 +183,11 @@ bool Layout::NeedUpNotify() {
 LayoutItem* Layout::FindItem(LayoutBaseItem *item) {
     auto iter = layout_items_.begin();
     while (iter != layout_items_.end()) {
-	LayoutBaseItem *bli = (*iter)->GetLayoutBaseItem();
-	if(bli == item) {
-	    return iter->get();
-	}
-	iter++;
+        LayoutBaseItem *bli = (*iter)->GetLayoutBaseItem();
+        if(bli == item) {
+            return iter->get();
+        }
+        iter++;
     }
     return nullptr;
 }

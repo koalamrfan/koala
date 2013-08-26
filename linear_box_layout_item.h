@@ -26,6 +26,5 @@ protected:
     uint32_t strech_factor_;
     bool    strong_elastic_;
 };
-
 } // namespace ui
 #endif // LINEAR_BOX_LAYOUT_ITEM_H_

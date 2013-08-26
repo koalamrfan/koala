@@ -23,8 +23,8 @@ void LayoutItem::Relayout() {
     layout_base_item_->Relayout();
 }
 
-void LayoutItem::ResetPreferLimitSize(bool deep) {
-    layout_base_item_->ResetPreferLimitSize(deep);
+void LayoutItem::AdjustSizes(bool deep) {
+    layout_base_item_->AdjustSizes(deep);
 }
 
 void LayoutItem::Move(int32_t x, int32_t y) {

@@ -13,7 +13,7 @@ void main(uint32_t argc, TCHAR** argv) {
     ui::HBoxLayout *hbox = new ui::HBoxLayout;
     window->SetLayout(hbox);
 
-    panel1->AddChild(panel2);
+    panel2->SetParent(panel1);
     panel2->SetGeometry(0, 0, 100, 100);
 
     hbox->AddWidget(panel1);

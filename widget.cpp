@@ -24,24 +24,22 @@ void Widget::AddChild(Widget* widget) {
         iter++;
     }
     children_.push_back(widget);
-    widget->SetParent(this);
 }
 
 void Widget::RemoveChild(Widget* widget) {
-    widget->SetParent(nullptr);
     auto iter = children_.begin();
     while (iter != children_.end()) {
-	if(*iter == widget) {
-	    children_.erase(iter);
-	    break;
-	}
-	iter++;
+        if(*iter == widget) {
+            children_.erase(iter);
+            break;
+        }
+        iter++;
     }
 }
 
 Widget* Widget::ChildAt(uint32_t index) {
     if(index < 0 || index >= ChildrenNum())
-	return nullptr;
+        return nullptr;
     return children_[index];
 }
 
@@ -50,7 +48,9 @@ uint32_t Widget::ChildrenNum() const {
 }
 
 void Widget::SetParent(Widget* parent) {
-    parent->AddChild(this);
+    if(parent !=  nullptr) {
+        parent->AddChild(this);
+    }
     parent_ = parent;
 }
 
@@ -88,25 +88,25 @@ void Widget::SetLayout(Layout* layout) {
     layout_->SetParentWidget(this);
 }
 
-void Widget::ResetPreferLimitSize(bool deep) {
+void Widget::AdjustSizes(bool deep) {
     if(BaseLayout()) {
-      BaseLayout()->ResetPreferLimitSize(deep);
-      
-      SetPreferWidth(BaseLayout()->PreferWidth());
-      SetPreferHeight(BaseLayout()->PreferHeight());
-      SetLimitMinWidth(BaseLayout()->LimitMinWidth());
-      SetLimitMinHeight(BaseLayout()->LimitMinHeight());
-      SetLimitMaxWidth(BaseLayout()->LimitMaxWidth());
-      SetLimitMaxHeight(BaseLayout()->LimitMaxHeight());
-      
-      ResizeAdaptLimitSize();
+        BaseLayout()->AdjustSizes(deep);
+
+        SetPreferWidth(BaseLayout()->PreferWidth());
+        SetPreferHeight(BaseLayout()->PreferHeight());
+        SetLimitMinWidth(BaseLayout()->LimitMinWidth());
+        SetLimitMinHeight(BaseLayout()->LimitMinHeight());
+        SetLimitMaxWidth(BaseLayout()->LimitMaxWidth());
+        SetLimitMaxHeight(BaseLayout()->LimitMaxHeight());
+
+        ResizeAdaptLimitSize();
     }
 }
 
 void Widget::Relayout() {
     if(BaseLayout()) {
         if(Parent() == nullptr) {
-            ResetPreferLimitSize(true);
+            AdjustSizes(true);
         }
         BaseLayout()->SetGeometry(0, 0, Width(), Height());
         BaseLayout()->Relayout();
@@ -120,7 +120,7 @@ void Widget::UpNotifyRelayout() {
 }
 
 void Widget::RelayoutToAdapt() {
-    ResetPreferLimitSize(false);
+    AdjustSizes(false);
     if(ParentLayout()) {
       UpNotifyRelayout();
     } else {

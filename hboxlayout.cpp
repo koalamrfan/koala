@@ -53,7 +53,7 @@ uint32_t HBoxLayout::CalculateLimitMaxHeight() {
 uint32_t HBoxLayout::CalculatePreferWidth() {
     uint32_t width = 0;
     for (auto item:layout_items_) {
-        width += std::max(item->LimitMinWidth(), item->PreferWidth());
+        width += (std::max)(item->LimitMinWidth(), item->PreferWidth());
     }
     return width;
 }
@@ -61,7 +61,7 @@ uint32_t HBoxLayout::CalculatePreferWidth() {
 uint32_t HBoxLayout::CalculatePreferHeight() {
     uint32_t height = 0, hign_height = 0;
     for (auto item:layout_items_) {
-        hign_height = std::max(item->LimitMinHeight(), item->PreferHeight());
+        hign_height = (std::max)(item->LimitMinHeight(), item->PreferHeight());
         if(hign_height > height) {
             height = hign_height;
         }

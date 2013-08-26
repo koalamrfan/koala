@@ -33,60 +33,29 @@ void LinearBoxLayout::SetWeakElastic(LayoutBaseItem* item) {
 }
 
 void LinearBoxLayout::AddWidget(Widget* widget) {
-    Widget* parent = ParentWidget();
-    assert(parent);
-    parent->AddChild(widget);
     Layout::AddItem(std::make_shared<LinearBoxLayoutItem>(widget));
 }
 
 bool LinearBoxLayout::InsertWidget(uint32_t index, Widget *widget) {
-    Widget* parent = ParentWidget();
-    assert(parent);
-    parent->AddChild(widget);
     return Layout::InsertItem(index, std::make_shared<LinearBoxLayoutItem>(widget));
 }
 
 bool LinearBoxLayout::RemoveWidget(Widget *widget) {
-    Widget* parent = ParentWidget();
-    assert(parent);
-    parent->RemoveChild(widget);
-    auto iter = layout_items_.begin();
-    while (iter != layout_items_.end()) {
-	if((*iter)->GetWidget() == widget) {
-	    layout_items_.erase(iter);
-	    return true;
-	}
-	iter++;
-    }
-    return false;
+    widget->SetParent(nullptr);
+    return Layout::RemoveItem(widget);
 }
     
 void LinearBoxLayout::AddLayout(Layout* layout) {
-    Widget* parent = ParentWidget();
-    assert(parent);
-    layout->SetParentWidget(parent);
     Layout::AddItem(std::make_shared<LinearBoxLayoutItem>(layout));
 }
 
 bool LinearBoxLayout::InsertLayout(uint32_t index, Layout *layout) {
-    Widget* parent = ParentWidget();
-    assert(parent);
-    layout->SetParentWidget(parent);
     return Layout::InsertItem(index, std::make_shared<LinearBoxLayoutItem>(layout));
 }
 
 bool LinearBoxLayout::RemoveLayout(Layout *layout) {
     layout->SetParentWidget(nullptr);
-    layout->Empty();
-    auto iter = layout_items_.begin();
-    while (iter != layout_items_.end()) {
-	if((*iter)->GetLayout() == layout) {
-	    layout_items_.erase(iter);
-	    return true;
-	}
-	iter++;
-    }
-    return false;
+    return Layout::RemoveItem(layout);;
 }
 
 void LinearBoxLayout::AddSpace(LayoutSpace* space) {
@@ -98,15 +67,7 @@ bool LinearBoxLayout::InsertSpace(uint32_t index, LayoutSpace *space) {
 }
 
 bool LinearBoxLayout::RemoveSpace(LayoutSpace *space) {
-    auto iter = layout_items_.begin();
-    while (iter != layout_items_.end()) {
-	if((*iter)->GetLayoutSpace() == space) {
-	    layout_items_.erase(iter);
-	    return true;
-	}
-	iter++;
-    }
-    return false;
+    return Layout::RemoveItem(space);
 }
 
 LinearBoxLayout::~LinearBoxLayout() {
@@ -116,9 +77,9 @@ LinearBoxLayout::~LinearBoxLayout() {
 void LinearBoxLayout::Relayout() {
     BoxToAllocHelper();
     if(IsUnderPrefer()) {
-	DoUnderPrefer();
+        DoUnderPrefer();
     } else {
-	DoExceedPrefer();
+        DoExceedPrefer();
     }
     AllocHelperToBox();
 }
@@ -127,47 +88,44 @@ void LinearBoxLayout::BoxToAllocHelper() {
     alloc_sections_.clear();
     auto iter = layout_items_.begin();
     while(iter != layout_items_.end()) {
-	AllocHelper helper;
-	helper.box_item = reinterpret_cast<LinearBoxLayoutItem *>(iter->get());
-	if(SkipUnVisibleWidget(helper.box_item)) {
-	  iter++;
-	  continue;
-	}
-	alloc_sections_.push_back(helper);
-	iter++;
+        AllocHelper helper;
+        helper.box_item = reinterpret_cast<LinearBoxLayoutItem *>(iter->get());
+        if(SkipUnVisibleWidget(helper.box_item)) {
+            iter++;
+            continue;
+        }
+        alloc_sections_.push_back(helper);
+        iter++;
     }
 }
 
 bool LinearBoxLayout::IsStrongWeakAllInNoAlloc() {
     bool has_strong = false;
     bool has_weak   = false;
-
     auto iter = alloc_sections_.begin();
     while(iter != alloc_sections_.end()) {
-	if(iter->status == AllocHelper::kNoAlloc) {
-	    if(iter->box_item->IsStrongElastic()) {
-		has_strong = true;
-	    } else {
-		has_weak = true;
-	    }
-	} 
-	iter++;
+        if(iter->status == AllocHelper::kNoAlloc) {
+            if(iter->box_item->IsStrongElastic()) {
+                has_strong = true;
+            } else {
+                has_weak = true;
+            }
+        } 
+        iter++;
     }
-
     if(has_strong && has_weak) {
-	return true;
+        return true;
     }
-
     return false;
 }
 
 void LinearBoxLayout::ResetTempAllocToNoAlloc() {
     auto iter = alloc_sections_.begin();
     while(iter != alloc_sections_.end()) {
-	if(iter->status == AllocHelper::kTempAlloc) {
-	    iter->status = AllocHelper::kNoAlloc;
-	}
-	iter++;
+        if(iter->status == AllocHelper::kTempAlloc) {
+            iter->status = AllocHelper::kNoAlloc;
+        }
+        iter++;
     }
 }
 } // namespace ui

@@ -16,12 +16,6 @@ class Layout:public LayoutBaseItem
     friend class LayoutItem;
     
     typedef std::shared_ptr<LayoutItem> SharedLayoutItem;
-protected:
-    virtual void AddItem(SharedLayoutItem item);
-    virtual bool InsertItem(uint32_t index, SharedLayoutItem item);
-    virtual bool RemoveItem(SharedLayoutItem item);
-    virtual SharedLayoutItem ItemAt(uint32_t  index);
-    virtual LayoutItem* FindItem(LayoutBaseItem *item);
 public:
     virtual void AddWidget(Widget* widget) = 0;
     virtual bool InsertWidget(uint32_t index, Widget *widget) = 0;
@@ -31,24 +25,28 @@ public:
     virtual bool InsertLayout(uint32_t index, Layout *layout) = 0;
     virtual bool RemoveLayout(Layout *layout) = 0;
     
+    uint32_t Count() const;
+
     void SetParentWidget(Widget* parent);
     Widget* ParentWidget() const;
     
     void SetParentLayout(Layout* parent);
     Layout* ParentLayout() const;
     
-    virtual void Empty();
     virtual bool IsEmpty();
     
-    virtual void ResetPreferLimitSize(bool deep) override;
+    virtual void AdjustSizes(bool deep) override;
     
     virtual void UpNotifyRelayout() override;
     virtual void RelayoutToAdapt() override;
-    virtual bool NeedUpNotify();
-    
-    
 protected:
-    Layout():parent_widget_(nullptr),parent_layout_(nullptr) {}
+    Layout():parent_widget_(nullptr), parent_layout_(nullptr) {}
+
+    virtual void AddItem(SharedLayoutItem item);
+    virtual bool InsertItem(uint32_t index, SharedLayoutItem item);
+    virtual bool RemoveItem(LayoutBaseItem *item);
+    virtual SharedLayoutItem ItemAt(uint32_t index);
+    virtual LayoutItem* FindItem(LayoutBaseItem *item);
 
     virtual uint32_t CalculateLimitMinWidth() = 0;
     virtual uint32_t CalculateLimitMinHeight() = 0;
@@ -57,6 +55,8 @@ protected:
     virtual uint32_t CalculatePreferWidth() = 0;
     virtual uint32_t CalculatePreferHeight() = 0;
     
+    virtual bool NeedUpNotify();
+
     virtual void SetGeometry(int32_t x, int32_t y, uint32_t width, uint32_t height) override;
     virtual void Move(int32_t x, int32_t y) override;
     virtual void ReSize(uint32_t width, uint32_t height) override;
@@ -66,8 +66,9 @@ protected:
     virtual void SetLimitMinHeight(uint32_t height) override;
     virtual void SetLimitMaxWidth(uint32_t width) override;
     virtual void SetLimitMaxHeight(uint32_t height) override;
-    
+
     std::vector<SharedLayoutItem> layout_items_;
+private:
     Widget* parent_widget_;
     Layout* parent_layout_;
 };

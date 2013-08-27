@@ -49,7 +49,7 @@ public:
     virtual void UpNotifyRelayout() override;
     virtual void RelayoutToAdapt() override;
     
-    void ResizeAdaptLimitSize();
+    void AdaptLimitSize();
 
     virtual void SetPreferWidth(uint32_t width) override;
     virtual void SetPreferHeight(uint32_t height) override;
@@ -58,7 +58,7 @@ public:
     virtual void SetLimitMaxWidth(uint32_t width) override;
     virtual void SetLimitMaxHeight(uint32_t height) override;
 
-    virtual void Draw(const SkRect& clip_rect);
+    void Draw(const SkRect& clip_rect);
     void SetRegion(const SkRegion& region);
     SkRegion Region() const;
 
@@ -79,7 +79,7 @@ public:
 protected:
     virtual void AddChild(Widget* widget);
     virtual void RemoveChild(Widget* widget);
-    void DrawSelf( const SkRect& clip_rect );
+    bool DrawSelf( const SkRect& clip_rect );
     virtual void OnDraw(SkCanvas* canvas, const SkRect& clip_rect) = 0;
     void MakeInnerBitmap(const SkRect& clip_rect);
     std::shared_ptr<BmpRenderTactics> GetRenderTactics();

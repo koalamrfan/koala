@@ -189,7 +189,9 @@ void Widget::Draw(const SkRect& clip_rect) {
     if(IsVisible() == false) {
         return ;
     }
-    DrawSelf(clip_rect);
+    if(!DrawSelf(clip_rect)) {
+        return ;
+    }
     if (children_.empty()) {
         return ;
     }
@@ -200,17 +202,24 @@ void Widget::Draw(const SkRect& clip_rect) {
     }
 }
 
-void Widget::DrawSelf(const SkRect& clip_rect) {
-    auto canvas = TexturePool::GetInstance()->GetCanvas();
-    canvas->save();
-    if(auto_region_active_ && region_mode_ == HitRegionMode::kAuto) {
-        MakeInnerBitmap(clip_rect);
-        auto_region_active_ = false;
+bool Widget::DrawSelf(const SkRect& clip_rect) {
+    SkRect relative_clip_rect = GeometryToAncestor();
+    if(relative_clip_rect.intersect(clip_rect)) {
+        auto canvas = TexturePool::GetInstance()->GetCanvas();
+        canvas->save();
+        if(auto_region_active_ && region_mode_ == HitRegionMode::kAuto) {
+            MakeInnerBitmap(clip_rect);
+            auto_region_active_ = false;
+        }
+        canvas->translate(SkIntToScalar(GeometryToAncestor().x()), 
+            SkIntToScalar(GeometryToAncestor().y()));
+        relative_clip_rect.offsetTo(relative_clip_rect.x() - GeometryToAncestor().x(), 
+                                    relative_clip_rect.y() - GeometryToAncestor().y());
+        OnDraw(canvas, clip_rect);
+        canvas->restore();
+        return true;
     }
-    canvas->translate(SkIntToScalar(GeometryToAncestor().x()), 
-                      SkIntToScalar(GeometryToAncestor().y()));
-    OnDraw(canvas, clip_rect);
-    canvas->restore();
+    return false;
 }
 
 void Widget::SetRegion(const SkRegion& region) {

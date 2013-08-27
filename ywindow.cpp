@@ -49,7 +49,7 @@ Window::Window(HWND hwnd) {
     hwnd_ = hwnd;
     TexturePool::GetInstance()->Init(this);
 
-    SetRegionMode(HitRegionMode::kEntirely);
+    SetHitRegionMode(HitRegionMode::kEntirely);
 
     RECT rect;
     GetClientRect(hwnd, &rect);

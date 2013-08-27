@@ -208,8 +208,8 @@ void Widget::DrawSelf(const SkRect& clip_rect) {
         MakeInnerBitmap(clip_rect);
         auto_region_active_ = false;
     }
-    SkRect rect = GeometryToAncestor();
-    canvas->translate(SkIntToScalar(rect.x()), SkIntToScalar(rect.y()));
+    canvas->translate(SkIntToScalar(GeometryToAncestor().x()), 
+                      SkIntToScalar(GeometryToAncestor().y()));
     OnDraw(canvas, clip_rect);
     canvas->restore();
 }
@@ -301,8 +301,9 @@ ui::HitRegionMode Widget::GetHitRegionMode() const {
 
 void Widget::MakeInnerBitmap(const SkRect& clip_rect) {
     inner_bitmap_ = std::make_shared<SkBitmap>();
-    SkRect rect = GeometryToAncestor();
-    inner_bitmap_->setConfig(SkBitmap::kARGB_8888_Config, SkScalarFloorToInt(rect.width()), SkScalarFloorToInt(rect.height()));
+    inner_bitmap_->setConfig(SkBitmap::kARGB_8888_Config, 
+                             SkScalarFloorToInt(GeometryToAncestor().width()), 
+                             SkScalarFloorToInt(GeometryToAncestor().height()));
     inner_bitmap_->allocPixels();
     inner_canvas_ = std::make_shared<SkCanvas>(*inner_bitmap_);
     inner_canvas_->clear(SK_AlphaTRANSPARENT);
@@ -320,13 +321,12 @@ std::vector<SkBitmap*> Widget::Bitmap() {
 
 std::shared_ptr<BmpRenderTactics> Widget::GetRenderTactics() {
     auto extentd = source_.substr(source_.size() - 6);
-    std::shared_ptr<BmpRenderTactics> tactics;
     if(extentd == ".9.png") {
-        tactics = TexturePool::GetInstance()->CreatePng9Tactics();
+        return TexturePool::GetInstance()->CreatePng9Tactics();
     }else {
-        tactics = TexturePool::GetInstance()->CreateNormalTactics();
+        return TexturePool::GetInstance()->CreateNormalTactics();
     }
-    return tactics;
+    return nullptr;
 }
 
 void Widget::UpdateAutoRegion() {

@@ -187,6 +187,21 @@ Layout* Widget::BaseLayout() const {
 }
 
 void Widget::Draw(const SkRect& clip_rect) {
+    if(IsVisible() == false) {
+        return ;
+    }
+    DrawSelf(clip_rect);
+    if (children_.empty()) {
+        return ;
+    }
+    auto iter = children_.begin();
+    while (iter != children_.end()) {
+         (*iter)->Draw(clip_rect);
+         iter++;
+    }
+}
+
+void Widget::DrawSelf(const SkRect& clip_rect) {
     auto canvas = TexturePool::GetInstance()->GetCanvas();
     canvas->save();
     if(auto_region_active_ && region_mode_ == HitRegionMode::kAuto) {
@@ -197,14 +212,6 @@ void Widget::Draw(const SkRect& clip_rect) {
     canvas->translate(SkIntToScalar(rect.x()), SkIntToScalar(rect.y()));
     OnDraw(canvas, clip_rect);
     canvas->restore();
-    if (children_.empty()) {
-        return ;
-    }
-    auto iter = children_.begin();
-    while (iter != children_.end()) {
-         (*iter)->Draw(clip_rect);
-         iter++;
-    }
 }
 
 void Widget::SetRegion(const SkRegion& region) {

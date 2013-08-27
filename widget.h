@@ -59,7 +59,6 @@ public:
     virtual void SetLimitMaxHeight(uint32_t height) override;
 
     virtual void Draw(const SkRect& clip_rect);
-
     void SetRegion(const SkRegion& region);
     SkRegion Region() const;
 
@@ -80,6 +79,7 @@ public:
 protected:
     virtual void AddChild(Widget* widget);
     virtual void RemoveChild(Widget* widget);
+    void DrawSelf( const SkRect& clip_rect );
     virtual void OnDraw(SkCanvas* canvas, const SkRect& clip_rect) = 0;
     void MakeInnerBitmap(const SkRect& clip_rect);
     std::shared_ptr<BmpRenderTactics> GetRenderTactics();

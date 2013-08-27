@@ -102,7 +102,7 @@ void Widget::AdjustSizes(bool deep) {
         SetLimitMaxWidth(BaseLayout()->LimitMaxWidth());
         SetLimitMaxHeight(BaseLayout()->LimitMaxHeight());
 
-        ResizeAdaptLimitSize();
+        AdaptLimitSize();
     }
 }
 
@@ -118,37 +118,36 @@ void Widget::Relayout() {
 
 void Widget::UpNotifyRelayout() {
     if(ParentLayout()) {
-      ParentLayout()->RelayoutToAdapt();
+        ParentLayout()->RelayoutToAdapt();
     }
 }
 
 void Widget::RelayoutToAdapt() {
     AdjustSizes(false);
     if(ParentLayout()) {
-      UpNotifyRelayout();
+        UpNotifyRelayout();
     } else {
-      ResizeAdaptLimitSize();
-      if(BaseLayout()) {
-        BaseLayout()->SetGeometry(0, 0, Width(), Height());
-        BaseLayout()->Relayout();
-      }
+        AdaptLimitSize();
+        if(BaseLayout()) {
+            BaseLayout()->SetGeometry(0, 0, Width(), Height());
+            BaseLayout()->Relayout();
+        }
     }
 }
 
-void Widget::ResizeAdaptLimitSize() {
+void Widget::AdaptLimitSize() {
     uint32_t width = Width(), height = Height();
     if(width < LimitMinWidth()) {
-      width = LimitMinWidth();
+        width = LimitMinWidth();
     } else if(width > LimitMaxWidth()) {
-      width = LimitMaxWidth();
+        width = LimitMaxWidth();
     }
-    
+
     if(height < LimitMinHeight()) {
-      height = LimitMinHeight();
+        height = LimitMinHeight();
     } else if(height > LimitMaxHeight()) {
-      height = LimitMaxHeight();
+        height = LimitMaxHeight();
     }
-    
     SetGeometry(X(), Y(), width, height);
 }
 

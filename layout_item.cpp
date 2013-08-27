@@ -105,21 +105,21 @@ uint32_t LayoutItem::LimitMaxHeight() {
 
 Widget* LayoutItem::GetWidget() const {
     if(type_ == kWidget) {
-      return reinterpret_cast<Widget *>(layout_base_item_);
+        return reinterpret_cast<Widget *>(layout_base_item_);
     }
     return nullptr;
 }
 
 Layout* LayoutItem::GetLayout() const {
     if(type_ == kLayout) {
-      return reinterpret_cast<Layout *>(layout_base_item_);
+        return reinterpret_cast<Layout *>(layout_base_item_);
     }
     return nullptr;
 }
 
 LayoutSpace* LayoutItem::GetLayoutSpace() const {
     if(type_ == kLayoutSpace) {
-      return reinterpret_cast<LayoutSpace *>(layout_base_item_);
+        return reinterpret_cast<LayoutSpace *>(layout_base_item_);
     }
     return nullptr;
 }

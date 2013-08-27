@@ -22,13 +22,15 @@ bool Layout::InsertItem(uint32_t index, SharedLayoutItem item) {
     layout_items_.insert(layout_items_.begin()+index, item);
     if(Widget* widget = item->GetWidget()) {
         if(widget->ParentLayout()) {
-            assert(widget->ParentLayout()->RemoveWidget(widget));
+            auto result = widget->ParentLayout()->RemoveWidget(widget);
+            assert(result);
         }
         widget->SetParent(ParentWidget());
         widget->SetParentLayout(this);
     } else if(Layout* layout = item->GetLayout()) {
         if(layout->ParentLayout()) {
-            assert(layout->ParentLayout()->RemoveLayout(layout));
+            auto result = layout->ParentLayout()->RemoveLayout(layout);
+            assert(result);
         }
         layout->SetParentWidget(ParentWidget());
         layout->SetParentLayout(this);

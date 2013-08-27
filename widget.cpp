@@ -341,7 +341,6 @@ std::shared_ptr<BmpRenderTactics> Widget::GetRenderTactics() {
 
 void Widget::UpdateAutoRegion() {
     auto_region_active_ = true;
-    Update();
 }
 
 bool Widget::PointInInnerBitmap(int32_t x, int32_t y) {

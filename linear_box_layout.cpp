@@ -39,11 +39,6 @@ void LinearBoxLayout::AddWidget(Widget* widget) {
 bool LinearBoxLayout::InsertWidget(uint32_t index, Widget *widget) {
     return Layout::InsertItem(index, std::make_shared<LinearBoxLayoutItem>(widget));
 }
-
-bool LinearBoxLayout::RemoveWidget(Widget *widget) {
-    widget->SetParent(nullptr);
-    return Layout::RemoveItem(widget);
-}
     
 void LinearBoxLayout::AddLayout(Layout* layout) {
     Layout::AddItem(std::make_shared<LinearBoxLayoutItem>(layout));
@@ -51,11 +46,6 @@ void LinearBoxLayout::AddLayout(Layout* layout) {
 
 bool LinearBoxLayout::InsertLayout(uint32_t index, Layout *layout) {
     return Layout::InsertItem(index, std::make_shared<LinearBoxLayoutItem>(layout));
-}
-
-bool LinearBoxLayout::RemoveLayout(Layout *layout) {
-    layout->SetParentWidget(nullptr);
-    return Layout::RemoveItem(layout);;
 }
 
 void LinearBoxLayout::AddSpace(LayoutSpace* space) {
@@ -67,7 +57,7 @@ bool LinearBoxLayout::InsertSpace(uint32_t index, LayoutSpace *space) {
 }
 
 bool LinearBoxLayout::RemoveSpace(LayoutSpace *space) {
-    return Layout::RemoveItem(space);
+    return BoxLayout::RemoveItem(space);
 }
 
 LinearBoxLayout::~LinearBoxLayout() {

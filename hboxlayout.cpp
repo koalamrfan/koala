@@ -53,17 +53,16 @@ uint32_t HBoxLayout::CalculateLimitMaxHeight() {
 uint32_t HBoxLayout::CalculatePreferWidth() {
     uint32_t width = 0;
     for (auto item:layout_items_) {
-        width += (std::max)(item->LimitMinWidth(), item->PreferWidth());
+        width += item->PreferWidth();
     }
     return width;
 }
 
 uint32_t HBoxLayout::CalculatePreferHeight() {
-    uint32_t height = 0, hign_height = 0;
+    uint32_t height = 0;
     for (auto item:layout_items_) {
-        hign_height = (std::max)(item->LimitMinHeight(), item->PreferHeight());
-        if(hign_height > height) {
-            height = hign_height;
+        if(item->PreferHeight() > height) {
+            height = item->PreferHeight();
         }
     }
     return height;
@@ -79,23 +78,10 @@ void HBoxLayout::DoUnderPrefer() {
 
     auto iter = alloc_sections_.begin();
     while(iter != alloc_sections_.end()) {
-        if(iter->box_item->LimitMinWidth() > iter->box_item->PreferWidth()) {
-            iter->section = iter->box_item->LimitMinWidth();
-            iter->status = AllocHelper::kAlloc;
-            alloc_size -= iter->section;
-        } else {
-            sum_factor += iter->box_item->PreferWidth();
-        }
+        sum_factor += iter->box_item->PreferWidth();
         iter++;
     }
-
-    iter = alloc_sections_.begin();
-    while(iter != alloc_sections_.end()) {
-        if(iter->status == AllocHelper::kNoAlloc) {
-            iter->section = (uint32_t)((float)alloc_size/sum_factor*iter->box_item->PreferWidth());
-        }
-        iter++;
-    }
+    AllocSectionByStrechFactor(Width(), sum_factor);
 }
 
 void HBoxLayout::DoExceedPrefer() {
@@ -108,13 +94,7 @@ void HBoxLayout::DoExceedPrefer() {
     while(iter != alloc_sections_.end()) {
         assert(iter->box_item);
         if(iter->box_item->StrechFactor() == 0 || (strong && !iter->box_item->IsStrongElastic())) {
-            if(iter->box_item->PreferWidth() < iter->box_item->LimitMinWidth()) {
-                iter->section = iter->box_item->LimitMinWidth();
-            } else if(iter->box_item->PreferWidth() > iter->box_item->LimitMaxWidth()) {
-                iter->section = iter->box_item->LimitMaxWidth();
-            } else {
-                iter->section = iter->box_item->PreferWidth();
-            }
+            iter->section = iter->box_item->PreferWidth();
             iter->status = AllocHelper::kAlloc;
             alloc_size -= iter->section;
         } else {
@@ -147,47 +127,56 @@ void HBoxLayout::AllocSectionByStrechFactor(uint32_t alloc_size, uint32_t sum_fa
     }
 
     if(first != alloc_sections_.end()) {
-        bool alloc = false;
-        if(first->status == AllocHelper::kNoAlloc) {
-            assert(first->box_item);
-            first->section = (uint32_t)((float)alloc_size/sum_factor*first->box_item->StrechFactor());
-            if(first->section < first->box_item->LimitMinWidth()) {
-                first->section = first->box_item->LimitMinWidth();
-                alloc = true;
-            } else if (first->section > first->box_item->LimitMaxWidth()) {
-                first->section = first->box_item->LimitMaxWidth();
-                alloc = true;
-            } else if(first->section < first->box_item->PreferWidth()){
-                first->section = first->box_item->PreferWidth();
-                alloc = true;
-            } else {
-                first->status = AllocHelper::kTempAlloc;
-                alloc = false;
-            }
+        assert(first->box_item);
 
-            if(alloc) {
-                first->status = AllocHelper::kAlloc;
-                ResetTempAllocToNoAlloc();
-
-                alloc_size = Width();
-                sum_factor = 0;
-
-                auto iter = alloc_sections_.begin();
-                while(iter != alloc_sections_.end()) {
-                    if(iter->status != AllocHelper::kNoAlloc) {
-                        alloc_size -= iter->section;
-                    } else {
-                        sum_factor += iter->box_item->StrechFactor();
-                    }
-                    iter++;
-                }
-            } else {
-                alloc_size -= first->section;
-                sum_factor -= first->box_item->StrechFactor();
-            }
-
-            AllocSectionByStrechFactor(alloc_size, sum_factor);
+        uint32_t strech_factor = 0;
+        if(IsUnderPrefer()) {
+            strech_factor = first->box_item->PreferWidth();
+        } else {
+            strech_factor = first->box_item->StrechFactor();
         }
+
+        bool alloc = false;
+        first->section = (uint32_t)((float)alloc_size/sum_factor*strech_factor);
+        if(first->section < first->box_item->LimitMinWidth()) {
+            first->section = first->box_item->LimitMinWidth();
+            alloc = true;
+        } else if (first->section > first->box_item->LimitMaxWidth() && !IsUnderPrefer()) {
+            first->section = first->box_item->LimitMaxWidth();
+            alloc = true;
+        } else if(first->section < first->box_item->PreferWidth() && !IsUnderPrefer()){
+            first->section = first->box_item->PreferWidth();
+            alloc = true;
+        } else {
+            first->status = AllocHelper::kTempAlloc;
+            alloc = false;
+        }
+        uint32_t new_sum_factor = sum_factor;
+        if(alloc) {
+            first->status = AllocHelper::kAlloc;
+            ResetTempAllocToNoAlloc();
+
+            alloc_size = Width();
+            new_sum_factor = 0;
+
+            auto iter = alloc_sections_.begin();
+            while(iter != alloc_sections_.end()) {
+                if(iter->status != AllocHelper::kNoAlloc) {
+                    alloc_size -= iter->section;
+                } else {
+                    if(IsUnderPrefer()) {
+                        new_sum_factor += iter->box_item->PreferWidth();
+                    } else {
+                        new_sum_factor += iter->box_item->StrechFactor();
+                    }
+                }
+                iter++;
+            }
+        } else {
+            alloc_size -= first->section;
+            new_sum_factor -= strech_factor;
+        }
+        AllocSectionByStrechFactor(alloc_size, new_sum_factor);
     }
 }
 } // namespace ui

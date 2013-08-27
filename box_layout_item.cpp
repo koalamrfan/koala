@@ -1,5 +1,6 @@
 #include "box_layout_item.h"
 #include <algorithm>
+#include <cassert>
 
 namespace ui
 {
@@ -137,15 +138,15 @@ uint32_t BoxLayoutItem::PreferHeight() {
 
     if(height < LimitMinHeight()) {
         height = LimitMinHeight();
-    } else if(height > LimitMinHeight()) {
-        height = LimitMinHeight();
+    } else if(height > LimitMaxHeight()) {
+        height = LimitMaxHeight();
     }
     return height;
 }
 
 uint32_t BoxLayoutItem::LimitMinWidth() {
     uint32_t width = 0;
-    if(IsValidGap(BoxLayoutItem::kWestValid) && !IsValidGap(BoxLayoutItem::kEastValid)) {
+    if(IsValidGap(BoxLayoutItem::kWestValid) && IsValidGap(BoxLayoutItem::kEastValid)) {
         if(LayoutItem::LimitMinWidth() < MAX_LENGTH - WestSpace() - EastSpace()) {
             width = LayoutItem::LimitMinWidth() + WestSpace() + EastSpace();
         }
@@ -165,7 +166,7 @@ uint32_t BoxLayoutItem::LimitMinWidth() {
 
 uint32_t BoxLayoutItem::LimitMinHeight() {
     uint32_t height = 0;
-    if(IsValidGap(BoxLayoutItem::kNorthValid) && !IsValidGap(BoxLayoutItem::kSouthValid)) {
+    if(IsValidGap(BoxLayoutItem::kNorthValid) && IsValidGap(BoxLayoutItem::kSouthValid)) {
         if(LayoutItem::LimitMinHeight() < MAX_LENGTH - WestSpace() - EastSpace()) {
             height = LayoutItem::LimitMinHeight() + NorthSpace() + SouthSpace();
         }
@@ -227,6 +228,11 @@ void BoxLayoutItem::CalculatePosition(int32_t container_x,
                                       int32_t container_y,
                                       uint32_t container_width, 
                                       uint32_t container_height) {
+    assert(container_width >= LimitMinWidth());
+    assert(container_height >= LimitMinHeight());
+    assert(container_width <= LimitMaxWidth());
+    assert(container_height <= LimitMaxHeight());
+
     SetGeometry(CalculateX(container_x, container_width),
                 CalculateY(container_y, container_height),
                 CalculateWidth(container_width),
@@ -272,7 +278,7 @@ uint32_t BoxLayoutItem::CalculateWidth(uint32_t container_width) {
     } else if(IsValidGap(BoxLayoutItem::kEastValid)) {
         width = (std::min)(PreferWidth(), container_width - EastSpace());
     }
-    return (std::max)((uint32_t)0, width);
+    return width;
 }
 
 uint32_t BoxLayoutItem::CalculateHeight(uint32_t container_height) {
@@ -284,6 +290,6 @@ uint32_t BoxLayoutItem::CalculateHeight(uint32_t container_height) {
     } else if(IsValidGap(BoxLayoutItem::kSouthValid)) {
         height = (std::min)(PreferHeight(), container_height - SouthSpace());
     }
-    return (std::max)((uint32_t)0, height);
+    return height;
 }
 } // namespace ui

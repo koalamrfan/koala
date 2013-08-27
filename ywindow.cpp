@@ -16,12 +16,13 @@ LRESULT CALLBACK Proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) {
         {
             RECT rect;
             GetUpdateRect(hwnd, &rect, FALSE);
-            window->Draw(SkRect::MakeXYWH(
+            SkRect clip_rect = SkRect::MakeXYWH(
                 SkIntToScalar(rect.left), 
                 SkIntToScalar(rect.top), 
                 SkIntToScalar(rect.right - rect.left),
-                SkIntToScalar(rect.bottom - rect.top)));
-            TexturePool::GetInstance()->CanvasToScreen();
+                SkIntToScalar(rect.bottom - rect.top));
+            window->Draw(clip_rect);
+            TexturePool::GetInstance()->CanvasToScreen(clip_rect);
         }
         break;
     case WM_SIZE:

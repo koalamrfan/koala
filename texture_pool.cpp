@@ -28,7 +28,6 @@ SkBitmap* TexturePool::GetBitmap() {
         bitmap_->allocPixels();
         bitmap_->setIsOpaque(false);
     }
-    
     return bitmap_.get();
 }
 
@@ -80,11 +79,9 @@ void TexturePool::ResizeCanvas(uint32_t width, uint32_t height) {
     }
 }
 
-void TexturePool::CanvasToScreen(SkBitmap* bitmap) {
+void TexturePool::CanvasToScreen(const SkRect& clip_rect) {
     auto scope_hdc = TexturePool::GetInstance()->CreateScopeHdc();
-    if(bitmap == nullptr) {
-        bitmap = TexturePool::GetInstance()->GetBitmap();
-    }
+    SkBitmap* bitmap = TexturePool::GetInstance()->GetBitmap();
     BITMAPINFO bmi;
     memset(&bmi, 0, sizeof(bmi));
     bmi.bmiHeader.biSize        = sizeof(BITMAPINFOHEADER);
@@ -107,9 +104,9 @@ void TexturePool::CanvasToScreen(SkBitmap* bitmap) {
     SkASSERT(bitmap->width() * bitmap->bytesPerPixel() == bitmap->rowBytes());
     bitmap->lockPixels();
     int ret = SetDIBitsToDevice(scope_hdc->GetHdc(),
-        0, 0,
-        bitmap->width(), bitmap->height(),
-        0, 0,
+        SkScalarFloorToInt(clip_rect.fLeft), SkScalarFloorToInt(clip_rect.fTop),
+        SkScalarFloorToInt(clip_rect.width()), SkScalarFloorToInt(clip_rect.height()),
+        SkScalarFloorToInt(clip_rect.fLeft), bitmap->height() - SkScalarFloorToInt(clip_rect.fBottom),
         0, bitmap->height(),
         bitmap->getPixels(),
         &bmi,

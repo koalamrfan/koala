@@ -207,6 +207,7 @@ bool Widget::DrawSelf(const SkRect& clip_rect) {
     if(relative_clip_rect.intersect(clip_rect)) {
         auto canvas = TexturePool::GetInstance()->GetCanvas();
         canvas->save();
+        canvas->clipRect(clip_rect);
         if(auto_region_active_ && region_mode_ == HitRegionMode::kAuto) {
             MakeInnerBitmap(clip_rect);
             auto_region_active_ = false;
@@ -230,7 +231,7 @@ bool Widget::PointInRegion(int32_t x, int32_t y) {
     if(GetHitRegionMode() == HitRegionMode::kAuto) {
         if(GeometryToAncestor().contains(SkIntToScalar(x), SkIntToScalar(y))) {
             return PointInInnerBitmap(x - SkScalarFloorToInt(GeometryToAncestor().x()),
-                                      y - SkScalarFloorToInt(GeometryToAncestor().y()));
+                y - SkScalarFloorToInt(GeometryToAncestor().y()));
         }
     } else if(GetHitRegionMode() == HitRegionMode::kCustom) {
         SkRegion region_to_ancestor = region_;
@@ -238,7 +239,8 @@ bool Widget::PointInRegion(int32_t x, int32_t y) {
                                      SkScalarFloorToInt(GeometryToAncestor().y()));
         return region_to_ancestor.contains(x, y);
     } else if(GetHitRegionMode() == HitRegionMode::kEntirely) {
-        if(GeometryToAncestor().contains(x, y)) {
+        if(GeometryToAncestor().contains(SkIntToScalar(x), 
+                                         SkIntToScalar(y))) {
             return true; 
         }
     } else if(GetHitRegionMode() == HitRegionMode::kNothing) {

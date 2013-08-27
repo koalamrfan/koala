@@ -30,7 +30,7 @@ public:
     std::shared_ptr<BmpRenderTactics> CreatePng9Tactics();
     std::shared_ptr<BmpRenderTactics> CreateNormalTactics();
 
-    void CanvasToScreen(SkBitmap* bitmap = nullptr);
+    void CanvasToScreen(const SkRect& clip_rect);
 protected:
     TexturePool():canvas_(nullptr) {}
 

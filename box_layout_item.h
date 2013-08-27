@@ -59,8 +59,6 @@ protected:
 		    uint32_t container_height);
     uint32_t CalculateWidth(uint32_t container_width);
     uint32_t CalculateHeight(uint32_t container_height);
-    uint32_t GetSuitWidth();
-    uint32_t GetSuitHeight();
 private:
     uint32_t west_space_;
     uint32_t north_space_;

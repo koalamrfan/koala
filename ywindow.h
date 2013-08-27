@@ -7,8 +7,7 @@
 class SkCanvas;
 namespace ui
 {
-class EventTarget;
-class Window:public Widget
+class Window : public Widget
 {
 public:
     Window(HWND hwnd);

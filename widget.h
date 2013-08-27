@@ -2,7 +2,8 @@
 #define WIDGET_H_
 
 #include "layout_base_item.h"
-#include "event_target.h"
+#include "event.h"
+#include "layout.h"
 #include "texture_pool.h"
 #include "SkRegion.h"
 #include <string>
@@ -23,8 +24,7 @@ enum class HitRegionMode
     kNothing
 };
 
-class Layout;
-class Widget:public LayoutBaseItem, public EventTarget
+class Widget:public LayoutBaseItem
 {
 public:
     Widget();
@@ -63,19 +63,20 @@ public:
     void SetRegion(const SkRegion& region);
     SkRegion Region() const;
 
-    SkRect GetAbsoluteRect();
+    SkRect GeometryToAncestor();
 
     void UpdateAutoRegion();
     void Update();
     void SetSource(const std::string& source);
     std::string Source() const;
 
-    void SetRegionMode(HitRegionMode region_mode);
-    HitRegionMode RegionMode() const;
+    void SetHitRegionMode(HitRegionMode region_mode);
+    HitRegionMode GetHitRegionMode() const;
 
     std::vector<SkBitmap*> Bitmap();
 
-    EventTarget* HitTest(int32_t x, int32_t y);
+    virtual bool DoEvent(Event* event) { return false; };
+    Widget* HitTest(int32_t x, int32_t y);
 protected:
     virtual void AddChild(Widget* widget);
     virtual void RemoveChild(Widget* widget);

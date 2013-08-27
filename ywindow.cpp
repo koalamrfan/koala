@@ -2,7 +2,6 @@
 #include "SkCanvas.h"
 #include "texture_pool.h"
 #include "event_factory.h"
-#include "event_target.h"
 #include "mouse_event.h"
 #include "SkRect.h"
 
@@ -78,5 +77,4 @@ void Window::SetGeometry(int32_t x, int32_t y, uint32_t width, uint32_t height) 
 bool Window::DoEvent(Event* event) {
     return true;
 }
-
 } // namespace ui

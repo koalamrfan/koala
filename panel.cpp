@@ -1,7 +1,6 @@
 #include "panel.h"
 #include "SkCanvas.h"
 #include "texture_pool.h"
-#include "event_target.h"
 #include "event.h"
 #include "mouse_event.h"
 

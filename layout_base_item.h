@@ -26,7 +26,7 @@ public:
     virtual int32_t Y();
     virtual uint32_t Width();
     virtual uint32_t Height();
-    virtual SkRect  Geometry();
+    virtual SkRect Geometry();
     virtual void SetPreferWidth(uint32_t width);
     virtual uint32_t PreferWidth();
     virtual void SetPreferHeight(uint32_t height);

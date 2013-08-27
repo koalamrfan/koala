@@ -14,21 +14,21 @@ enum class EventType
     kMouseEvent
 };
 
-class EventTarget;
+class Widget;
 class Event
 {
 public:
     Event();
 
-    void SetTarget(EventTarget* target);
-    EventTarget* Target() const {
+    void SetTarget(Widget* target);
+    Widget* Target() const {
         return target_;
     }
 
     virtual std::shared_ptr<Event> Clone() const = 0;
     virtual EventType Type() const = 0;
 private:
-    EventTarget* target_;
+    Widget* target_;
 
 };
 } // namespace ui

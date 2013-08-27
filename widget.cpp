@@ -1,6 +1,5 @@
 #include "widget.h"
 #include "app.h"
-#include "layout.h"
 #include "SkBitmap.h"
 #include <vector>
 
@@ -194,7 +193,7 @@ void Widget::Draw(const SkRect& clip_rect) {
         MakeInnerBitmap(clip_rect);
         auto_region_active_ = false;
     }
-    SkRect rect = GetAbsoluteRect();
+    SkRect rect = GeometryToAncestor();
     canvas->translate(SkIntToScalar(rect.x()), SkIntToScalar(rect.y()));
     OnDraw(canvas, clip_rect);
     canvas->restore();
@@ -213,43 +212,41 @@ void Widget::SetRegion(const SkRegion& region) {
 }
 
 bool Widget::PointInRegion(int32_t x, int32_t y) {
-    if(RegionMode() == HitRegionMode::kAuto) {
-        SkRect rect = GetAbsoluteRect();
-        if(rect.contains(SkIntToScalar(x), SkIntToScalar(y))) {
-            return PointInInnerBitmap(x - SkScalarFloorToInt(rect.x()), y - SkScalarFloorToInt(rect.y()));
+    if(GetHitRegionMode() == HitRegionMode::kAuto) {
+        if(GeometryToAncestor().contains(SkIntToScalar(x), SkIntToScalar(y))) {
+            return PointInInnerBitmap(x - SkScalarFloorToInt(GeometryToAncestor().x()),
+                                      y - SkScalarFloorToInt(GeometryToAncestor().y()));
         }
-    } else if(RegionMode() == HitRegionMode::kCustom){
-        return region_.contains(x, y);
-    } else {
-        SkIRect rect = SkIRect::MakeXYWH(X(), Y(), Width(), Height());
-        if(rect.contains(x, y)) {
+    } else if(GetHitRegionMode() == HitRegionMode::kCustom) {
+        SkRegion region_to_ancestor = region_;
+        region_to_ancestor.translate(SkScalarFloorToInt(GeometryToAncestor().x()),
+                                     SkScalarFloorToInt(GeometryToAncestor().y()));
+        return region_to_ancestor.contains(x, y);
+    } else if(GetHitRegionMode() == HitRegionMode::kEntirely) {
+        if(GeometryToAncestor().contains(x, y)) {
             return true; 
         }
+    } else if(GetHitRegionMode() == HitRegionMode::kNothing) {
+        return false;
     }
     return false;
 }
 
-EventTarget* Widget::HitTest(int32_t x, int32_t y) {
+Widget* Widget::HitTest(int32_t x, int32_t y) {
     auto iter = children_.rbegin();
     while (iter != children_.rend()) {
-        if((*iter)->HitTest(x, y)) {
-            return *iter;
+        if((*iter)->PointInRegion(x, y)) {
+            return (*iter)->HitTest(x, y);
         }
         iter++;
     }
-    
-    if(IgnoreHitTest()) {
-        return nullptr;
-    }
-
     if(PointInRegion(x, y)) {
-        return (EventTarget*)this;
+        return this;
     }
-
     return nullptr;
 }
 
-SkRect Widget::GetAbsoluteRect() {
+SkRect Widget::GeometryToAncestor() {
     int32_t x = X(), y= Y();
     Widget* parent = Parent();
     while(parent) {
@@ -279,7 +276,7 @@ std::string Widget::Source() const {
 
 void Widget::Update() {
     RECT rect;
-    SkRect sk_rect = GetAbsoluteRect();
+    SkRect sk_rect = GeometryToAncestor();
     rect.left = SkScalarFloorToInt(sk_rect.fLeft);
     rect.top = SkScalarFloorToInt(sk_rect.fTop);
     rect.right = SkScalarFloorToInt(sk_rect.fRight);
@@ -287,17 +284,17 @@ void Widget::Update() {
     InvalidateRect(App::GetInstance()->GetMainWindow()->GetHwnd(), &rect, FALSE);
 }
 
-void Widget::SetRegionMode(HitRegionMode region_mode) {
+void Widget::SetHitRegionMode(HitRegionMode region_mode) {
     region_mode_ = region_mode;
 }
 
-ui::HitRegionMode Widget::RegionMode() const {
+ui::HitRegionMode Widget::GetHitRegionMode() const {
     return region_mode_;
 }
 
 void Widget::MakeInnerBitmap(const SkRect& clip_rect) {
     inner_bitmap_ = std::make_shared<SkBitmap>();
-    SkRect rect = GetAbsoluteRect();
+    SkRect rect = GeometryToAncestor();
     inner_bitmap_->setConfig(SkBitmap::kARGB_8888_Config, SkScalarFloorToInt(rect.width()), SkScalarFloorToInt(rect.height()));
     inner_bitmap_->allocPixels();
     inner_canvas_ = std::make_shared<SkCanvas>(*inner_bitmap_);
@@ -327,9 +324,13 @@ std::shared_ptr<BmpRenderTactics> Widget::GetRenderTactics() {
 
 void Widget::UpdateAutoRegion() {
     auto_region_active_ = true;
+    Update();
 }
 
 bool Widget::PointInInnerBitmap(int32_t x, int32_t y) {
+    if(inner_bitmap_ == nullptr) {
+        return false;
+    }
     return 0 != *(inner_bitmap_->getAddr32(x, y));
 }
 } // namespace ui

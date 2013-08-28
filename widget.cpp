@@ -95,13 +95,26 @@ void Widget::AdjustSizes(bool deep) {
     if(BaseLayout()) {
         BaseLayout()->AdjustSizes(deep);
 
-        SetPreferWidth(BaseLayout()->PreferWidth());
-        SetPreferHeight(BaseLayout()->PreferHeight());
         SetLimitMinWidth(BaseLayout()->LimitMinWidth());
         SetLimitMinHeight(BaseLayout()->LimitMinHeight());
         SetLimitMaxWidth(BaseLayout()->LimitMaxWidth());
         SetLimitMaxHeight(BaseLayout()->LimitMaxHeight());
 
+        if(PreferWidth() == 0) {
+            SetPreferWidth(BaseLayout()->PreferWidth());
+        } else if(PreferWidth() < LimitMinWidth()) {
+            SetPreferWidth(LimitMinWidth());
+        } else if(PreferWidth() > LimitMaxWidth()) {
+            SetPreferWidth(LimitMaxWidth());
+        }
+
+        if(PreferHeight() == 0) {
+            SetPreferHeight(BaseLayout()->PreferHeight());
+        } else if(PreferHeight() < LimitMinHeight()) {
+            SetPreferHeight(LimitMinHeight());
+        } else if(PreferHeight() > LimitMaxHeight()) {
+            SetPreferHeight(LimitMaxHeight());
+        }
         AdaptLimitSize();
     }
 }

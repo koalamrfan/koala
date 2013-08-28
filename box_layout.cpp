@@ -188,7 +188,6 @@ uint32_t BoxLayout::CalculatePreferHeight() {
         if(item->PreferHeight() > prefer_height) {
             prefer_height = item->PreferHeight();
         }
-
         iter++;
     }
     return prefer_height;
@@ -217,7 +216,6 @@ bool BoxLayout::IsEmpty() {
             iter++;
             continue;
         }
-
         empty = false;
         iter++;
     }

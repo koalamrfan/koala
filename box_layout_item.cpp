@@ -94,7 +94,7 @@ uint32_t BoxLayoutItem::SouthSpace() const {
 
 uint32_t BoxLayoutItem::PreferWidth() {
     uint32_t width = 0;
-    if(IsValidGap(BoxLayoutItem::kWestValid) && !IsValidGap(BoxLayoutItem::kEastValid)) {
+    if(IsValidGap(BoxLayoutItem::kWestValid) && IsValidGap(BoxLayoutItem::kEastValid)) {
         if(LayoutItem::PreferWidth() < MAX_LENGTH - EastSpace() - WestSpace()) {
             width = LayoutItem::PreferWidth() + EastSpace() + WestSpace();
         }
@@ -120,7 +120,7 @@ uint32_t BoxLayoutItem::PreferWidth() {
 
 uint32_t BoxLayoutItem::PreferHeight() {
     uint32_t height = 0;
-    if(IsValidGap(BoxLayoutItem::kNorthValid) && !IsValidGap(BoxLayoutItem::kSouthValid)) {
+    if(IsValidGap(BoxLayoutItem::kNorthValid) && IsValidGap(BoxLayoutItem::kSouthValid)) {
         if(LayoutItem::PreferHeight() < MAX_LENGTH - NorthSpace() - EastSpace()) {
             height = LayoutItem::PreferHeight() + NorthSpace() + EastSpace();
         }
@@ -186,7 +186,7 @@ uint32_t BoxLayoutItem::LimitMinHeight() {
 
 uint32_t BoxLayoutItem::LimitMaxWidth() {
     uint32_t width = MAX_LENGTH;
-    if(IsValidGap(BoxLayoutItem::kWestValid) && !IsValidGap(BoxLayoutItem::kEastValid)) {
+    if(IsValidGap(BoxLayoutItem::kWestValid) && IsValidGap(BoxLayoutItem::kEastValid)) {
         if(LayoutItem::LimitMaxWidth() < MAX_LENGTH - EastSpace() - WestSpace()) {
             width = LayoutItem::LimitMaxWidth() + EastSpace() + WestSpace();
         }
@@ -198,15 +198,13 @@ uint32_t BoxLayoutItem::LimitMaxWidth() {
         if(LayoutItem::LimitMaxWidth() < MAX_LENGTH - EastSpace()) {
             width = LayoutItem::LimitMaxWidth() + EastSpace();
         }
-    } else {
-        width = LayoutItem::LimitMaxWidth();
     }
     return width;
 }
 
 uint32_t BoxLayoutItem::LimitMaxHeight() {
     uint32_t height = MAX_LENGTH;
-    if(IsValidGap(BoxLayoutItem::kNorthValid) && !IsValidGap(BoxLayoutItem::kSouthValid)) {
+    if(IsValidGap(BoxLayoutItem::kNorthValid) && IsValidGap(BoxLayoutItem::kSouthValid)) {
         if(LayoutItem::LimitMaxHeight() < MAX_LENGTH - NorthSpace() - SouthSpace()) {
             height = LayoutItem::LimitMaxHeight() + NorthSpace() + SouthSpace();
         }
@@ -218,8 +216,6 @@ uint32_t BoxLayoutItem::LimitMaxHeight() {
         if(LayoutItem::LimitMaxHeight() < MAX_LENGTH - SouthSpace()) {
             height = LayoutItem::LimitMaxHeight() + SouthSpace();
         }
-    } else {
-        height = LayoutItem::LimitMaxHeight();
     }
     return height;
 }
@@ -232,6 +228,8 @@ void BoxLayoutItem::CalculatePosition(int32_t container_x,
     assert(container_height >= LimitMinHeight());
     assert(container_width <= LimitMaxWidth());
     assert(container_height <= LimitMaxHeight());
+    assert(LimitMinWidth() <= LimitMaxWidth());
+    assert(LimitMinHeight() <= LimitMaxHeight());
 
     SetGeometry(CalculateX(container_x, container_width),
                 CalculateY(container_y, container_height),

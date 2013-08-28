@@ -10,13 +10,12 @@ void main(uint32_t argc, TCHAR** argv) {
     //button1->SetTexture("normal.png", "hover.png", "press.png");
     panel1->SetSource("mac.png");
     panel2->SetSource("mac.png");
-    ui::VBoxLayout *hbox = new ui::VBoxLayout;
-    window->SetLayout(hbox);
+    ui::BoxLayout *vbox = new ui::BoxLayout;
+    window->SetLayout(vbox);
 
-    //panel2->SetParent(panel1);
-    //panel2->SetGeometry(0, 0, 100, 100);
-
-    hbox->AddWidget(panel1);
-    hbox->SetAround(panel1, 100, 100, 100, 100);
+    vbox->AddWidget(panel1);
+    vbox->SetAround(panel1, 100, 100, 100, 100);
+    //vbox->AddWidget(panel2);
+    //vbox->SetAround(panel2, 100, 100, 100, 100);
     window->Relayout();
 }

@@ -14,7 +14,7 @@ void main(uint32_t argc, TCHAR** argv) {
     window->SetLayout(vbox);
 
     vbox->AddWidget(panel1);
-    vbox->SetAround(panel1, 100, 100, 100, 100);
+    //vbox->SetAround(panel1, 100, 100, 100, 100);
     //vbox->AddWidget(panel2);
     //vbox->SetAround(panel2, 100, 100, 100, 100);
     window->Dolayout();

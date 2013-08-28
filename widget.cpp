@@ -308,16 +308,6 @@ std::string Widget::Source() const {
     return source_;
 }
 
-void Widget::Update() {
-    RECT rect;
-    SkRect sk_rect = GeometryToAncestor();
-    rect.left = SkScalarFloorToInt(sk_rect.fLeft);
-    rect.top = SkScalarFloorToInt(sk_rect.fTop);
-    rect.right = SkScalarFloorToInt(sk_rect.fRight);
-    rect.bottom = SkScalarFloorToInt(sk_rect.fBottom);
-    InvalidateRect(App::GetInstance()->GetMainWindow()->GetHwnd(), &rect, FALSE);
-}
-
 void Widget::SetHitRegionMode(HitRegionMode region_mode) {
     region_mode_ = region_mode;
 }

@@ -34,7 +34,6 @@ public:
     Layout* ParentLayout() const;
     
     virtual SkRect GeometryToAncestor() override;
-    virtual void Update() override;
     virtual bool IsEmpty();
     
     virtual void AdjustSizes(bool deep) override;

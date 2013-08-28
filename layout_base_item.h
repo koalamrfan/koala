@@ -42,7 +42,8 @@ public:
     virtual uint32_t LimitMaxHeight();
     void Dolayout();
     virtual void AdjustSizes(bool deep) = 0;
-    virtual void Update() = 0;
+    virtual void Update(const SkRect& clip_rect);
+    virtual void Update();
     // adapt
     virtual void UpNotifyRelayout() = 0;
     virtual void RelayoutToAdapt() = 0;

@@ -1,5 +1,6 @@
 #include "layout_base_item.h"
 #include "layout_adapt_manager.h"
+#include "app.h"
 
 namespace ui
 {
@@ -113,6 +114,19 @@ void LayoutBaseItem::Dolayout() {
     LayoutAdaptManager::GetInstance()->CloseAdapt();
     Relayout();
     LayoutAdaptManager::GetInstance()->OpenAdapt();
+}
+
+void LayoutBaseItem::Update() {
+    Update(GeometryToAncestor());
+}
+
+void LayoutBaseItem::Update(const SkRect& clip_rect) {
+    RECT rect;
+    rect.left = SkScalarFloorToInt(clip_rect.fLeft);
+    rect.top = SkScalarFloorToInt(clip_rect.fTop);
+    rect.right = SkScalarFloorToInt(clip_rect.fRight);
+    rect.bottom = SkScalarFloorToInt(clip_rect.fBottom);
+    InvalidateRect(App::GetInstance()->GetMainWindow()->GetHwnd(), &rect, FALSE);
 }
 
 } // namespace ui

@@ -217,14 +217,4 @@ SkRect Layout::GeometryToAncestor() {
         SkIntToScalar(Height())
         );
 }
-
-void Layout::Update() {
-    RECT rect;
-    SkRect sk_rect = GeometryToAncestor();
-    rect.left = SkScalarFloorToInt(sk_rect.fLeft);
-    rect.top = SkScalarFloorToInt(sk_rect.fTop);
-    rect.right = SkScalarFloorToInt(sk_rect.fRight);
-    rect.bottom = SkScalarFloorToInt(sk_rect.fBottom);
-    InvalidateRect(App::GetInstance()->GetMainWindow()->GetHwnd(), &rect, FALSE);
-}
 } // namespace ui

@@ -64,7 +64,6 @@ public:
     virtual SkRect GeometryToAncestor() override;
 
     void UpdateAutoRegion();
-    virtual void Update() override;
     void SetSource(const std::string& source);
     std::string Source() const;
 

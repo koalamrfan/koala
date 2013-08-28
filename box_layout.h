@@ -38,7 +38,6 @@ public:
     virtual bool InsertLayout(uint32_t index, Layout *layout) override ;
     virtual bool RemoveLayout(Layout *layout) override ;
 
-    virtual bool IsEmpty();
 protected:
     virtual uint32_t CalculateLimitMinWidth() override;
     virtual uint32_t CalculateLimitMinHeight() override;
@@ -47,8 +46,6 @@ protected:
     virtual uint32_t CalculatePreferWidth() override;
     virtual uint32_t CalculatePreferHeight() override;
     virtual void Relayout() override;
-
-    bool SkipUnVisibleWidget(BoxLayoutItem *item);
 };
 
 } // namespace ui

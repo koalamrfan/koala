@@ -80,7 +80,7 @@ void LinearBoxLayout::BoxToAllocHelper() {
     while(iter != layout_items_.end()) {
         AllocHelper helper;
         helper.box_item = reinterpret_cast<LinearBoxLayoutItem *>(iter->get());
-        if(SkipUnVisibleWidget(helper.box_item)) {
+        if(helper.box_item->IsEmpty()) {
             iter++;
             continue;
         }

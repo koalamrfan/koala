@@ -84,19 +84,12 @@ bool BoxLayout::RemoveLayout(Layout *layout) {
     return Layout::RemoveItem(layout);
 }
 
-bool BoxLayout::SkipUnVisibleWidget(BoxLayoutItem *item) {
-    if(item->GetWidget() && !item->GetWidget()->IsVisible()) {
-        return true;
-    }
-    return false;
-}
-
 uint32_t BoxLayout::CalculateLimitMinWidth() {
     uint32_t min_width = 0;
     auto iter = layout_items_.begin();
     while(iter != layout_items_.end()) {
         BoxLayoutItem *item = reinterpret_cast<BoxLayoutItem*>(iter->get());
-        if(SkipUnVisibleWidget(item)) {
+        if(item->IsEmpty()) {
             iter++;
             continue;
         }
@@ -113,7 +106,7 @@ uint32_t BoxLayout::CalculateLimitMinHeight() {
     auto iter = layout_items_.begin();
     while(iter != layout_items_.end()) {
         BoxLayoutItem *item = reinterpret_cast<BoxLayoutItem*>(iter->get());
-        if(SkipUnVisibleWidget(item)) {
+        if(item->IsEmpty()) {
             iter++;
             continue;
         }
@@ -130,7 +123,7 @@ uint32_t BoxLayout::CalculateLimitMaxWidth() {
     auto iter = layout_items_.begin();
     while(iter != layout_items_.end()) {
         BoxLayoutItem *item = reinterpret_cast<BoxLayoutItem*>(iter->get());
-        if(SkipUnVisibleWidget(item)) {
+        if(item->IsEmpty()) {
             iter++;
             continue;
         }
@@ -147,7 +140,7 @@ uint32_t BoxLayout::CalculateLimitMaxHeight() {
     auto iter = layout_items_.begin();
     while(iter != layout_items_.end()) {
         BoxLayoutItem *item = reinterpret_cast<BoxLayoutItem*>(iter->get());
-        if(SkipUnVisibleWidget(item)) {
+        if(item->IsEmpty()) {
             iter++;
             continue;
         }
@@ -164,7 +157,7 @@ uint32_t BoxLayout::CalculatePreferWidth() {
     auto iter = layout_items_.begin();
     while(iter != layout_items_.end()) {
         BoxLayoutItem *item = reinterpret_cast<BoxLayoutItem*>(iter->get());
-        if(SkipUnVisibleWidget(item)) {
+        if(item->IsEmpty()) {
             iter++;
             continue;
         }
@@ -181,7 +174,7 @@ uint32_t BoxLayout::CalculatePreferHeight() {
     auto iter = layout_items_.begin();
     while(iter != layout_items_.end()) {
         BoxLayoutItem *item = reinterpret_cast<BoxLayoutItem*>(iter->get());
-        if(SkipUnVisibleWidget(item)) {
+        if(item->IsEmpty()) {
             iter++;
             continue;
         }
@@ -197,28 +190,13 @@ void BoxLayout::Relayout() {
     auto iter = layout_items_.begin();
     while(iter != layout_items_.end()) {
         BoxLayoutItem *item = reinterpret_cast<BoxLayoutItem*>(iter->get());
-        if(SkipUnVisibleWidget(item)) {
-            iter++;
-            continue;
+        if(!item->IsEmpty()) {
+            item->CalculatePosition(X(), Y(), Width(), Height());
+            item->Dolayout();
+        } else {
+            item->SetGeometry(0, 0, (uint32_t)0, (uint32_t)0);
         }
-        item->CalculatePosition(X(), Y(), Width(), Height());
-        item->Dolayout();
         iter++;
     }
-}
-
-bool BoxLayout::IsEmpty() {
-    bool empty = true;
-    auto iter = layout_items_.begin();
-    while(iter != layout_items_.end()) {
-        BoxLayoutItem *item = reinterpret_cast<BoxLayoutItem*>(iter->get());
-        if(SkipUnVisibleWidget(item)) {
-            iter++;
-            continue;
-        }
-        empty = false;
-        iter++;
-    }
-    return empty;
 }
 } // namespace ui

@@ -149,7 +149,17 @@ Layout* Layout::ParentLayout() const {
 }
 
 bool Layout::IsEmpty() {
-    return layout_items_.empty();
+    bool empty = true;
+    auto iter = layout_items_.begin();
+    while(iter != layout_items_.end()) {
+        if(!(*iter)->IsEmpty()) {
+            iter++;
+            continue;
+        }
+        empty = false;
+        iter++;
+    }
+    return empty;
 }
 
 void Layout::UpNotifyRelayout() {

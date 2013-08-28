@@ -49,14 +49,12 @@ public:
     virtual uint32_t LimitMaxHeight() override ;
     
     void CalculatePosition(int32_t container_x, 
-		      int32_t container_y,
-		      uint32_t container_width, 
-		      uint32_t container_height);
+                           int32_t container_y,
+                           uint32_t container_width, 
+                           uint32_t container_height);
 protected:
-    int32_t CalculateX(int32_t container_x, 
-		    uint32_t container_width);
-    int32_t CalculateY(int32_t container_y, 
-		    uint32_t container_height);
+    int32_t CalculateX(int32_t container_x, uint32_t container_width);
+    int32_t CalculateY(int32_t container_y, uint32_t container_height);
     uint32_t CalculateWidth(uint32_t container_width);
     uint32_t CalculateHeight(uint32_t container_height);
 private:

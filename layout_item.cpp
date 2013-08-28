@@ -135,4 +135,13 @@ void LayoutItem::UpNotifyRelayout() {
 void LayoutItem::RelayoutToAdapt() {
 
 }
+
+bool LayoutItem::IsEmpty() {
+    if(GetWidget() && GetWidget()->IsVisible()) {
+        return false;
+    } else if(GetLayout() && !GetLayout()->IsEmpty()) {
+        return false;
+    }
+    return true;
+}
 } // namespace ui

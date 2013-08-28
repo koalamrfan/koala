@@ -52,6 +52,8 @@ public:
 
     virtual void UpNotifyRelayout();
     virtual void RelayoutToAdapt();
+
+    bool IsEmpty();
 public:    
     Widget* GetWidget() const;
     Layout* GetLayout() const;

@@ -203,7 +203,7 @@ Layout* Widget::BaseLayout() const {
 }
 
 void Widget::Draw(const SkRect& clip_rect) {
-    if(IsVisible() == false) {
+    if(!IsVisible()) {
         return ;
     }
     if(!DrawSelf(clip_rect)) {
@@ -267,6 +267,9 @@ bool Widget::PointInRegion(int32_t x, int32_t y) {
 }
 
 Widget* Widget::HitTest(int32_t x, int32_t y) {
+    if(!IsVisible()) {
+        return nullptr;
+    }
     auto iter = children_.rbegin();
     while (iter != children_.rend()) {
         if((*iter)->PointInRegion(x, y)) {

@@ -193,8 +193,6 @@ void BoxLayout::Relayout() {
         if(!item->IsEmpty()) {
             item->CalculatePosition(X(), Y(), Width(), Height());
             item->Dolayout();
-        } else {
-            item->SetGeometry(0, 0, (uint32_t)0, (uint32_t)0);
         }
         iter++;
     }

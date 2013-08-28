@@ -30,7 +30,7 @@ LRESULT CALLBACK Proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) {
             RECT rect;
             GetClientRect(hwnd, &rect);
             window->SetGeometry(rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top);
-            window->Relayout();
+            window->Dolayout();
         }
         break;
     default:

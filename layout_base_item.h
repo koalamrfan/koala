@@ -27,6 +27,7 @@ public:
     virtual uint32_t Width();
     virtual uint32_t Height();
     virtual SkRect Geometry();
+    virtual SkRect GeometryToAncestor() = 0;
     virtual void SetPreferWidth(uint32_t width);
     virtual uint32_t PreferWidth();
     virtual void SetPreferHeight(uint32_t height);
@@ -39,13 +40,14 @@ public:
     virtual uint32_t LimitMaxWidth();
     virtual void SetLimitMaxHeight(uint32_t height);
     virtual uint32_t LimitMaxHeight();
-
-    virtual void Relayout() = 0;
+    void Dolayout();
     virtual void AdjustSizes(bool deep) = 0;
-    
+    virtual void Update() = 0;
     // adapt
     virtual void UpNotifyRelayout() = 0;
     virtual void RelayoutToAdapt() = 0;
+protected:
+    virtual void Relayout() = 0;
 private:
     int32_t x_;
     int32_t y_;

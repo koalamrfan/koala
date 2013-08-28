@@ -10,9 +10,10 @@ class LayoutSpace:public LayoutBaseItem
 {
 public:
     virtual void AdjustSizes(bool deep) override {}
-    virtual void Relayout() override {}
     virtual void UpNotifyRelayout() {}
     virtual void RelayoutToAdapt() {}
+protected:
+    virtual void Relayout() override {}
 };  
 }
 

@@ -19,8 +19,8 @@ LayoutItem::LayoutItem(LayoutSpace* layout_space):layout_base_item_(layout_space
     type_ = kLayoutSpace;
 }
 
-void LayoutItem::Relayout() {
-    layout_base_item_->Relayout();
+void LayoutItem::Dolayout() {
+    layout_base_item_->Dolayout();
 }
 
 void LayoutItem::AdjustSizes(bool deep) {

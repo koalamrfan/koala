@@ -202,7 +202,7 @@ void BoxLayout::Relayout() {
             continue;
         }
         item->CalculatePosition(X(), Y(), Width(), Height());
-        item->Relayout();
+        item->Dolayout();
         iter++;
     }
 }

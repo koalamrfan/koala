@@ -1,4 +1,5 @@
 #include "layout_base_item.h"
+#include "layout_adapt_manager.h"
 
 namespace ui
 {
@@ -107,4 +108,11 @@ void LayoutBaseItem::SetLimitMaxHeight(uint32_t height) {
 uint32_t LayoutBaseItem::LimitMaxHeight() {
     return limit_max_height_;
 }
+
+void LayoutBaseItem::Dolayout() {
+    LayoutAdaptManager::GetInstance()->CloseAdapt();
+    Relayout();
+    LayoutAdaptManager::GetInstance()->OpenAdapt();
+}
+
 } // namespace ui

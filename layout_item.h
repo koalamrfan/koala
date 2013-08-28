@@ -10,7 +10,7 @@ class Widget;
 class Layout;
 class LayoutSpace;
 
-class LayoutItem : public LayoutBaseItem
+class LayoutItem
 {
     enum ItemType
     {
@@ -26,31 +26,32 @@ public:
     
     virtual ~LayoutItem() {}
 public:
-    virtual void Move(int32_t x, int32_t y) override ;
-    virtual void ReSize(uint32_t width, uint32_t height) override ;
-    virtual void SetGeometry(int32_t x, int32_t y, uint32_t width, uint32_t height) override ;
-    virtual int32_t X() override ;
-    virtual int32_t Y() override ;
-    virtual uint32_t Width() override ;
-    virtual uint32_t Height() override ;
-    virtual void SetPreferWidth(uint32_t width) override ;
-    virtual uint32_t PreferWidth() override ;
-    virtual void SetPreferHeight(uint32_t height) override ;
-    virtual uint32_t PreferHeight() override ;
-    virtual void SetLimitMinWidth(uint32_t width) override ;
-    virtual uint32_t LimitMinWidth() override ;
-    virtual void SetLimitMinHeight(uint32_t height) override ;
-    virtual uint32_t LimitMinHeight() override ;
-    virtual void SetLimitMaxWidth(uint32_t width) override ;
-    virtual uint32_t LimitMaxWidth() override ;
-    virtual void SetLimitMaxHeight(uint32_t height) override ;
-    virtual uint32_t LimitMaxHeight() override ;
+    virtual void Move(int32_t x, int32_t y) ;
+    virtual void ReSize(uint32_t width, uint32_t height) ;
+    virtual void SetGeometry(int32_t x, int32_t y, uint32_t width, uint32_t height) ;
+    virtual int32_t X() ;
+    virtual int32_t Y() ;
+    virtual uint32_t Width() ;
+    virtual uint32_t Height() ;
+    virtual void SetPreferWidth(uint32_t width);
+    virtual uint32_t PreferWidth();
+    virtual void SetPreferHeight(uint32_t height);
+    virtual uint32_t PreferHeight();
+    virtual void SetLimitMinWidth(uint32_t width);
+    virtual uint32_t LimitMinWidth();
+    virtual void SetLimitMinHeight(uint32_t height);
+    virtual uint32_t LimitMinHeight();
+    virtual void SetLimitMaxWidth(uint32_t width);
+    virtual uint32_t LimitMaxWidth();
+    virtual void SetLimitMaxHeight(uint32_t height);
+    virtual uint32_t LimitMaxHeight();
 
-    virtual void Relayout()  override ;
-    virtual void AdjustSizes(bool deep)  override ;
+    void Dolayout();
 
-    virtual void UpNotifyRelayout() override;
-    virtual void RelayoutToAdapt() override;
+    virtual void AdjustSizes(bool deep);
+
+    virtual void UpNotifyRelayout();
+    virtual void RelayoutToAdapt();
 public:    
     Widget* GetWidget() const;
     Layout* GetLayout() const;

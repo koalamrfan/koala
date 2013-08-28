@@ -1,6 +1,7 @@
 #include "widget.h"
 #include "app.h"
 #include "SkBitmap.h"
+#include "layout_adapt_manager.h"
 #include <vector>
 
 
@@ -27,6 +28,7 @@ void Widget::AddChild(Widget* widget) {
         iter++;
     }
     children_.push_back(widget);
+    
 }
 
 void Widget::RemoveChild(Widget* widget) {
@@ -125,7 +127,7 @@ void Widget::Relayout() {
             AdjustSizes(true);
         }
         BaseLayout()->SetGeometry(0, 0, Width(), Height());
-        BaseLayout()->Relayout();
+        BaseLayout()->Dolayout();
     }
 }
 
@@ -142,9 +144,11 @@ void Widget::RelayoutToAdapt() {
     } else {
         AdaptLimitSize();
         if(BaseLayout()) {
-            BaseLayout()->SetGeometry(0, 0, Width(), Height());
-            BaseLayout()->Relayout();
+            LayoutAdaptManager::GetInstance()->Push(this);
         }
+    }
+    if(LayoutAdaptManager::GetInstance()->AdaptOpened()) {
+        LayoutAdaptManager::GetInstance()->Flush();
     }
 }
 

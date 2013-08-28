@@ -2,12 +2,16 @@
 #include "layout_item.h"
 #include "widget.h"
 #include "layout_base_item.h"
+#include "app.h"
+#include "layout_adapt_manager.h"
 #include <cassert>
+
 
 namespace ui
 {
 void Layout::AddItem(SharedLayoutItem item) {
     InsertItem(layout_items_.size(), item);
+    UpNotifyRelayout();
 }
 
 bool Layout::InsertItem(uint32_t index, SharedLayoutItem item) {
@@ -43,6 +47,7 @@ bool Layout::RemoveItem(LayoutBaseItem *item) {
     while (iter != layout_items_.end()) {
         if((*iter)->GetLayoutBaseItem() == item) {
             layout_items_.erase(iter);
+            UpNotifyRelayout();
             return true;
         }
         iter++;
@@ -159,7 +164,10 @@ void Layout::RelayoutToAdapt() {
     if(NeedUpNotify()) {
         UpNotifyRelayout();
     } else {
-        Relayout();
+        LayoutAdaptManager::GetInstance()->Push(this);
+    }
+    if(LayoutAdaptManager::GetInstance()->AdaptOpened()) {
+        LayoutAdaptManager::GetInstance()->Flush();
     }
 }
 
@@ -192,5 +200,31 @@ LayoutItem* Layout::FindItem(LayoutBaseItem *item) {
         iter++;
     }
     return nullptr;
+}
+
+SkRect Layout::GeometryToAncestor() {
+    int32_t x = X(), y= Y();
+    Widget* parent = ParentWidget();
+    while(parent) {
+        x += parent->X();
+        y += parent->Y();
+        parent = parent->Parent();
+    }
+    return SkRect::MakeXYWH(
+        SkIntToScalar(x),
+        SkIntToScalar(y), 
+        SkIntToScalar(Width()), 
+        SkIntToScalar(Height())
+        );
+}
+
+void Layout::Update() {
+    RECT rect;
+    SkRect sk_rect = GeometryToAncestor();
+    rect.left = SkScalarFloorToInt(sk_rect.fLeft);
+    rect.top = SkScalarFloorToInt(sk_rect.fTop);
+    rect.right = SkScalarFloorToInt(sk_rect.fRight);
+    rect.bottom = SkScalarFloorToInt(sk_rect.fBottom);
+    InvalidateRect(App::GetInstance()->GetMainWindow()->GetHwnd(), &rect, FALSE);
 }
 } // namespace ui

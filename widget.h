@@ -44,11 +44,10 @@ public:
     void SetLayout(Layout* layout);
     
     virtual void AdjustSizes(bool deep) override;
-    virtual void Relayout() override;
     
     virtual void UpNotifyRelayout() override;
     virtual void RelayoutToAdapt() override;
-    
+
     void AdaptLimitSize();
 
     virtual void SetPreferWidth(uint32_t width) override;
@@ -62,10 +61,10 @@ public:
     void SetRegion(const SkRegion& region);
     SkRegion Region() const;
 
-    SkRect GeometryToAncestor();
+    virtual SkRect GeometryToAncestor() override;
 
     void UpdateAutoRegion();
-    void Update();
+    virtual void Update() override;
     void SetSource(const std::string& source);
     std::string Source() const;
 
@@ -77,6 +76,7 @@ public:
     virtual bool DoEvent(Event* event) { return false; };
     Widget* HitTest(int32_t x, int32_t y);
 protected:
+    virtual void Relayout() override;
     virtual void AddChild(Widget* widget);
     virtual void RemoveChild(Widget* widget);
     bool DrawSelf( const SkRect& clip_rect );

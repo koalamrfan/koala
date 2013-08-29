@@ -36,11 +36,14 @@ LRESULT CALLBACK Proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) {
     case WM_GETMINMAXINFO:
         {
             LPMINMAXINFO lpMMI = (LPMINMAXINFO)lParam;
-            lpMMI->ptMaxTrackSize.x = window->LimitMaxWidth() + GetSystemMetrics(SM_CYBORDER) + GetSystemMetrics(SM_CYBORDER);
-            lpMMI->ptMaxTrackSize.y = window->LimitMaxHeight() + GetSystemMetrics(SM_CYCAPTION) + GetSystemMetrics(SM_CYBORDER);
+            if(window->LimitMaxWidth() < (uint32_t)(INT32_MAX - GetSystemMetrics(SM_CYBORDER) + GetSystemMetrics(SM_CYBORDER))) {
+                lpMMI->ptMaxTrackSize.x = window->LimitMaxWidth() + GetSystemMetrics(SM_CYBORDER) + GetSystemMetrics(SM_CYBORDER);
+            }
+            if(window->LimitMaxHeight() < (uint32_t)(INT32_MAX - GetSystemMetrics(SM_CYBORDER) + GetSystemMetrics(SM_CYBORDER))) {
+                lpMMI->ptMaxTrackSize.y = window->LimitMaxHeight() + GetSystemMetrics(SM_CYCAPTION) + GetSystemMetrics(SM_CYBORDER);
+            }
             lpMMI->ptMinTrackSize.x = window->LimitMinWidth() + GetSystemMetrics(SM_CYBORDER) + GetSystemMetrics(SM_CYBORDER);
             lpMMI->ptMinTrackSize.y = window->LimitMinHeight() + GetSystemMetrics(SM_CYCAPTION) + GetSystemMetrics(SM_CYBORDER);
-
         }
     default:
         auto events = EventFactory::GetInstance()->CreateEvent(message, wParam, lParam);
@@ -77,6 +80,11 @@ void Window::OnDraw(SkCanvas* canvas, const SkRect& clip_rect) {
     auto bitmaps = Bitmap();
     !bitmaps.empty() ? GetRenderTactics()->Draw(canvas, bitmaps[0], rect, paint) :
         canvas->clear(SK_AlphaTRANSPARENT);
+}
+
+void Window::SetGeometry(int32_t x, int32_t y, uint32_t width, uint32_t height) {
+    TexturePool::GetInstance()->ResizeCanvas(width, height);
+    Widget::SetGeometry(x, y, width, height);
 }
 
 bool Window::DoEvent(Event* event) {

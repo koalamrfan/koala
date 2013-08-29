@@ -82,30 +82,6 @@ void Layout::AdjustSizes() {
     SetPreferHeight(CalculatePreferHeight());
 }
 
-void Layout::SetPreferWidth(uint32_t width) {
-    LayoutBaseItem::SetPreferWidth(width);
-}
-
-void Layout::SetPreferHeight(uint32_t height) {
-    LayoutBaseItem::SetPreferHeight(height);
-}
-
-void Layout::SetLimitMinWidth(uint32_t width) {
-    LayoutBaseItem::SetLimitMinWidth(width);
-}
-
-void Layout::SetLimitMinHeight(uint32_t height) {
-    LayoutBaseItem::SetLimitMinHeight(height);
-}
-
-void Layout::SetLimitMaxWidth(uint32_t width) {
-    LayoutBaseItem::SetLimitMaxWidth(width);
-}
-
-void Layout::SetLimitMaxHeight(uint32_t height) {
-    LayoutBaseItem::SetLimitMaxHeight(height);
-}
-
 void Layout::SetParentWidget(Widget* widget) {
     if(parent_widget_ == widget) {
         return ;

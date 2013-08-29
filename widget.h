@@ -38,6 +38,7 @@ public:
     Layout* ParentLayout() const;
     Layout* BaseLayout() const;
 
+    virtual void SetGeometry(int32_t x, int32_t y, uint32_t width, uint32_t height) override;
     virtual void Show();
     virtual void Hide();
     bool IsVisible() const;
@@ -45,7 +46,6 @@ public:
     
     virtual void AdjustSizes() override;
     
-
     virtual void SetPreferWidth(uint32_t width) override;
     virtual void SetPreferHeight(uint32_t height) override;
     virtual void SetLimitMinWidth(uint32_t width) override;

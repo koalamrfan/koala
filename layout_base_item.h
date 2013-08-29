@@ -6,11 +6,8 @@
 
 namespace ui
 {
-#ifndef UINT32_MAX
-#define UINT32_MAX  (0xffffffff)
-#endif
 
-#define MAX_LENGTH UINT32_MAX
+#define MAX_LENGTH INT32_MAX
 
 class LayoutItem;
 class LayoutBaseItem
@@ -23,7 +20,7 @@ public:
 
     void Move(int32_t x, int32_t y);
     void ReSize(uint32_t width, uint32_t height);
-    void SetGeometry(int32_t x, int32_t y, uint32_t width, uint32_t height);
+    virtual void SetGeometry(int32_t x, int32_t y, uint32_t width, uint32_t height);
     int32_t X() const;
     int32_t Y() const;
     uint32_t Width() const;

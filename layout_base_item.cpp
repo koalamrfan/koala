@@ -116,6 +116,7 @@ void LayoutBaseItem::Dolayout() {
     LayoutAdaptManager::GetInstance()->CloseAdapt();
     Relayout();
     LayoutAdaptManager::GetInstance()->OpenAdapt();
+    Update();
 }
 
 void LayoutBaseItem::Update() const {

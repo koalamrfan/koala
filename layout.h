@@ -53,13 +53,6 @@ protected:
     virtual uint32_t CalculateLimitMaxHeight() = 0;
     virtual uint32_t CalculatePreferWidth() = 0;
     virtual uint32_t CalculatePreferHeight() = 0;
-    
-    virtual void SetPreferWidth(uint32_t width) override;
-    virtual void SetPreferHeight(uint32_t height) override;
-    virtual void SetLimitMinWidth(uint32_t width) override;
-    virtual void SetLimitMinHeight(uint32_t height) override;
-    virtual void SetLimitMaxWidth(uint32_t width) override;
-    virtual void SetLimitMaxHeight(uint32_t height) override;
 
     std::vector<SharedLayoutItem> layout_items_;
 private:

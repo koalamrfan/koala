@@ -70,6 +70,11 @@ Layout* Widget::ParentLayout() const {
     return parent_layout_;
 }
 
+void Widget::SetGeometry(int32_t x, int32_t y, uint32_t width, uint32_t height) {
+    UpdateAutoRegion();
+    LayoutBaseItem::SetGeometry(x, y, width, height);
+}
+
 void Widget::Show() {
     NotifyRelayout();
 }

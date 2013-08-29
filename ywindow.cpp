@@ -27,10 +27,12 @@ LRESULT CALLBACK Proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) {
         break;
     case WM_SIZE:
         {
-            RECT rect;
-            GetClientRect(hwnd, &rect);
-            window->SetGeometry(rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top);
-            window->Dolayout();
+            if(wParam != SIZE_MINIMIZED) {
+                RECT rect;
+                GetClientRect(hwnd, &rect);
+                window->SetGeometry(rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top);
+                window->Dolayout();
+            }
         }
         break;
     case WM_GETMINMAXINFO:
@@ -42,8 +44,15 @@ LRESULT CALLBACK Proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) {
             if(window->LimitMaxHeight() < (uint32_t)(INT32_MAX - GetSystemMetrics(SM_CYBORDER) + GetSystemMetrics(SM_CYBORDER))) {
                 lpMMI->ptMaxTrackSize.y = window->LimitMaxHeight() + GetSystemMetrics(SM_CYCAPTION) + GetSystemMetrics(SM_CYBORDER);
             }
-            lpMMI->ptMinTrackSize.x = window->LimitMinWidth() + GetSystemMetrics(SM_CYBORDER) + GetSystemMetrics(SM_CYBORDER);
-            lpMMI->ptMinTrackSize.y = window->LimitMinHeight() + GetSystemMetrics(SM_CYCAPTION) + GetSystemMetrics(SM_CYBORDER);
+            RECT inner_rect, window_rect;
+            GetClientRect(hwnd, &inner_rect);
+            GetWindowRect(hwnd, &window_rect);
+
+            lpMMI->ptMinTrackSize.x = window->LimitMinWidth() + 
+                ((window_rect.right - window_rect.left) - (inner_rect.right - inner_rect.left));
+
+            lpMMI->ptMinTrackSize.y = window->LimitMinHeight() +
+                ((window_rect.bottom - window_rect.top) - (inner_rect.bottom - inner_rect.top));
         }
     default:
         auto events = EventFactory::GetInstance()->CreateEvent(message, wParam, lParam);

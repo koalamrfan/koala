@@ -33,6 +33,17 @@ LRESULT CALLBACK Proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) {
             window->Dolayout();
         }
         break;
+    case WM_GETMINMAXINFO:
+        {
+            LPMINMAXINFO lpMMI = (LPMINMAXINFO)lParam;
+            lpMMI->ptMaxTrackSize.x = window->LimitMaxWidth();
+            lpMMI->ptMaxTrackSize.y = window->LimitMaxHeight();
+            lpMMI->ptMinTrackSize.x = window->LimitMinWidth();
+            lpMMI->ptMinTrackSize.y = window->LimitMinHeight();
+            lpMMI->ptMaxSize.x = lpMMI->ptMaxTrackSize.x;
+            lpMMI->ptMaxSize.y = lpMMI->ptMaxTrackSize.y;
+
+        }
     default:
         auto events = EventFactory::GetInstance()->CreateEvent(message, wParam, lParam);
         for (auto event:events) {

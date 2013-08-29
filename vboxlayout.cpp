@@ -129,7 +129,6 @@ void VBoxLayout::AllocSectionByStrechFactor(uint32_t alloc_size, uint32_t sum_fa
 
     if(first != alloc_sections_.end()) {
         assert(first->box_item);
-
         uint32_t strech_factor = 0;
         if(IsUnderPrefer()) {
             strech_factor = first->box_item->PreferHeight();

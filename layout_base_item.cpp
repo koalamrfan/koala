@@ -1,5 +1,6 @@
 #include "layout_base_item.h"
 #include "layout_adapt_manager.h"
+#include "layout_item.h"
 #include "app.h"
 
 namespace ui
@@ -37,23 +38,23 @@ void LayoutBaseItem::SetGeometry(int32_t x, int32_t y, uint32_t width, uint32_t 
     ReSize(width, height);
 }
 
-int32_t LayoutBaseItem::X() {
+int32_t LayoutBaseItem::X() const {
     return x_;
 }
 
-int32_t LayoutBaseItem::Y() {
+int32_t LayoutBaseItem::Y() const {
     return y_;
 }
 
-uint32_t LayoutBaseItem::Width() {
+uint32_t LayoutBaseItem::Width() const {
     return width_;
 }
 
-uint32_t LayoutBaseItem::Height() {
+uint32_t LayoutBaseItem::Height() const {
     return height_;
 }
 
-SkRect  LayoutBaseItem::Geometry() {
+SkRect  LayoutBaseItem::Geometry() const {
     return SkRect::MakeXYWH(
         SkIntToScalar(X()),
         SkIntToScalar(X()), 
@@ -111,22 +112,27 @@ uint32_t LayoutBaseItem::LimitMaxHeight() {
 }
 
 void LayoutBaseItem::Dolayout() {
+    AdjustSizes();
     LayoutAdaptManager::GetInstance()->CloseAdapt();
     Relayout();
     LayoutAdaptManager::GetInstance()->OpenAdapt();
 }
 
-void LayoutBaseItem::Update() {
+void LayoutBaseItem::Update() const {
     Update(GeometryToAncestor());
 }
 
-void LayoutBaseItem::Update(const SkRect& clip_rect) {
+void LayoutBaseItem::Update(const SkRect& clip_rect) const {
     RECT rect;
     rect.left = SkScalarFloorToInt(clip_rect.fLeft);
     rect.top = SkScalarFloorToInt(clip_rect.fTop);
     rect.right = SkScalarFloorToInt(clip_rect.fRight);
     rect.bottom = SkScalarFloorToInt(clip_rect.fBottom);
     InvalidateRect(App::GetInstance()->GetMainWindow()->GetHwnd(), &rect, FALSE);
+}
+
+void LayoutBaseItem::NotifyRelayout() const {
+    LayoutAdaptManager::GetInstance()->Drive();
 }
 
 } // namespace ui

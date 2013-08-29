@@ -79,11 +79,6 @@ void Window::OnDraw(SkCanvas* canvas, const SkRect& clip_rect) {
         canvas->clear(SK_AlphaTRANSPARENT);
 }
 
-void Window::SetGeometry(int32_t x, int32_t y, uint32_t width, uint32_t height) {
-    TexturePool::GetInstance()->ResizeCanvas(width, height);
-    Widget::SetGeometry(x, y, width, height);
-}
-
 bool Window::DoEvent(Event* event) {
     return true;
 }

@@ -33,13 +33,11 @@ public:
     void SetParentLayout(Layout* parent);
     Layout* ParentLayout() const;
     
-    virtual SkRect GeometryToAncestor() override;
+    virtual SkRect GeometryToAncestor() const override;
     bool IsEmpty();
     
-    virtual void AdjustSizes(bool deep) override;
-    
-    virtual void UpNotifyRelayout() override;
-    virtual void RelayoutToAdapt() override;
+    virtual void AdjustSizes() override;
+
 protected:
     Layout():parent_widget_(nullptr), parent_layout_(nullptr) {}
 
@@ -56,11 +54,6 @@ protected:
     virtual uint32_t CalculatePreferWidth() = 0;
     virtual uint32_t CalculatePreferHeight() = 0;
     
-    virtual bool NeedUpNotify();
-
-    virtual void SetGeometry(int32_t x, int32_t y, uint32_t width, uint32_t height) override;
-    virtual void Move(int32_t x, int32_t y) override;
-    virtual void ReSize(uint32_t width, uint32_t height) override;
     virtual void SetPreferWidth(uint32_t width) override;
     virtual void SetPreferHeight(uint32_t height) override;
     virtual void SetLimitMinWidth(uint32_t width) override;

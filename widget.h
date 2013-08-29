@@ -37,18 +37,14 @@ public:
     void SetParentLayout(Layout* parent);
     Layout* ParentLayout() const;
     Layout* BaseLayout() const;
-    virtual void SetGeometry(int32_t x, int32_t y, uint32_t width, uint32_t height) override;
+
     virtual void Show();
     virtual void Hide();
     bool IsVisible() const;
     void SetLayout(Layout* layout);
     
-    virtual void AdjustSizes(bool deep) override;
+    virtual void AdjustSizes() override;
     
-    virtual void UpNotifyRelayout() override;
-    virtual void RelayoutToAdapt() override;
-
-    void AdaptLimitSize();
 
     virtual void SetPreferWidth(uint32_t width) override;
     virtual void SetPreferHeight(uint32_t height) override;
@@ -61,7 +57,7 @@ public:
     void SetRegion(const SkRegion& region);
     SkRegion Region() const;
 
-    virtual SkRect GeometryToAncestor() override;
+    virtual SkRect GeometryToAncestor() const override;
 
     void UpdateAutoRegion();
     void SetSource(const std::string& source);

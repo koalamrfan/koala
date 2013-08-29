@@ -28,7 +28,6 @@ void Widget::AddChild(Widget* widget) {
         iter++;
     }
     children_.push_back(widget);
-    
 }
 
 void Widget::RemoveChild(Widget* widget) {
@@ -71,17 +70,12 @@ Layout* Widget::ParentLayout() const {
     return parent_layout_;
 }
 
-void Widget::SetGeometry(int32_t x, int32_t y, uint32_t width, uint32_t height) {
-    UpdateAutoRegion();
-    LayoutBaseItem::SetGeometry(x, y, width, height);
-}
-
 void Widget::Show() {
-    UpNotifyRelayout();
+    NotifyRelayout();
 }
 
 void Widget::Hide() {
-    UpNotifyRelayout();
+    NotifyRelayout();
 }
 
 bool Widget::IsVisible() const{
@@ -93,109 +87,67 @@ void Widget::SetLayout(Layout* layout) {
     layout_->SetParentWidget(this);
 }
 
-void Widget::AdjustSizes(bool deep) {
+void Widget::AdjustSizes() {
     if(BaseLayout()) {
-        BaseLayout()->AdjustSizes(deep);
-
-        SetLimitMinWidth(BaseLayout()->LimitMinWidth());
-        SetLimitMinHeight(BaseLayout()->LimitMinHeight());
-        SetLimitMaxWidth(BaseLayout()->LimitMaxWidth());
-        SetLimitMaxHeight(BaseLayout()->LimitMaxHeight());
+        BaseLayout()->AdjustSizes();
+        LayoutBaseItem::SetLimitMinWidth(BaseLayout()->LimitMinWidth());
+        LayoutBaseItem::SetLimitMinHeight(BaseLayout()->LimitMinHeight());
+        LayoutBaseItem::SetLimitMaxWidth(BaseLayout()->LimitMaxWidth());
+        LayoutBaseItem::SetLimitMaxHeight(BaseLayout()->LimitMaxHeight());
 
         if(PreferWidth() == 0) {
-            SetPreferWidth(BaseLayout()->PreferWidth());
+            LayoutBaseItem::SetPreferWidth(BaseLayout()->PreferWidth());
         } else if(PreferWidth() < LimitMinWidth()) {
-            SetPreferWidth(LimitMinWidth());
+            LayoutBaseItem::SetPreferWidth(LimitMinWidth());
         } else if(PreferWidth() > LimitMaxWidth()) {
-            SetPreferWidth(LimitMaxWidth());
+            LayoutBaseItem::SetPreferWidth(LimitMaxWidth());
         }
 
         if(PreferHeight() == 0) {
-            SetPreferHeight(BaseLayout()->PreferHeight());
+            LayoutBaseItem::SetPreferHeight(BaseLayout()->PreferHeight());
         } else if(PreferHeight() < LimitMinHeight()) {
-            SetPreferHeight(LimitMinHeight());
+            LayoutBaseItem::SetPreferHeight(LimitMinHeight());
         } else if(PreferHeight() > LimitMaxHeight()) {
-            SetPreferHeight(LimitMaxHeight());
+            LayoutBaseItem::SetPreferHeight(LimitMaxHeight());
         }
-        AdaptLimitSize();
     }
 }
 
 void Widget::Relayout() {
     if(BaseLayout()) {
-        if(Parent() == nullptr) {
-            AdjustSizes(true);
-        }
         BaseLayout()->SetGeometry(0, 0, Width(), Height());
-        BaseLayout()->Dolayout();
+        BaseLayout()->Relayout();
     }
-}
-
-void Widget::UpNotifyRelayout() {
-    if(ParentLayout()) {
-        ParentLayout()->RelayoutToAdapt();
-    }
-}
-
-void Widget::RelayoutToAdapt() {
-    AdjustSizes(false);
-    if(ParentLayout()) {
-        UpNotifyRelayout();
-    } else {
-        AdaptLimitSize();
-        if(BaseLayout()) {
-            LayoutAdaptManager::GetInstance()->Push(this);
-        }
-    }
-    if(LayoutAdaptManager::GetInstance()->AdaptOpened()) {
-        LayoutAdaptManager::GetInstance()->Flush();
-    }
-}
-
-void Widget::AdaptLimitSize() {
-    uint32_t width = Width(), height = Height();
-    if(width < LimitMinWidth()) {
-        width = LimitMinWidth();
-    } else if(width > LimitMaxWidth()) {
-        width = LimitMaxWidth();
-    }
-
-    if(height < LimitMinHeight()) {
-        height = LimitMinHeight();
-    } else if(height > LimitMaxHeight()) {
-        height = LimitMaxHeight();
-    }
-    SetGeometry(X(), Y(), width, height);
 }
 
 void Widget::SetPreferWidth(uint32_t width) {
     LayoutBaseItem::SetPreferWidth(width);
-    UpNotifyRelayout();
+    NotifyRelayout();
 }
 
 void Widget::SetPreferHeight(uint32_t height) {
     LayoutBaseItem::SetPreferHeight(height);
-    UpNotifyRelayout();
+    NotifyRelayout();
 }
 
 void Widget::SetLimitMinWidth(uint32_t width) {
     LayoutBaseItem::SetLimitMinWidth(width);
-    UpNotifyRelayout();
+    NotifyRelayout();
 }
 
 void Widget::SetLimitMinHeight(uint32_t height) {
     LayoutBaseItem::SetLimitMinHeight(height);
-    UpNotifyRelayout();
+    NotifyRelayout();
 }
 
 void Widget::SetLimitMaxWidth(uint32_t width) {
     LayoutBaseItem::SetLimitMaxWidth(width);
-    UpNotifyRelayout();
+    NotifyRelayout();
 }
 
 void Widget::SetLimitMaxHeight(uint32_t height) {
     LayoutBaseItem::SetLimitMaxHeight(height);
-    UpNotifyRelayout();
+    NotifyRelayout();
 }
 
 Layout* Widget::BaseLayout() const {
@@ -283,7 +235,7 @@ Widget* Widget::HitTest(int32_t x, int32_t y) {
     return nullptr;
 }
 
-SkRect Widget::GeometryToAncestor() {
+SkRect Widget::GeometryToAncestor() const {
     int32_t x = X(), y= Y();
     Widget* parent = Parent();
     while(parent) {

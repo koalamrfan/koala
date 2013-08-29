@@ -112,7 +112,7 @@ void VBoxLayout::AllocHelperToBox() {
     while(iter != alloc_sections_.end()) {
         assert(iter->box_item);
         iter->box_item->CalculatePosition(X(), pre_y, Width(), iter->section);
-        iter->box_item->Dolayout();
+        iter->box_item->Relayout();
         pre_y += iter->section;
         iter++;
     }

@@ -12,22 +12,24 @@ namespace ui
 
 #define MAX_LENGTH UINT32_MAX
 
+class LayoutItem;
 class LayoutBaseItem
 {
+    friend class LayoutItem;
 public:
     LayoutBaseItem();
 
     virtual ~LayoutBaseItem();
 
-    virtual void Move(int32_t x, int32_t y);
-    virtual void ReSize(uint32_t width, uint32_t height);
-    virtual void SetGeometry(int32_t x, int32_t y, uint32_t width, uint32_t height);
-    virtual int32_t X();
-    virtual int32_t Y();
-    virtual uint32_t Width();
-    virtual uint32_t Height();
-    virtual SkRect Geometry();
-    virtual SkRect GeometryToAncestor() = 0;
+    void Move(int32_t x, int32_t y);
+    void ReSize(uint32_t width, uint32_t height);
+    void SetGeometry(int32_t x, int32_t y, uint32_t width, uint32_t height);
+    int32_t X() const;
+    int32_t Y() const;
+    uint32_t Width() const;
+    uint32_t Height() const;
+    SkRect Geometry() const;
+    virtual SkRect GeometryToAncestor() const = 0;
     virtual void SetPreferWidth(uint32_t width);
     virtual uint32_t PreferWidth();
     virtual void SetPreferHeight(uint32_t height);
@@ -41,12 +43,12 @@ public:
     virtual void SetLimitMaxHeight(uint32_t height);
     virtual uint32_t LimitMaxHeight();
     void Dolayout();
-    virtual void AdjustSizes(bool deep) = 0;
-    virtual void Update(const SkRect& clip_rect);
-    virtual void Update();
+    virtual void AdjustSizes() = 0;
+    void Update(const SkRect& clip_rect) const;
+    void Update() const;
     // adapt
-    virtual void UpNotifyRelayout() = 0;
-    virtual void RelayoutToAdapt() = 0;
+    void NotifyRelayout() const;
+
 protected:
     virtual void Relayout() = 0;
 private:

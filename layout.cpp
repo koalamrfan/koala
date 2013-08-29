@@ -11,7 +11,6 @@ namespace ui
 {
 void Layout::AddItem(SharedLayoutItem item) {
     InsertItem(layout_items_.size(), item);
-    UpNotifyRelayout();
 }
 
 bool Layout::InsertItem(uint32_t index, SharedLayoutItem item) {
@@ -39,6 +38,7 @@ bool Layout::InsertItem(uint32_t index, SharedLayoutItem item) {
         layout->SetParentWidget(ParentWidget());
         layout->SetParentLayout(this);
     }
+    NotifyRelayout();
     return true;
 }
 
@@ -47,11 +47,12 @@ bool Layout::RemoveItem(LayoutBaseItem *item) {
     while (iter != layout_items_.end()) {
         if((*iter)->GetLayoutBaseItem() == item) {
             layout_items_.erase(iter);
-            UpNotifyRelayout();
+            NotifyRelayout();
             return true;
         }
         iter++;
     }
+    NotifyRelayout();
     return false;
 }
 
@@ -69,11 +70,9 @@ Layout::SharedLayoutItem Layout::ItemAt(uint32_t  index) {
     return layout_items_[index];
 }
 
-void Layout::AdjustSizes(bool deep) {
-    if(deep) {
-        for(auto item:layout_items_) {
-            item->AdjustSizes(deep);
-        }
+void Layout::AdjustSizes() {
+    for(auto item:layout_items_) {
+        item->AdjustSizes();
     }
     SetLimitMinWidth(CalculateLimitMinWidth());
     SetLimitMinHeight(CalculateLimitMinHeight());
@@ -81,18 +80,6 @@ void Layout::AdjustSizes(bool deep) {
     SetLimitMaxHeight(CalculateLimitMaxHeight());
     SetPreferWidth(CalculatePreferWidth());
     SetPreferHeight(CalculatePreferHeight());
-}
-
-void Layout::SetGeometry(int32_t x, int32_t y, uint32_t width, uint32_t height) {
-    LayoutBaseItem::SetGeometry(x, y, width, height);
-}
-
-void Layout::Move(int32_t x, int32_t y) {
-    LayoutBaseItem::Move(x, y);
-}
-
-void Layout::ReSize(uint32_t width, uint32_t height){
-    LayoutBaseItem::ReSize(width, height);
 }
 
 void Layout::SetPreferWidth(uint32_t width) {
@@ -162,44 +149,6 @@ bool Layout::IsEmpty() {
     return empty;
 }
 
-void Layout::UpNotifyRelayout() {
-    if(ParentLayout()) {
-        ParentLayout()->RelayoutToAdapt();
-    } else if(ParentWidget()) {
-        ParentWidget()->RelayoutToAdapt();
-    }
-}
-
-void Layout::RelayoutToAdapt() {
-    if(NeedUpNotify()) {
-        UpNotifyRelayout();
-    } else {
-        LayoutAdaptManager::GetInstance()->Push(this);
-    }
-    if(LayoutAdaptManager::GetInstance()->AdaptOpened()) {
-        LayoutAdaptManager::GetInstance()->Flush();
-    }
-}
-
-bool Layout::NeedUpNotify() {
-    uint32_t prefer_width = PreferWidth();
-    uint32_t prefer_height = PreferHeight();
-    uint32_t limit_min_width = LimitMinWidth();
-    uint32_t limit_min_height = LimitMinHeight();
-    uint32_t limit_max_width = LimitMaxWidth();
-    uint32_t limit_max_height = LimitMaxHeight();
-
-    AdjustSizes(false);
-
-    if(prefer_width != PreferWidth()) return true;
-    if(prefer_height != PreferHeight()) return true;
-    if(limit_min_width != LimitMinWidth()) return true;
-    if(limit_min_height != LimitMinHeight()) return true;
-    if(limit_max_width != LimitMaxWidth()) return true;
-    if(limit_max_height != LimitMaxHeight()) return true;
-    return false;
-}
-
 LayoutItem* Layout::FindItem(LayoutBaseItem *item) {
     auto iter = layout_items_.begin();
     while (iter != layout_items_.end()) {
@@ -212,7 +161,7 @@ LayoutItem* Layout::FindItem(LayoutBaseItem *item) {
     return nullptr;
 }
 
-SkRect Layout::GeometryToAncestor() {
+SkRect Layout::GeometryToAncestor() const {
     int32_t x = X(), y= Y();
     Widget* parent = ParentWidget();
     while(parent) {

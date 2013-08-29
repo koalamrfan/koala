@@ -192,7 +192,7 @@ void BoxLayout::Relayout() {
         BoxLayoutItem *item = reinterpret_cast<BoxLayoutItem*>(iter->get());
         if(!item->IsEmpty()) {
             item->CalculatePosition(X(), Y(), Width(), Height());
-            item->Dolayout();
+            item->Relayout();
         }
         iter++;
     }

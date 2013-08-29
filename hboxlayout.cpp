@@ -111,7 +111,7 @@ void HBoxLayout::AllocHelperToBox() {
     while(iter != alloc_sections_.end()) {
         assert(iter->box_item);
         iter->box_item->CalculatePosition(pre_x, Y(), iter->section, Height()) ;
-        iter->box_item->Dolayout();
+        iter->box_item->Relayout();
         pre_x += iter->section;
         iter++;
     }

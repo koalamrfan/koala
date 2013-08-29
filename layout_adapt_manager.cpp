@@ -12,18 +12,6 @@ LayoutAdaptManager* LayoutAdaptManager::GetInstance() {
     return &layout_adapt_manager;
 }
 
-void LayoutAdaptManager::Push( LayoutAdaptItem* item) {
-    layout_adapt_items_.push_back(item);
-}
-
-LayoutAdaptManager::LayoutAdaptItem* LayoutAdaptManager::FindPublicItem() const {
-    if(layout_adapt_items_.size() == (uint32_t)1) {
-        layout_adapt_items_[0];
-    }
-    //TODO
-    return nullptr;
-}
-
 bool LayoutAdaptManager::AdaptOpened() const {
     return adapt_opened_;
 }
@@ -36,16 +24,11 @@ void LayoutAdaptManager::CloseAdapt() {
     adapt_opened_ = false;
 }
 
-void ui::LayoutAdaptManager::Flush() {
+void ui::LayoutAdaptManager::Drive() {
     if(adapt_opened_ == false) {
         return ;
     }
     App::GetInstance()->GetMainWindow()->Dolayout();
-    auto iter = layout_adapt_items_.begin();
-    while (iter != layout_adapt_items_.end()) {
-        (*iter)->Update();
-        iter++;
-    }
 }
 } // namespace ui
 

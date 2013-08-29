@@ -19,12 +19,12 @@ LayoutItem::LayoutItem(LayoutSpace* layout_space):layout_base_item_(layout_space
     type_ = kLayoutSpace;
 }
 
-void LayoutItem::Dolayout() {
-    layout_base_item_->Dolayout();
+void LayoutItem::Relayout() {
+    layout_base_item_->Relayout();
 }
 
-void LayoutItem::AdjustSizes(bool deep) {
-    layout_base_item_->AdjustSizes(deep);
+void LayoutItem::AdjustSizes() {
+    layout_base_item_->AdjustSizes();
 }
 
 void LayoutItem::Move(int32_t x, int32_t y) {

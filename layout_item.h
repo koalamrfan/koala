@@ -46,9 +46,9 @@ public:
     virtual void SetLimitMaxHeight(uint32_t height);
     virtual uint32_t LimitMaxHeight();
 
-    void Dolayout();
+    void Relayout();
 
-    virtual void AdjustSizes(bool deep);
+    virtual void AdjustSizes();
 
     virtual void UpNotifyRelayout();
     virtual void RelayoutToAdapt();

@@ -12,16 +12,13 @@ class LayoutAdaptManager
     typedef LayoutBaseItem LayoutAdaptItem;
 public:
     static LayoutAdaptManager* GetInstance();
-    void Push(LayoutAdaptItem* item);
-    void Flush();
+    void Drive();
     void OpenAdapt();
     void CloseAdapt();
     bool AdaptOpened() const;
 protected:
     LayoutAdaptManager();
-    LayoutAdaptItem* FindPublicItem() const;
 private:
-    std::vector<LayoutAdaptItem*> layout_adapt_items_;
     bool adapt_opened_;
 };
 } // namespace ui

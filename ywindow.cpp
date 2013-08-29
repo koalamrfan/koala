@@ -36,12 +36,10 @@ LRESULT CALLBACK Proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) {
     case WM_GETMINMAXINFO:
         {
             LPMINMAXINFO lpMMI = (LPMINMAXINFO)lParam;
-            lpMMI->ptMaxTrackSize.x = window->LimitMaxWidth();
-            lpMMI->ptMaxTrackSize.y = window->LimitMaxHeight();
-            lpMMI->ptMinTrackSize.x = window->LimitMinWidth();
-            lpMMI->ptMinTrackSize.y = window->LimitMinHeight();
-            lpMMI->ptMaxSize.x = lpMMI->ptMaxTrackSize.x;
-            lpMMI->ptMaxSize.y = lpMMI->ptMaxTrackSize.y;
+            lpMMI->ptMaxTrackSize.x = window->LimitMaxWidth() + GetSystemMetrics(SM_CYBORDER) + GetSystemMetrics(SM_CYBORDER);
+            lpMMI->ptMaxTrackSize.y = window->LimitMaxHeight() + GetSystemMetrics(SM_CYCAPTION) + GetSystemMetrics(SM_CYBORDER);
+            lpMMI->ptMinTrackSize.x = window->LimitMinWidth() + GetSystemMetrics(SM_CYBORDER) + GetSystemMetrics(SM_CYBORDER);
+            lpMMI->ptMinTrackSize.y = window->LimitMinHeight() + GetSystemMetrics(SM_CYCAPTION) + GetSystemMetrics(SM_CYBORDER);
 
         }
     default:

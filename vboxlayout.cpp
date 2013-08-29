@@ -63,7 +63,7 @@ uint32_t VBoxLayout::CalculatePreferWidth() {
 uint32_t VBoxLayout::CalculatePreferHeight() {
     uint32_t height = 0;
     for (auto item:layout_items_) {
-        height += (std::max)(item->LimitMinHeight(), item->PreferHeight());
+        height += item->PreferHeight();
     }
     return height;
 }
@@ -138,16 +138,15 @@ void VBoxLayout::AllocSectionByStrechFactor(uint32_t alloc_size, uint32_t sum_fa
         }
 
         bool alloc = false;
-        LayoutBaseItem* box = first->box_item->GetLayoutBaseItem();
         first->section = (uint32_t)((float)alloc_size/sum_factor*strech_factor);
-        if(first->section < box->LimitMinHeight()) {
-            first->section = box->LimitMinHeight();
+        if(first->section < first->box_item->LimitMinHeight()) {
+            first->section = first->box_item->LimitMinHeight();
             alloc = true;
-        } else if (first->section > box->LimitMaxHeight() && !IsUnderPrefer()) {
-            first->section = box->LimitMaxHeight();
+        } else if (first->section > first->box_item->LimitMaxHeight() && !IsUnderPrefer()) {
+            first->section = first->box_item->LimitMaxHeight();
             alloc = true;
-        } else if(first->section < box->PreferHeight() && !IsUnderPrefer()){
-            first->section = box->PreferHeight();
+        } else if(first->section < first->box_item->PreferHeight() && !IsUnderPrefer()){
+            first->section = first->box_item->PreferHeight();
             alloc = true;
         } else {
             first->status = AllocHelper::kTempAlloc;
@@ -160,7 +159,7 @@ void VBoxLayout::AllocSectionByStrechFactor(uint32_t alloc_size, uint32_t sum_fa
             ResetTempAllocToNoAlloc();
 
             alloc_size = Height();
-            uint32_t new_sum_factor = sum_factor;
+            new_sum_factor = 0;
 
             auto iter = alloc_sections_.begin();
             while(iter != alloc_sections_.end()) {

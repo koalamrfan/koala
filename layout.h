@@ -44,7 +44,7 @@ protected:
     virtual void AddItem(SharedLayoutItem item);
     virtual bool InsertItem(uint32_t index, SharedLayoutItem item);
     virtual bool RemoveItem(LayoutBaseItem *item);
-    virtual SharedLayoutItem ItemAt(uint32_t index);
+    virtual LayoutItem* ItemAt(uint32_t index);
     virtual LayoutItem* FindItem(LayoutBaseItem *item);
 
     virtual uint32_t CalculateLimitMinWidth() = 0;

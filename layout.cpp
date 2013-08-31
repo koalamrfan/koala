@@ -46,6 +46,11 @@ bool Layout::RemoveItem(LayoutBaseItem *item) {
     auto iter = layout_items_.begin();
     while (iter != layout_items_.end()) {
         if((*iter)->GetLayoutBaseItem() == item) {
+            if((*iter)->GetWidget()) {
+                (*iter)->GetWidget()->SetParentLayout(nullptr);
+            } else if((*iter)->GetLayout()) {
+                (*iter)->GetLayout()->SetParentLayout(nullptr);
+            }
             layout_items_.erase(iter);
             NotifyRelayout();
             return true;
@@ -60,14 +65,14 @@ uint32_t Layout::Count() const {
     return layout_items_.size();
 }
 
-Layout::SharedLayoutItem Layout::ItemAt(uint32_t  index) {
+LayoutItem* Layout::ItemAt(uint32_t  index) {
     if (index < 0) {
         index += Count();
     }
-    if (index < 0 || index > Count()) {
+    if (index < 0 || index >= Count()) {
         return nullptr;
     }
-    return layout_items_[index];
+    return layout_items_[index].get();
 }
 
 void Layout::AdjustSizes() {

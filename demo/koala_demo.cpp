@@ -1,10 +1,10 @@
-#include "app.h"
+#include "main.h"
 #include "panel.h"
 #include "button.h"
 #include "vboxlayout.h"
 
 void main(uint32_t argc, TCHAR** argv) {
-    ui::Window* window = App::GetInstance()->GetMainWindow();
+    ui::Window* window = ui::App::GetInstance()->GetMainWindow();
     ui::Panel* panel1 = new ui::Panel;
     ui::Panel* panel2 = new ui::Panel;
     //button1->SetTexture("normal.png", "hover.png", "press.png");

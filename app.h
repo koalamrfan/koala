@@ -5,6 +5,8 @@
 #include "ywindow.h"
 #include <memory>
 
+namespace ui
+{
 class App
 {
 public:
@@ -21,7 +23,7 @@ protected:
 private:
    std::shared_ptr<ui::Window> window_; 
 };
-
+} // namespace ui
 
 extern void main(uint32_t argc, TCHAR** argv);
 #endif

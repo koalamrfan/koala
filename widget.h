@@ -93,6 +93,7 @@ private:
     std::shared_ptr<SkCanvas> inner_canvas_;
     std::shared_ptr<SkBitmap> inner_bitmap_;
     bool auto_region_active_;
+    bool  visible_;
 };
 } // namespace ui
 

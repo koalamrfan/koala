@@ -11,7 +11,8 @@ Widget::Widget():parent_(nullptr),
         parent_layout_(nullptr),
         layout_(nullptr),
         auto_region_active_(true),
-        region_mode_(HitRegionMode::kAuto) {
+        region_mode_(HitRegionMode::kAuto),
+        visible_(true) {
     
 }
 
@@ -76,15 +77,17 @@ void Widget::SetGeometry(int x, int y, int width, int height) {
 }
 
 void Widget::Show() {
+    visible_ = true;
     NotifyRelayout();
 }
 
 void Widget::Hide() {
+    visible_ = false;
     NotifyRelayout();
 }
 
 bool Widget::IsVisible() const{
-    return true;
+    return visible_;
 }
 
 void Widget::SetLayout(Layout* layout) {

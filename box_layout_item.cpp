@@ -121,8 +121,8 @@ int BoxLayoutItem::PreferWidth() {
 int BoxLayoutItem::PreferHeight() {
     int height = 0;
     if(IsValidGap(BoxLayoutItem::kNorthValid) && IsValidGap(BoxLayoutItem::kSouthValid)) {
-        if(LayoutItem::PreferHeight() < MAX_LENGTH - NorthSpace() - EastSpace()) {
-            height = LayoutItem::PreferHeight() + NorthSpace() + EastSpace();
+        if(LayoutItem::PreferHeight() < MAX_LENGTH - NorthSpace() - SouthSpace()) {
+            height = LayoutItem::PreferHeight() + NorthSpace() + SouthSpace();
         }
     } else if(IsValidGap(BoxLayoutItem::kNorthValid)){
         if(LayoutItem::PreferHeight() < MAX_LENGTH - NorthSpace()) {

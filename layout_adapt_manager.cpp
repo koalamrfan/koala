@@ -28,7 +28,7 @@ void ui::LayoutAdaptManager::Drive() {
     if(adapt_opened_ == false) {
         return ;
     }
-    App::GetInstance()->GetMainWindow()->Dolayout();
+    App::DoLayout();
 }
 } // namespace ui
 

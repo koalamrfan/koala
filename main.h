@@ -60,7 +60,7 @@ BOOL KoalaInitInstance(HINSTANCE hInstance, int nCmdShow, LPTSTR lpCmdLine)
         arg = _tcstok_s(NULL, _T(" "), &next);
     }
 
-    ui::App::GetInstance()->Init(hWnd, argc, argv);
+    ui::App::Init(hWnd, argc, argv);
 
     ShowWindow(hWnd, nCmdShow);
     UpdateWindow(hWnd);

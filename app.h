@@ -3,6 +3,8 @@
 
 #include <windows.h>
 #include "ywindow.h"
+#include "widget.h"
+#include "SkRect.h"
 #include <memory>
 
 namespace ui
@@ -10,18 +12,14 @@ namespace ui
 class App
 {
 public:
-    static App* GetInstance();
-
-    void Init(HWND hwnd, uint32_t argc, TCHAR** argv);
-
-    ui::Window* GetMainWindow() const {
-        return window_.get();
-    }
-protected:
-    App() {}
+    static void Init(HWND hwnd, uint32_t argc, TCHAR** argv);
+    static Widget* MainWindowHitest(int32_t x, int32_t y);
+    static void Update(const SkRect& clip_rect);
+    static void DoLayout();
+    static Window* MainWindow();
 
 private:
-   std::shared_ptr<ui::Window> window_; 
+   static std::shared_ptr<ui::Window> window_; 
 };
 } // namespace ui
 

@@ -4,7 +4,7 @@
 #include "vboxlayout.h"
 
 void main(uint32_t argc, TCHAR** argv) {
-    ui::Window* window = ui::App::GetInstance()->GetMainWindow();
+    ui::Window* window = ui::App::MainWindow();
     ui::Panel* panel1 = new ui::Panel;
     ui::Panel* panel2 = new ui::Panel;
     //button1->SetTexture("normal.png", "hover.png", "press.png");

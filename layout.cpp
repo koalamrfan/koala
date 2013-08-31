@@ -9,11 +9,14 @@
 
 namespace ui
 {
-void Layout::AddItem(SharedLayoutItem item) {
+void Layout::AddItem(std::shared_ptr<LayoutItem> item) {
     InsertItem(layout_items_.size(), item);
 }
 
-bool Layout::InsertItem(int index, SharedLayoutItem item) {
+bool Layout::InsertItem(int index, std::shared_ptr<LayoutItem> item) {
+    if(item == nullptr) {
+        return false;
+    }
     if(index < 0) {
         index += Count();
     }
@@ -43,6 +46,9 @@ bool Layout::InsertItem(int index, SharedLayoutItem item) {
 }
 
 bool Layout::RemoveItem(LayoutBaseItem *item) {
+    if(item == nullptr) {
+        return false;
+    }
     auto iter = layout_items_.begin();
     while (iter != layout_items_.end()) {
         if((*iter)->GetLayoutBaseItem() == item) {
@@ -85,6 +91,13 @@ void Layout::AdjustSizes() {
     SetLimitMaxHeight(CalculateLimitMaxHeight());
     SetPreferWidth(CalculatePreferWidth());
     SetPreferHeight(CalculatePreferHeight());
+
+    assert(LimitMinWidth() <= LimitMaxWidth());
+    assert(LimitMinHeight() <= LimitMaxHeight());
+    assert(LimitMinWidth() <= PreferWidth());
+    assert(PreferWidth() <= LimitMaxWidth());
+    assert(LimitMinHeight() <= PreferHeight());
+    assert(PreferHeight() <= LimitMaxHeight());
 }
 
 void Layout::SetParentWidget(Widget* widget) {

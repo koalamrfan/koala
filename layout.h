@@ -14,8 +14,7 @@ class Layout:public LayoutBaseItem
 {
     friend class Widget;
     friend class LayoutItem;
-    
-    typedef std::shared_ptr<LayoutItem> SharedLayoutItem;
+
 public:
     virtual void AddWidget(Widget* widget) = 0;
     virtual bool InsertWidget(int index, Widget *widget) = 0;
@@ -41,8 +40,8 @@ public:
 protected:
     Layout():parent_widget_(nullptr), parent_layout_(nullptr) {}
 
-    virtual void AddItem(SharedLayoutItem item);
-    virtual bool InsertItem(int index, SharedLayoutItem item);
+    virtual void AddItem(std::shared_ptr<LayoutItem> item);
+    virtual bool InsertItem(int index, std::shared_ptr<LayoutItem> item);
     virtual bool RemoveItem(LayoutBaseItem *item);
     virtual LayoutItem* ItemAt(int index);
     virtual LayoutItem* FindItem(LayoutBaseItem *item);
@@ -54,7 +53,7 @@ protected:
     virtual int CalculatePreferWidth() = 0;
     virtual int CalculatePreferHeight() = 0;
 
-    std::vector<SharedLayoutItem> layout_items_;
+    std::vector<std::shared_ptr<LayoutItem>> layout_items_;
 private:
     Widget* parent_widget_;
     Layout* parent_layout_;

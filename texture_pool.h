@@ -20,7 +20,7 @@ public:
     
     void Init(Window* window);
 
-    void ResizeCanvas(uint32_t width, uint32_t height);
+    void ResizeCanvas(int width, int height);
 
     SkCanvas* GetCanvas();
     SkBitmap* GetBitmap();

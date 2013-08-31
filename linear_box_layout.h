@@ -29,7 +29,7 @@ protected:
 
         }
 
-        uint32_t section;
+        int section;
         AllocStatus status;
         LinearBoxLayoutItem* box_item;
     };
@@ -37,18 +37,18 @@ public:
     LinearBoxLayout();
     ~LinearBoxLayout();
 
-    void SetStrechFactor(LayoutBaseItem* item, uint32_t strech_factor);
+    void SetStrechFactor(LayoutBaseItem* item, int strech_factor);
     void SetStrongElastic(LayoutBaseItem* item);
     void SetWeakElastic(LayoutBaseItem* item);
     
     virtual void AddWidget(Widget* widget) override ;
-    virtual bool InsertWidget(uint32_t index, Widget *widget) override ;
+    virtual bool InsertWidget(int index, Widget *widget) override ;
     
     virtual void AddLayout(Layout* layout) override ;
-    virtual bool InsertLayout(uint32_t index, Layout *layout) override ;
+    virtual bool InsertLayout(int index, Layout *layout) override ;
     
     void AddSpace(LayoutSpace* space);
-    bool InsertSpace(uint32_t index, LayoutSpace *space) ;
+    bool InsertSpace(int index, LayoutSpace *space) ;
     bool RemoveSpace(LayoutSpace *space) ;
 protected:
     virtual void Relayout() override;

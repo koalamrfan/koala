@@ -12,8 +12,8 @@ VBoxLayout::VBoxLayout() {
   
 }
 
-uint32_t VBoxLayout::CalculateLimitMinWidth() {
-    uint32_t width = 0;
+int VBoxLayout::CalculateLimitMinWidth() {
+    int width = 0;
     for (auto item:layout_items_) {
         if(item->LimitMinWidth() > width) {
             width = item->LimitMinWidth();
@@ -22,16 +22,16 @@ uint32_t VBoxLayout::CalculateLimitMinWidth() {
     return width;
 }
 
-uint32_t VBoxLayout::CalculateLimitMinHeight() {
-    uint32_t height = 0;
+int VBoxLayout::CalculateLimitMinHeight() {
+    int height = 0;
     for (auto item:layout_items_) {
         height += item->LimitMinHeight();
     }
     return height;
 }
 
-uint32_t VBoxLayout::CalculateLimitMaxWidth() {
-    uint32_t width = MAX_LENGTH;
+int VBoxLayout::CalculateLimitMaxWidth() {
+    int width = MAX_LENGTH;
     for (auto item:layout_items_) {
         if(item->LimitMaxWidth() < width) {
             width = item->LimitMaxWidth();
@@ -40,8 +40,8 @@ uint32_t VBoxLayout::CalculateLimitMaxWidth() {
     return width;
 }
 
-uint32_t VBoxLayout::CalculateLimitMaxHeight() {
-    uint32_t height = MAX_LENGTH;
+int VBoxLayout::CalculateLimitMaxHeight() {
+    int height = MAX_LENGTH;
     for (auto item:layout_items_) {
         if(height < MAX_LENGTH - item->LimitMaxHeight()) {
             height += item->LimitMaxHeight();
@@ -50,8 +50,8 @@ uint32_t VBoxLayout::CalculateLimitMaxHeight() {
     return height;
 }
 
-uint32_t VBoxLayout::CalculatePreferWidth() {
-    uint32_t width = 0;
+int VBoxLayout::CalculatePreferWidth() {
+    int width = 0;
     for (auto item:layout_items_) {
         if(item->PreferWidth() > width) {
             width = item->PreferWidth();
@@ -60,8 +60,8 @@ uint32_t VBoxLayout::CalculatePreferWidth() {
     return width;
 }
 
-uint32_t VBoxLayout::CalculatePreferHeight() {
-    uint32_t height = 0;
+int VBoxLayout::CalculatePreferHeight() {
+    int height = 0;
     for (auto item:layout_items_) {
         height += item->PreferHeight();
     }
@@ -73,8 +73,8 @@ bool VBoxLayout::IsUnderPrefer() {
 }
 
 void VBoxLayout::DoUnderPrefer() {
-    uint32_t alloc_size = Height();
-    uint32_t sum_factor = 0;
+    int alloc_size = Height();
+    int sum_factor = 0;
 
     auto iter = alloc_sections_.begin();
     while(iter != alloc_sections_.end()) {
@@ -86,8 +86,8 @@ void VBoxLayout::DoUnderPrefer() {
 }
 
 void VBoxLayout::DoExceedPrefer() {
-    uint32_t alloc_size = Height();
-    uint32_t sum_factor = 0;
+    int alloc_size = Height();
+    int sum_factor = 0;
 
     bool strong = IsStrongWeakAllInNoAlloc();
 
@@ -108,7 +108,7 @@ void VBoxLayout::DoExceedPrefer() {
 
 void VBoxLayout::AllocHelperToBox() {
     auto iter = alloc_sections_.begin();
-    int32_t pre_y = Y();
+    int pre_y = Y();
     while(iter != alloc_sections_.end()) {
         assert(iter->box_item);
         iter->box_item->CalculatePosition(X(), pre_y, Width(), iter->section);
@@ -118,7 +118,7 @@ void VBoxLayout::AllocHelperToBox() {
     }
 }
 
-void VBoxLayout::AllocSectionByStrechFactor(uint32_t alloc_size, uint32_t sum_factor) {
+void VBoxLayout::AllocSectionByStrechFactor(int alloc_size, int sum_factor) {
     auto first = alloc_sections_.begin();
     while(first != alloc_sections_.end()) {
         if(first->status == AllocHelper::kNoAlloc) {
@@ -129,7 +129,7 @@ void VBoxLayout::AllocSectionByStrechFactor(uint32_t alloc_size, uint32_t sum_fa
 
     if(first != alloc_sections_.end()) {
         assert(first->box_item);
-        uint32_t strech_factor = 0;
+        int strech_factor = 0;
         if(IsUnderPrefer()) {
             strech_factor = first->box_item->PreferHeight();
         } else {
@@ -137,7 +137,7 @@ void VBoxLayout::AllocSectionByStrechFactor(uint32_t alloc_size, uint32_t sum_fa
         }
 
         bool alloc = false;
-        first->section = (uint32_t)((float)alloc_size/sum_factor*strech_factor);
+        first->section = (int)((float)alloc_size/sum_factor*strech_factor);
         if(first->section < first->box_item->LimitMinHeight()) {
             first->section = first->box_item->LimitMinHeight();
             alloc = true;
@@ -152,7 +152,7 @@ void VBoxLayout::AllocSectionByStrechFactor(uint32_t alloc_size, uint32_t sum_fa
             alloc = false;
         }
 
-        uint32_t new_sum_factor = sum_factor;
+        int new_sum_factor = sum_factor;
         if(alloc) {
             first->status = AllocHelper::kAlloc;
             ResetTempAllocToNoAlloc();

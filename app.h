@@ -12,8 +12,8 @@ namespace ui
 class App
 {
 public:
-    static void Init(HWND hwnd, uint32_t argc, TCHAR** argv);
-    static Widget* MainWindowHitest(int32_t x, int32_t y);
+    static void Init(HWND hwnd, int argc, TCHAR** argv);
+    static Widget* MainWindowHitest(int x, int y);
     static void Update(const SkRect& clip_rect);
     static void DoLayout();
     static Window* MainWindow();
@@ -23,5 +23,5 @@ private:
 };
 } // namespace ui
 
-extern void main(uint32_t argc, TCHAR** argv);
+extern void main(int argc, TCHAR** argv);
 #endif

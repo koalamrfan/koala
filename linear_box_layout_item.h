@@ -17,13 +17,13 @@ public:
     LinearBoxLayoutItem(Layout* layout);
     LinearBoxLayoutItem(LayoutSpace* layout_space);
     
-    void SetStrechFactor(uint32_t strech_factor);
-    uint32_t StrechFactor() const;
+    void SetStrechFactor(int strech_factor);
+    int StrechFactor() const;
     void SetStrongElastic();
     void SetWeakElastic();
     bool IsStrongElastic() const;
 protected:
-    uint32_t strech_factor_;
+    int strech_factor_;
     bool    strong_elastic_;
 };
 } // namespace ui

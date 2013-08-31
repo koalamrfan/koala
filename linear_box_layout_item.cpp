@@ -29,11 +29,11 @@ LinearBoxLayoutItem::LinearBoxLayoutItem(LayoutSpace* layout_space):
     SetAround(0, 0, 0, 0);  
 }
 
-void LinearBoxLayoutItem::SetStrechFactor(uint32_t strech_factor) {
+void LinearBoxLayoutItem::SetStrechFactor(int strech_factor) {
     strech_factor_ = strech_factor;
 }
 
-uint32_t LinearBoxLayoutItem::StrechFactor() const {
+int LinearBoxLayoutItem::StrechFactor() const {
     return strech_factor_;
 }
 

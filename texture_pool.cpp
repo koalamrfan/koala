@@ -68,7 +68,7 @@ std::shared_ptr<BmpRenderTactics> TexturePool::CreateNormalTactics() {
     return std::make_shared<NormalTactics>();
 }
 
-void TexturePool::ResizeCanvas(uint32_t width, uint32_t height) {
+void TexturePool::ResizeCanvas(int width, int height) {
     if(bitmap_) {
         bitmap_ = std::make_shared<SkBitmap>();
         bitmap_->setConfig(SkBitmap::kARGB_8888_Config, width, height);

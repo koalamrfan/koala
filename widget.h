@@ -30,15 +30,15 @@ public:
     Widget();
     virtual ~Widget();
 
-    Widget* ChildAt(uint32_t index);
-    uint32_t ChildrenNum() const;
+    Widget* ChildAt(int index);
+    int ChildrenNum() const;
     void SetParent(Widget* parent);
     Widget* Parent() const;
     void SetParentLayout(Layout* parent);
     Layout* ParentLayout() const;
     Layout* BaseLayout() const;
 
-    virtual void SetGeometry(int32_t x, int32_t y, uint32_t width, uint32_t height) override;
+    virtual void SetGeometry(int x, int y, int width, int height) override;
     virtual void Show();
     virtual void Hide();
     bool IsVisible() const;
@@ -46,12 +46,12 @@ public:
     
     virtual void AdjustSizes() override;
     
-    virtual void SetPreferWidth(uint32_t width) override;
-    virtual void SetPreferHeight(uint32_t height) override;
-    virtual void SetLimitMinWidth(uint32_t width) override;
-    virtual void SetLimitMinHeight(uint32_t height) override;
-    virtual void SetLimitMaxWidth(uint32_t width) override;
-    virtual void SetLimitMaxHeight(uint32_t height) override;
+    virtual void SetPreferWidth(int width) override;
+    virtual void SetPreferHeight(int height) override;
+    virtual void SetLimitMinWidth(int width) override;
+    virtual void SetLimitMinHeight(int height) override;
+    virtual void SetLimitMaxWidth(int width) override;
+    virtual void SetLimitMaxHeight(int height) override;
 
     void Draw(const SkRect& clip_rect);
     void SetRegion(const SkRegion& region);
@@ -69,7 +69,7 @@ public:
     std::vector<SkBitmap*> Bitmap();
 
     virtual bool DoEvent(Event* event) { return false; };
-    Widget* HitTest(int32_t x, int32_t y);
+    Widget* HitTest(int x, int y);
 protected:
     virtual void Relayout() override;
     virtual void AddChild(Widget* widget);
@@ -79,8 +79,8 @@ protected:
     void MakeInnerBitmap(const SkRect& clip_rect);
     std::shared_ptr<BmpRenderTactics> GetRenderTactics();
     
-    bool PointInRegion(int32_t x, int32_t y);
-    bool PointInInnerBitmap(int32_t x, int32_t y);
+    bool PointInRegion(int x, int y);
+    bool PointInInnerBitmap(int x, int y);
 
     std::vector<Widget*> children_;
     Layout* layout_;

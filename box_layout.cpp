@@ -13,35 +13,35 @@ BoxLayout::BoxLayout() {
 
 }
 
-void BoxLayout::SetWestSpace(LayoutBaseItem *item, uint32_t west_space) {
+void BoxLayout::SetWestSpace(LayoutBaseItem *item, int west_space) {
     BoxLayoutItem *bli = reinterpret_cast<BoxLayoutItem *>(FindItem(item));
     assert(bli);
     bli->SetWestSpace(west_space);
 }
 
-void BoxLayout::SetNorthSpace(LayoutBaseItem *item, uint32_t north_space) {
+void BoxLayout::SetNorthSpace(LayoutBaseItem *item, int north_space) {
     BoxLayoutItem *bli = reinterpret_cast<BoxLayoutItem *>(FindItem(item));
     assert(bli);
     bli->SetNorthSpace(north_space);
 }
 
-void BoxLayout::SetEastSpace(LayoutBaseItem *item, uint32_t east_space) {
+void BoxLayout::SetEastSpace(LayoutBaseItem *item, int east_space) {
     BoxLayoutItem *bli = reinterpret_cast<BoxLayoutItem *>(FindItem(item));
     assert(bli);
     bli->SetEastSpace(east_space);
 }
 
-void BoxLayout::SetSouthSpace(LayoutBaseItem *item, uint32_t south_space) {
+void BoxLayout::SetSouthSpace(LayoutBaseItem *item, int south_space) {
     BoxLayoutItem *bli = reinterpret_cast<BoxLayoutItem *>(FindItem(item));
     assert(bli);
     bli->SetSouthSpace(south_space);
 }
 
 void BoxLayout::SetAround(LayoutBaseItem *item, 
-                          uint32_t west_space, 
-                          uint32_t north_space, 
-                          uint32_t east_space, 
-                          uint32_t south_space) {
+                          int west_space, 
+                          int north_space, 
+                          int east_space, 
+                          int south_space) {
     BoxLayoutItem *bli = reinterpret_cast<BoxLayoutItem *>(FindItem(item));
     assert(bli);
     SetWestSpace(bli->GetLayoutBaseItem(), west_space);
@@ -62,7 +62,7 @@ void BoxLayout::AddWidget(Widget* widget) {
     Layout::AddItem(std::make_shared<BoxLayoutItem>(widget));
 }
 
-bool BoxLayout::InsertWidget(uint32_t index, Widget *widget) {
+bool BoxLayout::InsertWidget(int index, Widget *widget) {
     return Layout::InsertItem(index, std::make_shared<BoxLayoutItem>(widget));
 }
 
@@ -75,7 +75,7 @@ void BoxLayout::AddLayout(Layout* layout) {
     Layout::AddItem(std::make_shared<BoxLayoutItem>(layout));
 }
 
-bool BoxLayout::InsertLayout(uint32_t index, Layout *layout) {
+bool BoxLayout::InsertLayout(int index, Layout *layout) {
     return Layout::InsertItem(index, std::make_shared<BoxLayoutItem>(layout));
 }
 
@@ -84,8 +84,8 @@ bool BoxLayout::RemoveLayout(Layout *layout) {
     return Layout::RemoveItem(layout);
 }
 
-uint32_t BoxLayout::CalculateLimitMinWidth() {
-    uint32_t min_width = 0;
+int BoxLayout::CalculateLimitMinWidth() {
+    int min_width = 0;
     auto iter = layout_items_.begin();
     while(iter != layout_items_.end()) {
         BoxLayoutItem *item = reinterpret_cast<BoxLayoutItem*>(iter->get());
@@ -101,8 +101,8 @@ uint32_t BoxLayout::CalculateLimitMinWidth() {
     return min_width;
 }
 
-uint32_t BoxLayout::CalculateLimitMinHeight() {
-    uint32_t min_height = 0;
+int BoxLayout::CalculateLimitMinHeight() {
+    int min_height = 0;
     auto iter = layout_items_.begin();
     while(iter != layout_items_.end()) {
         BoxLayoutItem *item = reinterpret_cast<BoxLayoutItem*>(iter->get());
@@ -118,8 +118,8 @@ uint32_t BoxLayout::CalculateLimitMinHeight() {
     return min_height;
 }
 
-uint32_t BoxLayout::CalculateLimitMaxWidth() {
-    uint32_t max_width = MAX_LENGTH;
+int BoxLayout::CalculateLimitMaxWidth() {
+    int max_width = MAX_LENGTH;
     auto iter = layout_items_.begin();
     while(iter != layout_items_.end()) {
         BoxLayoutItem *item = reinterpret_cast<BoxLayoutItem*>(iter->get());
@@ -135,8 +135,8 @@ uint32_t BoxLayout::CalculateLimitMaxWidth() {
     return max_width;
 }
 
-uint32_t BoxLayout::CalculateLimitMaxHeight() {
-    uint32_t max_height = MAX_LENGTH;
+int BoxLayout::CalculateLimitMaxHeight() {
+    int max_height = MAX_LENGTH;
     auto iter = layout_items_.begin();
     while(iter != layout_items_.end()) {
         BoxLayoutItem *item = reinterpret_cast<BoxLayoutItem*>(iter->get());
@@ -152,8 +152,8 @@ uint32_t BoxLayout::CalculateLimitMaxHeight() {
     return max_height;
 }
 
-uint32_t BoxLayout::CalculatePreferWidth() {
-    uint32_t prefer_width = 0;
+int BoxLayout::CalculatePreferWidth() {
+    int prefer_width = 0;
     auto iter = layout_items_.begin();
     while(iter != layout_items_.end()) {
         BoxLayoutItem *item = reinterpret_cast<BoxLayoutItem*>(iter->get());
@@ -169,8 +169,8 @@ uint32_t BoxLayout::CalculatePreferWidth() {
     return prefer_width;
 }
 
-uint32_t BoxLayout::CalculatePreferHeight() {
-    uint32_t prefer_height = 0;
+int BoxLayout::CalculatePreferHeight() {
+    int prefer_height = 0;
     auto iter = layout_items_.begin();
     while(iter != layout_items_.end()) {
         BoxLayoutItem *item = reinterpret_cast<BoxLayoutItem*>(iter->get());

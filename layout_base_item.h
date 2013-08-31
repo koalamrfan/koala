@@ -18,27 +18,27 @@ public:
 
     virtual ~LayoutBaseItem();
 
-    void Move(int32_t x, int32_t y);
-    void ReSize(uint32_t width, uint32_t height);
-    virtual void SetGeometry(int32_t x, int32_t y, uint32_t width, uint32_t height);
-    int32_t X() const;
-    int32_t Y() const;
-    uint32_t Width() const;
-    uint32_t Height() const;
+    void Move(int x, int y);
+    void ReSize(int width, int height);
+    virtual void SetGeometry(int x, int y, int width, int height);
+    int X() const;
+    int Y() const;
+    int Width() const;
+    int Height() const;
     SkRect Geometry() const;
     virtual SkRect GeometryToAncestor() const = 0;
-    virtual void SetPreferWidth(uint32_t width);
-    virtual uint32_t PreferWidth();
-    virtual void SetPreferHeight(uint32_t height);
-    virtual uint32_t PreferHeight();
-    virtual void SetLimitMinWidth(uint32_t width);
-    virtual uint32_t LimitMinWidth();
-    virtual void SetLimitMinHeight(uint32_t height);
-    virtual uint32_t LimitMinHeight();
-    virtual void SetLimitMaxWidth(uint32_t width);
-    virtual uint32_t LimitMaxWidth();
-    virtual void SetLimitMaxHeight(uint32_t height);
-    virtual uint32_t LimitMaxHeight();
+    virtual void SetPreferWidth(int width);
+    virtual int PreferWidth();
+    virtual void SetPreferHeight(int height);
+    virtual int PreferHeight();
+    virtual void SetLimitMinWidth(int width);
+    virtual int LimitMinWidth();
+    virtual void SetLimitMinHeight(int height);
+    virtual int LimitMinHeight();
+    virtual void SetLimitMaxWidth(int width);
+    virtual int LimitMaxWidth();
+    virtual void SetLimitMaxHeight(int height);
+    virtual int LimitMaxHeight();
     void Dolayout();
     virtual void AdjustSizes() = 0;
     void Update(const SkRect& clip_rect) const;
@@ -49,18 +49,18 @@ public:
 protected:
     virtual void Relayout() = 0;
 private:
-    int32_t x_;
-    int32_t y_;
-    uint32_t width_;
-    uint32_t height_;
+    int x_;
+    int y_;
+    int width_;
+    int height_;
 
-    uint32_t prefer_width_;
-    uint32_t prefer_height_;
+    int prefer_width_;
+    int prefer_height_;
 
-    uint32_t limit_min_width_;
-    uint32_t limit_min_height_;
-    uint32_t limit_max_width_;
-    uint32_t limit_max_height_;
+    int limit_min_width_;
+    int limit_min_height_;
+    int limit_max_width_;
+    int limit_max_height_;
 };
 } // namesapce ui
 

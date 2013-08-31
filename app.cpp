@@ -5,13 +5,13 @@ namespace ui
 {
 std::shared_ptr<Window> App::window_;
 
-void App::Init(HWND hwnd, uint32_t argc, TCHAR** argv) {
+void App::Init(HWND hwnd, int argc, TCHAR** argv) {
     window_ = std::make_shared<Window>(hwnd);
 
     main(argc, argv);
 }
 
-Widget* App::MainWindowHitest(int32_t x, int32_t y) {
+Widget* App::MainWindowHitest(int x, int y) {
     return window_->HitTest(x, y);
 }
 

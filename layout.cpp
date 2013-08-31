@@ -13,7 +13,7 @@ void Layout::AddItem(SharedLayoutItem item) {
     InsertItem(layout_items_.size(), item);
 }
 
-bool Layout::InsertItem(uint32_t index, SharedLayoutItem item) {
+bool Layout::InsertItem(int index, SharedLayoutItem item) {
     if(index < 0) {
         index += Count();
     }
@@ -61,11 +61,11 @@ bool Layout::RemoveItem(LayoutBaseItem *item) {
     return false;
 }
 
-uint32_t Layout::Count() const {
+int Layout::Count() const {
     return layout_items_.size();
 }
 
-LayoutItem* Layout::ItemAt(uint32_t  index) {
+LayoutItem* Layout::ItemAt(int  index) {
     if (index < 0) {
         index += Count();
     }
@@ -143,7 +143,7 @@ LayoutItem* Layout::FindItem(LayoutBaseItem *item) {
 }
 
 SkRect Layout::GeometryToAncestor() const {
-    int32_t x = X(), y= Y();
+    int x = X(), y= Y();
     Widget* parent = ParentWidget();
     while(parent) {
         x += parent->X();

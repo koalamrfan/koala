@@ -34,30 +34,30 @@ BoxLayoutItem::BoxLayoutItem(LayoutSpace* layout_space):
 
 }
 
-void BoxLayoutItem::SetWestSpace(uint32_t west_space) {
+void BoxLayoutItem::SetWestSpace(int west_space) {
     west_space_ = west_space;
     SetValidGap(kWestValid);
 }
 
-void BoxLayoutItem::SetNorthSpace(uint32_t north_space) {
+void BoxLayoutItem::SetNorthSpace(int north_space) {
     north_space_ = north_space;
     SetValidGap(kNorthValid);
 }
 
-void BoxLayoutItem::SetEastSpace(uint32_t east_space) {
+void BoxLayoutItem::SetEastSpace(int east_space) {
     east_space_ = east_space;
         SetValidGap(kEastValid);
 }
 
-void BoxLayoutItem::SetSouthSpace(uint32_t south_space) {
+void BoxLayoutItem::SetSouthSpace(int south_space) {
     south_space_ = south_space;
     SetValidGap(kSouthValid);
 }
 
-void BoxLayoutItem::SetAround(uint32_t west_space, 
-                   uint32_t north_space, 
-                   uint32_t east_space, 
-                   uint32_t south_space) {
+void BoxLayoutItem::SetAround(int west_space, 
+                   int north_space, 
+                   int east_space, 
+                   int south_space) {
     SetWestSpace(west_space);
     SetNorthSpace(north_space);
     SetEastSpace(east_space);
@@ -76,24 +76,24 @@ bool BoxLayoutItem::IsValidGap(GapValid gap_valid) const {
     return (gap_valid_ & gap_valid) == gap_valid;
 }
 
-uint32_t BoxLayoutItem::WestSpace() const {
+int BoxLayoutItem::WestSpace() const {
     return west_space_;
 }
 
-uint32_t BoxLayoutItem::NorthSpace() const {
+int BoxLayoutItem::NorthSpace() const {
     return north_space_;
 }
 
-uint32_t BoxLayoutItem::EastSpace() const {
+int BoxLayoutItem::EastSpace() const {
     return east_space_;
 }
 
-uint32_t BoxLayoutItem::SouthSpace() const {
+int BoxLayoutItem::SouthSpace() const {
     return south_space_;
 }
 
-uint32_t BoxLayoutItem::PreferWidth() {
-    uint32_t width = 0;
+int BoxLayoutItem::PreferWidth() {
+    int width = 0;
     if(IsValidGap(BoxLayoutItem::kWestValid) && IsValidGap(BoxLayoutItem::kEastValid)) {
         if(LayoutItem::PreferWidth() < MAX_LENGTH - EastSpace() - WestSpace()) {
             width = LayoutItem::PreferWidth() + EastSpace() + WestSpace();
@@ -118,8 +118,8 @@ uint32_t BoxLayoutItem::PreferWidth() {
     return width;
 }
 
-uint32_t BoxLayoutItem::PreferHeight() {
-    uint32_t height = 0;
+int BoxLayoutItem::PreferHeight() {
+    int height = 0;
     if(IsValidGap(BoxLayoutItem::kNorthValid) && IsValidGap(BoxLayoutItem::kSouthValid)) {
         if(LayoutItem::PreferHeight() < MAX_LENGTH - NorthSpace() - EastSpace()) {
             height = LayoutItem::PreferHeight() + NorthSpace() + EastSpace();
@@ -144,12 +144,12 @@ uint32_t BoxLayoutItem::PreferHeight() {
     return height;
 }
 
-uint32_t BoxLayoutItem::LimitMinWidth() {
+int BoxLayoutItem::LimitMinWidth() {
     if(LayoutItem::LimitMinWidth() == 0) {
         return 0;
     }
 
-    uint32_t width = 0;
+    int width = 0;
     if(IsValidGap(BoxLayoutItem::kWestValid) && IsValidGap(BoxLayoutItem::kEastValid)) {
         if(LayoutItem::LimitMinWidth() < MAX_LENGTH - WestSpace() - EastSpace()) {
             width = LayoutItem::LimitMinWidth() + WestSpace() + EastSpace();
@@ -168,12 +168,12 @@ uint32_t BoxLayoutItem::LimitMinWidth() {
     return width;
 }
 
-uint32_t BoxLayoutItem::LimitMinHeight() {
+int BoxLayoutItem::LimitMinHeight() {
     if(LayoutItem::LimitMinHeight() == 0) {
         return 0;
     }
 
-    uint32_t height = 0;
+    int height = 0;
     if(IsValidGap(BoxLayoutItem::kNorthValid) && IsValidGap(BoxLayoutItem::kSouthValid)) {
         if(LayoutItem::LimitMinHeight() < MAX_LENGTH - WestSpace() - EastSpace()) {
             height = LayoutItem::LimitMinHeight() + NorthSpace() + SouthSpace();
@@ -192,12 +192,12 @@ uint32_t BoxLayoutItem::LimitMinHeight() {
     return height;
 }
 
-uint32_t BoxLayoutItem::LimitMaxWidth() {
+int BoxLayoutItem::LimitMaxWidth() {
     if(LayoutItem::LimitMaxWidth() == 0) {
         return 0;
     }
 
-    uint32_t width = MAX_LENGTH;
+    int width = MAX_LENGTH;
     if(IsValidGap(BoxLayoutItem::kWestValid) && IsValidGap(BoxLayoutItem::kEastValid)) {
         if(LayoutItem::LimitMaxWidth() < MAX_LENGTH - EastSpace() - WestSpace()) {
             width = LayoutItem::LimitMaxWidth() + EastSpace() + WestSpace();
@@ -214,12 +214,12 @@ uint32_t BoxLayoutItem::LimitMaxWidth() {
     return width;
 }
 
-uint32_t BoxLayoutItem::LimitMaxHeight() {
+int BoxLayoutItem::LimitMaxHeight() {
     if(LayoutItem::LimitMaxHeight() == 0) {
         return 0;
     }
 
-    uint32_t height = MAX_LENGTH;
+    int height = MAX_LENGTH;
     if(IsValidGap(BoxLayoutItem::kNorthValid) && IsValidGap(BoxLayoutItem::kSouthValid)) {
         if(LayoutItem::LimitMaxHeight() < MAX_LENGTH - NorthSpace() - SouthSpace()) {
             height = LayoutItem::LimitMaxHeight() + NorthSpace() + SouthSpace();
@@ -236,10 +236,10 @@ uint32_t BoxLayoutItem::LimitMaxHeight() {
     return height;
 }
 
-void BoxLayoutItem::CalculatePosition(int32_t container_x, 
-                                      int32_t container_y,
-                                      uint32_t container_width, 
-                                      uint32_t container_height) {
+void BoxLayoutItem::CalculatePosition(int container_x, 
+                                      int container_y,
+                                      int container_width, 
+                                      int container_height) {
     assert(container_width >= LimitMinWidth());
     assert(container_height >= LimitMinHeight());
     assert(container_width <= LimitMaxWidth());
@@ -253,10 +253,10 @@ void BoxLayoutItem::CalculatePosition(int32_t container_x,
                 CalculateHeight(container_height));
 }
 
-int32_t BoxLayoutItem::CalculateX(int32_t container_x, 
-                                  uint32_t container_width) {
-    uint32_t width = (std::min)(PreferWidth(), container_width);
-    int32_t x = container_x + (container_width - width)/2;
+int BoxLayoutItem::CalculateX(int container_x, 
+                                  int container_width) {
+    int width = (std::min)(PreferWidth(), container_width);
+    int x = container_x + (container_width - width)/2;
     if(IsValidGap(BoxLayoutItem::kWestValid) && IsValidGap(BoxLayoutItem::kEastValid)) {
         x = container_x + WestSpace();
     } else if(IsValidGap(BoxLayoutItem::kWestValid)) {
@@ -268,10 +268,10 @@ int32_t BoxLayoutItem::CalculateX(int32_t container_x,
     return x;
 }
 
-int32_t BoxLayoutItem::CalculateY(int32_t container_y, 
-                                  uint32_t container_height) {
-    uint32_t height = (std::min)(PreferHeight(), container_height);
-    int32_t y = container_y + (container_height - height)/2;
+int BoxLayoutItem::CalculateY(int container_y, 
+                                  int container_height) {
+    int height = (std::min)(PreferHeight(), container_height);
+    int y = container_y + (container_height - height)/2;
     if(IsValidGap(BoxLayoutItem::kNorthValid) && IsValidGap(BoxLayoutItem::kSouthValid)) {
         y = container_y + NorthSpace();
     } else if(IsValidGap(BoxLayoutItem::kNorthValid)) {
@@ -283,8 +283,8 @@ int32_t BoxLayoutItem::CalculateY(int32_t container_y,
     return y;
 }
 
-uint32_t BoxLayoutItem::CalculateWidth(uint32_t container_width) {
-    uint32_t width = (std::min)(PreferWidth(), container_width);
+int BoxLayoutItem::CalculateWidth(int container_width) {
+    int width = (std::min)(PreferWidth(), container_width);
     if(IsValidGap(BoxLayoutItem::kWestValid) && IsValidGap(BoxLayoutItem::kEastValid)) {
         if(container_width < EastSpace() + WestSpace()) {
             width = 0;
@@ -307,8 +307,8 @@ uint32_t BoxLayoutItem::CalculateWidth(uint32_t container_width) {
     return width;
 }
 
-uint32_t BoxLayoutItem::CalculateHeight(uint32_t container_height) {
-    uint32_t height = (std::min)(PreferHeight(), container_height);
+int BoxLayoutItem::CalculateHeight(int container_height) {
+    int height = (std::min)(PreferHeight(), container_height);
     if(IsValidGap(BoxLayoutItem::kNorthValid) && IsValidGap(BoxLayoutItem::kSouthValid)) {
         if(container_height < NorthSpace() + SouthSpace()) {
             height = 0;

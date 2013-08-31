@@ -26,25 +26,25 @@ public:
     
     virtual ~LayoutItem() {}
 public:
-    virtual void Move(int32_t x, int32_t y) ;
-    virtual void ReSize(uint32_t width, uint32_t height) ;
-    virtual void SetGeometry(int32_t x, int32_t y, uint32_t width, uint32_t height) ;
-    virtual int32_t X() ;
-    virtual int32_t Y() ;
-    virtual uint32_t Width() ;
-    virtual uint32_t Height() ;
-    virtual void SetPreferWidth(uint32_t width);
-    virtual uint32_t PreferWidth();
-    virtual void SetPreferHeight(uint32_t height);
-    virtual uint32_t PreferHeight();
-    virtual void SetLimitMinWidth(uint32_t width);
-    virtual uint32_t LimitMinWidth();
-    virtual void SetLimitMinHeight(uint32_t height);
-    virtual uint32_t LimitMinHeight();
-    virtual void SetLimitMaxWidth(uint32_t width);
-    virtual uint32_t LimitMaxWidth();
-    virtual void SetLimitMaxHeight(uint32_t height);
-    virtual uint32_t LimitMaxHeight();
+    virtual void Move(int x, int y) ;
+    virtual void ReSize(int width, int height) ;
+    virtual void SetGeometry(int x, int y, int width, int height) ;
+    virtual int X() ;
+    virtual int Y() ;
+    virtual int Width() ;
+    virtual int Height() ;
+    virtual void SetPreferWidth(int width);
+    virtual int PreferWidth();
+    virtual void SetPreferHeight(int height);
+    virtual int PreferHeight();
+    virtual void SetLimitMinWidth(int width);
+    virtual int LimitMinWidth();
+    virtual void SetLimitMinHeight(int height);
+    virtual int LimitMinHeight();
+    virtual void SetLimitMaxWidth(int width);
+    virtual int LimitMaxWidth();
+    virtual void SetLimitMaxHeight(int height);
+    virtual int LimitMaxHeight();
 
     void Relayout();
 

@@ -40,10 +40,10 @@ public:
 
     static std::vector<std::shared_ptr<Event>> CreateEvent(UINT message, WPARAM wParam, LPARAM lParam);
 
-    int32_t X();
-    int32_t Y();
+    int X();
+    int Y();
 
-    void SetXY(int32_t x, int32_t y);
+    void SetXY(int x, int y);
 
     void SetButton(MouseButton button);
     MouseButton Button() const {
@@ -60,8 +60,8 @@ public:
     }
 
 private:
-    int32_t x_;
-    int32_t y_;
+    int x_;
+    int y_;
     MouseButton button_;
     MouseAction action_;
 };

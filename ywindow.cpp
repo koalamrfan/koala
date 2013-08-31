@@ -38,10 +38,10 @@ LRESULT CALLBACK Proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) {
     case WM_GETMINMAXINFO:
         {
             LPMINMAXINFO lpMMI = (LPMINMAXINFO)lParam;
-            if(window->LimitMaxWidth() < (uint32_t)(INT32_MAX - GetSystemMetrics(SM_CYBORDER) + GetSystemMetrics(SM_CYBORDER))) {
+            if(window->LimitMaxWidth() < (int)(INT32_MAX - GetSystemMetrics(SM_CYBORDER) + GetSystemMetrics(SM_CYBORDER))) {
                 lpMMI->ptMaxTrackSize.x = window->LimitMaxWidth() + GetSystemMetrics(SM_CYBORDER) + GetSystemMetrics(SM_CYBORDER);
             }
-            if(window->LimitMaxHeight() < (uint32_t)(INT32_MAX - GetSystemMetrics(SM_CYBORDER) + GetSystemMetrics(SM_CYBORDER))) {
+            if(window->LimitMaxHeight() < (int)(INT32_MAX - GetSystemMetrics(SM_CYBORDER) + GetSystemMetrics(SM_CYBORDER))) {
                 lpMMI->ptMaxTrackSize.y = window->LimitMaxHeight() + GetSystemMetrics(SM_CYCAPTION) + GetSystemMetrics(SM_CYBORDER);
             }
             RECT inner_rect, window_rect;
@@ -91,7 +91,7 @@ void Window::OnDraw(SkCanvas* canvas, const SkRect& clip_rect) {
         canvas->clear(SK_AlphaTRANSPARENT);
 }
 
-void Window::SetGeometry(int32_t x, int32_t y, uint32_t width, uint32_t height) {
+void Window::SetGeometry(int x, int y, int width, int height) {
     TexturePool::GetInstance()->ResizeCanvas(width, height);
     Widget::SetGeometry(x, y, width, height);
 }

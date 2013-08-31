@@ -17,7 +17,7 @@ public:
     }
     virtual void OnDraw(SkCanvas* canvas, const SkRect& clip_rect) override;
     virtual bool DoEvent(Event* event) override;
-    virtual void SetGeometry(int32_t x, int32_t y, uint32_t width, uint32_t height) override;
+    virtual void SetGeometry(int x, int y, int width, int height) override;
 
 protected:
     friend LRESULT CALLBACK Proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);

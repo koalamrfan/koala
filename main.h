@@ -48,7 +48,7 @@ BOOL KoalaInitInstance(HINSTANCE hInstance, int nCmdShow, LPTSTR lpCmdLine)
     }
 
     TCHAR* argv[4096];
-    uint32_t argc = 0;
+    int argc = 0;
     TCHAR exename[1024], *next;
     int exenameLen = GetModuleFileName(NULL, exename, SK_ARRAY_COUNT(exename));
     // we're ignoring the possibility that the exe name exceeds the exename buffer

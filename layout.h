@@ -18,14 +18,14 @@ class Layout:public LayoutBaseItem
     typedef std::shared_ptr<LayoutItem> SharedLayoutItem;
 public:
     virtual void AddWidget(Widget* widget) = 0;
-    virtual bool InsertWidget(uint32_t index, Widget *widget) = 0;
+    virtual bool InsertWidget(int index, Widget *widget) = 0;
     virtual bool RemoveWidget(Widget *widget) = 0;
     
     virtual void AddLayout(Layout* layout) = 0;
-    virtual bool InsertLayout(uint32_t index, Layout *layout) = 0;
+    virtual bool InsertLayout(int index, Layout *layout) = 0;
     virtual bool RemoveLayout(Layout *layout) = 0;
     
-    uint32_t Count() const;
+    int Count() const;
 
     void SetParentWidget(Widget* parent);
     Widget* ParentWidget() const;
@@ -42,17 +42,17 @@ protected:
     Layout():parent_widget_(nullptr), parent_layout_(nullptr) {}
 
     virtual void AddItem(SharedLayoutItem item);
-    virtual bool InsertItem(uint32_t index, SharedLayoutItem item);
+    virtual bool InsertItem(int index, SharedLayoutItem item);
     virtual bool RemoveItem(LayoutBaseItem *item);
-    virtual LayoutItem* ItemAt(uint32_t index);
+    virtual LayoutItem* ItemAt(int index);
     virtual LayoutItem* FindItem(LayoutBaseItem *item);
 
-    virtual uint32_t CalculateLimitMinWidth() = 0;
-    virtual uint32_t CalculateLimitMinHeight() = 0;
-    virtual uint32_t CalculateLimitMaxWidth() = 0;
-    virtual uint32_t CalculateLimitMaxHeight() = 0;
-    virtual uint32_t CalculatePreferWidth() = 0;
-    virtual uint32_t CalculatePreferHeight() = 0;
+    virtual int CalculateLimitMinWidth() = 0;
+    virtual int CalculateLimitMinHeight() = 0;
+    virtual int CalculateLimitMaxWidth() = 0;
+    virtual int CalculateLimitMaxHeight() = 0;
+    virtual int CalculatePreferWidth() = 0;
+    virtual int CalculatePreferHeight() = 0;
 
     std::vector<SharedLayoutItem> layout_items_;
 private:

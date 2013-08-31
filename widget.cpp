@@ -41,13 +41,13 @@ void Widget::RemoveChild(Widget* widget) {
     }
 }
 
-Widget* Widget::ChildAt(uint32_t index) {
+Widget* Widget::ChildAt(int index) {
     if(index < 0 || index >= ChildrenNum())
         return nullptr;
     return children_[index];
 }
 
-uint32_t Widget::ChildrenNum() const {
+int Widget::ChildrenNum() const {
     return children_.size();
 }
 
@@ -70,7 +70,7 @@ Layout* Widget::ParentLayout() const {
     return parent_layout_;
 }
 
-void Widget::SetGeometry(int32_t x, int32_t y, uint32_t width, uint32_t height) {
+void Widget::SetGeometry(int x, int y, int width, int height) {
     UpdateAutoRegion();
     LayoutBaseItem::SetGeometry(x, y, width, height);
 }
@@ -125,32 +125,32 @@ void Widget::Relayout() {
     }
 }
 
-void Widget::SetPreferWidth(uint32_t width) {
+void Widget::SetPreferWidth(int width) {
     LayoutBaseItem::SetPreferWidth(width);
     NotifyRelayout();
 }
 
-void Widget::SetPreferHeight(uint32_t height) {
+void Widget::SetPreferHeight(int height) {
     LayoutBaseItem::SetPreferHeight(height);
     NotifyRelayout();
 }
 
-void Widget::SetLimitMinWidth(uint32_t width) {
+void Widget::SetLimitMinWidth(int width) {
     LayoutBaseItem::SetLimitMinWidth(width);
     NotifyRelayout();
 }
 
-void Widget::SetLimitMinHeight(uint32_t height) {
+void Widget::SetLimitMinHeight(int height) {
     LayoutBaseItem::SetLimitMinHeight(height);
     NotifyRelayout();
 }
 
-void Widget::SetLimitMaxWidth(uint32_t width) {
+void Widget::SetLimitMaxWidth(int width) {
     LayoutBaseItem::SetLimitMaxWidth(width);
     NotifyRelayout();
 }
 
-void Widget::SetLimitMaxHeight(uint32_t height) {
+void Widget::SetLimitMaxHeight(int height) {
     LayoutBaseItem::SetLimitMaxHeight(height);
     NotifyRelayout();
 }
@@ -201,7 +201,7 @@ void Widget::SetRegion(const SkRegion& region) {
     region_ = region;
 }
 
-bool Widget::PointInRegion(int32_t x, int32_t y) {
+bool Widget::PointInRegion(int x, int y) {
     if(GetHitRegionMode() == HitRegionMode::kAuto) {
         if(GeometryToAncestor().contains(SkIntToScalar(x), SkIntToScalar(y))) {
             return PointInInnerBitmap(x - SkScalarFloorToInt(GeometryToAncestor().x()),
@@ -223,7 +223,7 @@ bool Widget::PointInRegion(int32_t x, int32_t y) {
     return false;
 }
 
-Widget* Widget::HitTest(int32_t x, int32_t y) {
+Widget* Widget::HitTest(int x, int y) {
     if(!IsVisible()) {
         return nullptr;
     }
@@ -241,7 +241,7 @@ Widget* Widget::HitTest(int32_t x, int32_t y) {
 }
 
 SkRect Widget::GeometryToAncestor() const {
-    int32_t x = X(), y= Y();
+    int x = X(), y= Y();
     Widget* parent = Parent();
     while(parent) {
         x += parent->X();
@@ -310,7 +310,7 @@ void Widget::UpdateAutoRegion() {
     auto_region_active_ = true;
 }
 
-bool Widget::PointInInnerBitmap(int32_t x, int32_t y) {
+bool Widget::PointInInnerBitmap(int x, int y) {
     if(inner_bitmap_ == nullptr) {
         return false;
     }

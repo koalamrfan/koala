@@ -27,79 +27,79 @@ void LayoutItem::AdjustSizes() {
     layout_base_item_->AdjustSizes();
 }
 
-void LayoutItem::Move(int32_t x, int32_t y) {
+void LayoutItem::Move(int x, int y) {
     layout_base_item_->Move(x, y);
 }
 
-void LayoutItem::ReSize(uint32_t width, uint32_t height) {
+void LayoutItem::ReSize(int width, int height) {
     layout_base_item_->ReSize(width, height);
 }
 
-void LayoutItem::SetGeometry(int32_t x, int32_t y, uint32_t width, uint32_t height) {
+void LayoutItem::SetGeometry(int x, int y, int width, int height) {
     layout_base_item_->SetGeometry(x, y, width, height);
 }
 
-int32_t LayoutItem::X() {
+int LayoutItem::X() {
     return layout_base_item_->X();
 }
 
-int32_t LayoutItem::Y() {
+int LayoutItem::Y() {
     return layout_base_item_->Y();
 }
 
-uint32_t LayoutItem::Width() {
+int LayoutItem::Width() {
     return layout_base_item_->Width();
 }
 
-uint32_t LayoutItem::Height() {
+int LayoutItem::Height() {
     return layout_base_item_->Height();
 }
 
-void LayoutItem::SetPreferWidth(uint32_t width) {
+void LayoutItem::SetPreferWidth(int width) {
     layout_base_item_->SetPreferWidth(width);
 }
 
-uint32_t LayoutItem::PreferWidth() {
+int LayoutItem::PreferWidth() {
     return layout_base_item_->PreferWidth();
 }
 
-void LayoutItem::SetPreferHeight(uint32_t height) {
+void LayoutItem::SetPreferHeight(int height) {
     layout_base_item_->SetPreferHeight(height);
 }
 
-uint32_t LayoutItem::PreferHeight() {
+int LayoutItem::PreferHeight() {
     return layout_base_item_->PreferHeight();
 }
 
-void LayoutItem::SetLimitMinWidth(uint32_t width) {
+void LayoutItem::SetLimitMinWidth(int width) {
     layout_base_item_->SetLimitMinWidth(width);
 }
 
-uint32_t LayoutItem::LimitMinWidth() {
+int LayoutItem::LimitMinWidth() {
     return layout_base_item_->LimitMinWidth();
 }
 
-void LayoutItem::SetLimitMinHeight(uint32_t height) {
+void LayoutItem::SetLimitMinHeight(int height) {
     layout_base_item_->SetLimitMinHeight(height);
 }
 
-uint32_t LayoutItem::LimitMinHeight() {
+int LayoutItem::LimitMinHeight() {
     return layout_base_item_->LimitMinHeight();
 }
 
-void LayoutItem::SetLimitMaxWidth(uint32_t width) {
+void LayoutItem::SetLimitMaxWidth(int width) {
     layout_base_item_->SetLimitMaxWidth(width);
 }
 
-uint32_t LayoutItem::LimitMaxWidth() {
+int LayoutItem::LimitMaxWidth() {
     return layout_base_item_->LimitMaxWidth();
 }
 
-void LayoutItem::SetLimitMaxHeight(uint32_t height) {
+void LayoutItem::SetLimitMaxHeight(int height) {
     layout_base_item_->SetLimitMaxHeight(height);
 }
 
-uint32_t LayoutItem::LimitMaxHeight() {
+int LayoutItem::LimitMaxHeight() {
     return layout_base_item_->LimitMaxHeight();
 }
 

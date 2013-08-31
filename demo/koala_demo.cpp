@@ -3,7 +3,7 @@
 #include "button.h"
 #include "vboxlayout.h"
 
-void main(uint32_t argc, TCHAR** argv) {
+void main(int argc, TCHAR** argv) {
     ui::Window* window = ui::App::MainWindow();
     ui::Panel* panel1 = new ui::Panel;
     ui::Panel* panel2 = new ui::Panel;

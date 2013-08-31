@@ -28,7 +28,7 @@ private:
     ui::Widget *widget_;
     ui::Widget *awidget_;
     ui::Widget *bwidget_;
-    uint16_t i;
+    uint i;
 };
 
 #endif

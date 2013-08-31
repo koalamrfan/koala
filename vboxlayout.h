@@ -11,17 +11,17 @@ public:
     VBoxLayout();
 
 protected:
-    virtual uint32_t CalculateLimitMinWidth() override;
-    virtual uint32_t CalculateLimitMinHeight() override;
-    virtual uint32_t CalculateLimitMaxWidth() override;
-    virtual uint32_t CalculateLimitMaxHeight() override;
-    virtual uint32_t CalculatePreferWidth() override;
-    virtual uint32_t CalculatePreferHeight() override;
+    virtual int CalculateLimitMinWidth() override;
+    virtual int CalculateLimitMinHeight() override;
+    virtual int CalculateLimitMaxWidth() override;
+    virtual int CalculateLimitMaxHeight() override;
+    virtual int CalculatePreferWidth() override;
+    virtual int CalculatePreferHeight() override;
     virtual bool IsUnderPrefer() override;
     virtual void DoUnderPrefer() override;
     virtual void DoExceedPrefer() override;
     virtual void AllocHelperToBox() override;
-    void AllocSectionByStrechFactor(uint32_t alloc_size, uint32_t sum_factor);
+    void AllocSectionByStrechFactor(int alloc_size, int sum_factor);
     
 };
 } // namespace ui

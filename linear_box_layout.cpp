@@ -14,7 +14,7 @@ LinearBoxLayout::LinearBoxLayout() {
   
 }
 
-void LinearBoxLayout::SetStrechFactor(LayoutBaseItem* item, uint32_t strech_factor) {
+void LinearBoxLayout::SetStrechFactor(LayoutBaseItem* item, int strech_factor) {
     LinearBoxLayoutItem *lbli = reinterpret_cast<LinearBoxLayoutItem *>(FindItem(item));
     assert(lbli);
     lbli->SetStrechFactor(strech_factor);
@@ -36,7 +36,7 @@ void LinearBoxLayout::AddWidget(Widget* widget) {
     Layout::AddItem(std::make_shared<LinearBoxLayoutItem>(widget));
 }
 
-bool LinearBoxLayout::InsertWidget(uint32_t index, Widget *widget) {
+bool LinearBoxLayout::InsertWidget(int index, Widget *widget) {
     return Layout::InsertItem(index, std::make_shared<LinearBoxLayoutItem>(widget));
 }
     
@@ -44,7 +44,7 @@ void LinearBoxLayout::AddLayout(Layout* layout) {
     Layout::AddItem(std::make_shared<LinearBoxLayoutItem>(layout));
 }
 
-bool LinearBoxLayout::InsertLayout(uint32_t index, Layout *layout) {
+bool LinearBoxLayout::InsertLayout(int index, Layout *layout) {
     return Layout::InsertItem(index, std::make_shared<LinearBoxLayoutItem>(layout));
 }
 
@@ -52,7 +52,7 @@ void LinearBoxLayout::AddSpace(LayoutSpace* space) {
     Layout::AddItem(std::make_shared<LinearBoxLayoutItem>(space));
 }
 
-bool LinearBoxLayout::InsertSpace(uint32_t index, LayoutSpace *space) {
+bool LinearBoxLayout::InsertSpace(int index, LayoutSpace *space) {
     return Layout::InsertItem(index, std::make_shared<LinearBoxLayoutItem>(space));
 }
 

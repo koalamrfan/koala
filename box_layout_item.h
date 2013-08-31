@@ -24,45 +24,45 @@ public:
         kSouthValid = 8
     };
 
-    void SetWestSpace(uint32_t west_space);
-    void SetNorthSpace(uint32_t north_space);
-    void SetEastSpace(uint32_t east_space);
-    void SetSouthSpace(uint32_t south_space);
-    void SetAround(uint32_t west_space, 
-                   uint32_t north_space, 
-                   uint32_t east_space, 
-                   uint32_t south_space);
+    void SetWestSpace(int west_space);
+    void SetNorthSpace(int north_space);
+    void SetEastSpace(int east_space);
+    void SetSouthSpace(int south_space);
+    void SetAround(int west_space, 
+                   int north_space, 
+                   int east_space, 
+                   int south_space);
     
     void SetValidGap(GapValid gap_valid, bool valid = true);
     bool IsValidGap(GapValid gap_valid) const;
 
-    uint32_t WestSpace() const;
-    uint32_t NorthSpace() const;
-    uint32_t EastSpace() const;
-    uint32_t SouthSpace() const;
+    int WestSpace() const;
+    int NorthSpace() const;
+    int EastSpace() const;
+    int SouthSpace() const;
     
-    virtual uint32_t PreferWidth() override ;
-    virtual uint32_t PreferHeight() override ;
-    virtual uint32_t LimitMinWidth() override ;
-    virtual uint32_t LimitMinHeight() override ;
-    virtual uint32_t LimitMaxWidth() override ;
-    virtual uint32_t LimitMaxHeight() override ;
+    virtual int PreferWidth() override ;
+    virtual int PreferHeight() override ;
+    virtual int LimitMinWidth() override ;
+    virtual int LimitMinHeight() override ;
+    virtual int LimitMaxWidth() override ;
+    virtual int LimitMaxHeight() override ;
     
-    void CalculatePosition(int32_t container_x, 
-                           int32_t container_y,
-                           uint32_t container_width, 
-                           uint32_t container_height);
+    void CalculatePosition(int container_x, 
+                           int container_y,
+                           int container_width, 
+                           int container_height);
 protected:
-    int32_t CalculateX(int32_t container_x, uint32_t container_width);
-    int32_t CalculateY(int32_t container_y, uint32_t container_height);
-    uint32_t CalculateWidth(uint32_t container_width);
-    uint32_t CalculateHeight(uint32_t container_height);
+    int CalculateX(int container_x, int container_width);
+    int CalculateY(int container_y, int container_height);
+    int CalculateWidth(int container_width);
+    int CalculateHeight(int container_height);
 private:
-    uint32_t west_space_;
-    uint32_t north_space_;
-    uint32_t east_space_;
-    uint32_t south_space_;
-    uint16_t gap_valid_;
+    int west_space_;
+    int north_space_;
+    int east_space_;
+    int south_space_;
+    int gap_valid_;
 };
 
 } // namespace ui

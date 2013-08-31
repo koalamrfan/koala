@@ -114,16 +114,16 @@ std::vector<std::shared_ptr<Event>> MouseEvent::CreateEvent(UINT message, WPARAM
     return mouse_events;
 }
 
-void MouseEvent::SetXY(int32_t x, int32_t y) {
+void MouseEvent::SetXY(int x, int y) {
     x_ = x;
     y_ = y;
 }
 
-int32_t MouseEvent::X() {
+int MouseEvent::X() {
     return x_;
 }
 
-int32_t MouseEvent::Y() {
+int MouseEvent::Y() {
     return y_;
 }
 

@@ -16,11 +16,11 @@ class Layout:public LayoutBaseItem
     friend class LayoutItem;
 
 public:
-    virtual void AddWidget(Widget* widget) = 0;
+    virtual bool AddWidget(Widget* widget) = 0;
     virtual bool InsertWidget(int index, Widget *widget) = 0;
     virtual bool RemoveWidget(Widget *widget) = 0;
     
-    virtual void AddLayout(Layout* layout) = 0;
+    virtual bool AddLayout(Layout* layout) = 0;
     virtual bool InsertLayout(int index, Layout *layout) = 0;
     virtual bool RemoveLayout(Layout *layout) = 0;
     
@@ -40,7 +40,7 @@ public:
 protected:
     Layout():parent_widget_(nullptr), parent_layout_(nullptr) {}
 
-    virtual void AddItem(std::shared_ptr<LayoutItem> item);
+    virtual bool AddItem(std::shared_ptr<LayoutItem> item);
     virtual bool InsertItem(int index, std::shared_ptr<LayoutItem> item);
     virtual bool RemoveItem(LayoutBaseItem *item);
     virtual LayoutItem* ItemAt(int index);

@@ -64,6 +64,10 @@ void BoxLayoutItem::SetAround(int west_space,
     SetSouthSpace(south_space);
 }
 
+void BoxLayoutItem::SetAroundInValid() {
+    gap_valid_ = GapValid::kInValid;
+}
+
 void BoxLayoutItem::SetValidGap(GapValid gap_valid, bool valid) {
     if(valid) {
         gap_valid_ |= gap_valid;
@@ -197,7 +201,7 @@ int BoxLayoutItem::LimitMaxWidth() {
         return 0;
     }
 
-    int width = MAX_LENGTH;
+    int width = LayoutItem::LimitMaxWidth();
     if(IsValidGap(BoxLayoutItem::kWestValid) && IsValidGap(BoxLayoutItem::kEastValid)) {
         if(LayoutItem::LimitMaxWidth() < MAX_LENGTH - EastSpace() - WestSpace()) {
             width = LayoutItem::LimitMaxWidth() + EastSpace() + WestSpace();
@@ -219,7 +223,7 @@ int BoxLayoutItem::LimitMaxHeight() {
         return 0;
     }
 
-    int height = MAX_LENGTH;
+    int height = LayoutItem::LimitMaxHeight();
     if(IsValidGap(BoxLayoutItem::kNorthValid) && IsValidGap(BoxLayoutItem::kSouthValid)) {
         if(LayoutItem::LimitMaxHeight() < MAX_LENGTH - NorthSpace() - SouthSpace()) {
             height = LayoutItem::LimitMaxHeight() + NorthSpace() + SouthSpace();

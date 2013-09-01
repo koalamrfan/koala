@@ -50,6 +50,12 @@ void BoxLayout::SetAround(LayoutBaseItem *item,
     SetSouthSpace(bli->GetLayoutBaseItem(), south_space);
 }
 
+void BoxLayout::SetAroundInValid(LayoutBaseItem *item) {
+    BoxLayoutItem *bli = reinterpret_cast<BoxLayoutItem *>(FindItem(item));
+    assert(bli);
+    bli->SetAroundInValid();
+}
+
 void BoxLayout::SetValidGap(LayoutBaseItem *item,
                             BoxLayoutItem::GapValid gap_valid, 
                             bool valid) {
@@ -58,8 +64,8 @@ void BoxLayout::SetValidGap(LayoutBaseItem *item,
     bli->SetValidGap(gap_valid, valid);
 }
 
-void BoxLayout::AddWidget(Widget* widget) {
-    Layout::AddItem(std::make_shared<BoxLayoutItem>(widget));
+bool BoxLayout::AddWidget(Widget* widget) {
+    return Layout::AddItem(std::make_shared<BoxLayoutItem>(widget));
 }
 
 bool BoxLayout::InsertWidget(int index, Widget *widget) {
@@ -71,8 +77,8 @@ bool BoxLayout::RemoveWidget(Widget *widget) {
     return Layout::RemoveItem(widget);
 }
     
-void BoxLayout::AddLayout(Layout* layout) {
-    Layout::AddItem(std::make_shared<BoxLayoutItem>(layout));
+bool BoxLayout::AddLayout(Layout* layout) {
+    return Layout::AddItem(std::make_shared<BoxLayoutItem>(layout));
 }
 
 bool BoxLayout::InsertLayout(int index, Layout *layout) {

@@ -25,16 +25,16 @@ public:
                    int north_space, 
                    int east_space, 
                    int south_space);
-
+    void SetAroundInValid(LayoutBaseItem *item);
     void SetValidGap(LayoutBaseItem *item,
                      BoxLayoutItem::GapValid gap_valid, 
                      bool valid = true);
     
-    virtual void AddWidget(Widget* widget) override ;
+    virtual bool AddWidget(Widget* widget) override ;
     virtual bool InsertWidget(int index, Widget *widget) override ;
     virtual bool RemoveWidget(Widget *widget) override ;
     
-    virtual void AddLayout(Layout* layout) override ;
+    virtual bool AddLayout(Layout* layout) override ;
     virtual bool InsertLayout(int index, Layout *layout) override ;
     virtual bool RemoveLayout(Layout *layout) override ;
 

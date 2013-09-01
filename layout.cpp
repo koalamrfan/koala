@@ -9,8 +9,8 @@
 
 namespace ui
 {
-void Layout::AddItem(std::shared_ptr<LayoutItem> item) {
-    InsertItem(layout_items_.size(), item);
+bool Layout::AddItem(std::shared_ptr<LayoutItem> item) {
+    return InsertItem(layout_items_.size(), item);
 }
 
 bool Layout::InsertItem(int index, std::shared_ptr<LayoutItem> item) {

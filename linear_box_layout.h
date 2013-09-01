@@ -41,13 +41,13 @@ public:
     void SetStrongElastic(LayoutBaseItem* item);
     void SetWeakElastic(LayoutBaseItem* item);
     
-    virtual void AddWidget(Widget* widget) override ;
+    virtual bool AddWidget(Widget* widget) override ;
     virtual bool InsertWidget(int index, Widget *widget) override ;
     
-    virtual void AddLayout(Layout* layout) override ;
+    virtual bool AddLayout(Layout* layout) override ;
     virtual bool InsertLayout(int index, Layout *layout) override ;
     
-    void AddSpace(LayoutSpace* space);
+    bool AddSpace(LayoutSpace* space);
     bool InsertSpace(int index, LayoutSpace *space) ;
     bool RemoveSpace(LayoutSpace *space) ;
 protected:

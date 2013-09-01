@@ -5,6 +5,8 @@
 #include "widget.h"
 #include "box_layout_item.h"
 #include "box_layout.h"
+#include "hboxlayout.h"
+#include "vboxlayout.h"
 
 namespace ui
 {
@@ -27,11 +29,11 @@ public:
 class TestLayout : public Layout
 {
 public:
-    virtual void AddWidget(Widget* widget) override {}
+    virtual bool AddWidget(Widget* widget) override {return true;}
     virtual bool InsertWidget(int index, Widget *widget) override {return true;}
     virtual bool RemoveWidget(Widget *widget) override {return true;}
 
-    virtual void AddLayout(Layout* layout) override {}
+    virtual bool AddLayout(Layout* layout) override {return true;}
     virtual bool InsertLayout(int index, Layout *layout) override {return true;}
     virtual bool RemoveLayout(Layout *layout) override {return true;}
 
@@ -339,5 +341,344 @@ TEST(Layout, BoxLayout)
     EXPECT_EQ(w3.Y(), 75);
     EXPECT_EQ(w3.Width(), 50);
     EXPECT_EQ(w3.Height(), 50);
+}
+
+TEST(Layout, HBoxLayout)
+{
+    HBoxLayout hbox_layout;
+    hbox_layout.SetGeometry(0, 0, 500, 500);
+    TestWidget w1, w2;
+    w1.SetPreferWidth(100);
+    w1.SetPreferHeight(100);
+    w2.SetPreferWidth(200);
+    w2.SetPreferHeight(200);
+    hbox_layout.AddWidget(&w1);
+    hbox_layout.AddWidget(&w2);
+
+    hbox_layout.Dolayout();
+    // default factor is 1
+    // alloc width > prefer width
+    EXPECT_EQ(w1.X(), 75);
+    EXPECT_EQ(w1.Y(), 200);
+    EXPECT_EQ(w1.Width(), 100);
+    EXPECT_EQ(w1.Height(), 100);
+
+    EXPECT_EQ(w2.X(), 275);
+    EXPECT_EQ(w2.Y(), 150);
+    EXPECT_EQ(w2.Width(), 200);
+    EXPECT_EQ(w2.Height(), 200);
+
+    // alloc width < prefer width
+    w2.SetPreferWidth(300);
+
+    hbox_layout.Dolayout();
+
+    EXPECT_EQ(w1.X(), 50);
+    EXPECT_EQ(w1.Y(), 200);
+    EXPECT_EQ(w1.Width(), 100);
+    EXPECT_EQ(w1.Height(), 100);
+
+    EXPECT_EQ(w2.X(), 200);
+    EXPECT_EQ(w2.Y(), 150);
+    EXPECT_EQ(w2.Width(), 300);
+    EXPECT_EQ(w2.Height(), 200);
+
+    // alloc height < prefer height
+    w2.SetPreferHeight(600);
+
+    hbox_layout.Dolayout();
+
+    EXPECT_EQ(w1.X(), 50);
+    EXPECT_EQ(w1.Y(), 200);
+    EXPECT_EQ(w1.Width(), 100);
+    EXPECT_EQ(w1.Height(), 100);
+
+    EXPECT_EQ(w2.X(), 200);
+    EXPECT_EQ(w2.Y(), 0);
+    EXPECT_EQ(w2.Width(), 300);
+    EXPECT_EQ(w2.Height(), 500);
+
+    hbox_layout.SetStrechFactor(&w1, 0);
+
+    w1.SetPreferWidth(100);
+    w1.SetPreferHeight(100);
+    w2.SetPreferWidth(200);
+    w2.SetPreferHeight(100);
+
+    hbox_layout.Dolayout();
+
+    EXPECT_EQ(w1.X(), 0);
+    EXPECT_EQ(w1.Y(), 200);
+    EXPECT_EQ(w1.Width(), 100);
+    EXPECT_EQ(w1.Height(), 100);
+
+    EXPECT_EQ(w2.X(), 200);
+    EXPECT_EQ(w2.Y(), 200);
+    EXPECT_EQ(w2.Width(), 200);
+    EXPECT_EQ(w2.Height(), 100);
+
+    // factor > 1
+    w1.SetPreferWidth(100);
+    w1.SetPreferHeight(100);
+    w2.SetPreferWidth(200);
+    w2.SetPreferHeight(100);
+
+    hbox_layout.SetAround(&w1, 0, 0, 0, 0);
+    hbox_layout.SetAround(&w2, 0, 0, 0, 0);
+
+    hbox_layout.SetStrechFactor(&w1, 2);
+    hbox_layout.SetStrechFactor(&w2, 3);
+
+    hbox_layout.Dolayout();
+
+    EXPECT_EQ(w1.X(), 0);
+    EXPECT_EQ(w1.Y(), 0);
+    EXPECT_EQ(w1.Width(), 200);
+    EXPECT_EQ(w1.Height(), 500);
+
+    EXPECT_EQ(w2.X(), 200);
+    EXPECT_EQ(w2.Y(), 0);
+    EXPECT_EQ(w2.Width(), 300);
+    EXPECT_EQ(w2.Height(), 500);
+
+    // limit min width
+    hbox_layout.SetStrechFactor(&w1, 1);
+    hbox_layout.SetStrechFactor(&w2, 1);
+
+    w1.SetPreferWidth(100);
+    w1.SetPreferHeight(100);
+    w2.SetPreferWidth(200);
+    w2.SetPreferHeight(100);
+
+    w1.SetLimitMinWidth(500);
+
+    hbox_layout.SetAroundInValid(&w1);
+    hbox_layout.SetAroundInValid(&w2);
+
+    hbox_layout.Dolayout();
+
+    EXPECT_EQ(w1.X(), 0);
+    EXPECT_EQ(w1.Y(), 200);
+    EXPECT_EQ(w1.Width(), 500);
+    EXPECT_EQ(w1.Height(), 100);
+
+    EXPECT_EQ(w2.Width(), 0);
+
+    // limit min height
+    w1.SetLimitMinHeight(300);
+
+    hbox_layout.Dolayout();
+
+    EXPECT_EQ(w1.X(), 0);
+    EXPECT_EQ(w1.Y(), 100);
+    EXPECT_EQ(w1.Width(), 500);
+    EXPECT_EQ(w1.Height(), 300);
+
+    EXPECT_EQ(w2.Width(), 0);
+
+    // limit max width
+    w1.SetPreferWidth(100);
+    w1.SetPreferHeight(100);
+    w2.SetPreferWidth(200);
+    w2.SetPreferHeight(100);
+
+    w1.SetLimitMinWidth(0);
+    w1.SetLimitMaxWidth(1);
+
+    hbox_layout.SetStrechFactor(&w1, 1);
+    hbox_layout.SetStrechFactor(&w2, 1);
+
+    hbox_layout.SetAround(&w1, 0, 0, 0, 0);
+    hbox_layout.SetAround(&w2, 0, 0, 0, 0);
+
+    hbox_layout.Dolayout();
+
+    EXPECT_EQ(w1.Width(), 1);
+    EXPECT_EQ(w2.Width(), 499);
+}
+
+TEST(Layout, VBoxLayout)
+{
+    VBoxLayout vbox_layout;
+    vbox_layout.SetGeometry(0, 0, 500, 500);
+    TestWidget w1, w2;
+    w1.SetPreferWidth(100);
+    w1.SetPreferHeight(100);
+    w2.SetPreferWidth(200);
+    w2.SetPreferHeight(200);
+    vbox_layout.AddWidget(&w1);
+    vbox_layout.AddWidget(&w2);
+
+    vbox_layout.Dolayout();
+    // default factor is 1
+    // alloc height > prefer height
+    EXPECT_EQ(w1.X(), 200);
+    EXPECT_EQ(w1.Y(), 75);
+    EXPECT_EQ(w1.Width(), 100);
+    EXPECT_EQ(w1.Height(), 100);
+
+    EXPECT_EQ(w2.X(), 150);
+    EXPECT_EQ(w2.Y(), 275);
+    EXPECT_EQ(w2.Width(), 200);
+    EXPECT_EQ(w2.Height(), 200);
+
+    // alloc height < prefer height
+    w2.SetPreferHeight(300);
+
+    vbox_layout.Dolayout();
+
+    EXPECT_EQ(w1.X(), 200);
+    EXPECT_EQ(w1.Y(), 50);
+    EXPECT_EQ(w1.Width(), 100);
+    EXPECT_EQ(w1.Height(), 100);
+
+    EXPECT_EQ(w2.X(), 150);
+    EXPECT_EQ(w2.Y(), 200);
+    EXPECT_EQ(w2.Width(), 200);
+    EXPECT_EQ(w2.Height(), 300);
+
+    // alloc width < prefer width
+    w2.SetPreferWidth(600);
+
+    vbox_layout.Dolayout();
+
+    EXPECT_EQ(w1.X(), 200);
+    EXPECT_EQ(w1.Y(), 50);
+    EXPECT_EQ(w1.Width(), 100);
+    EXPECT_EQ(w1.Height(), 100);
+
+    EXPECT_EQ(w2.X(), 0);
+    EXPECT_EQ(w2.Y(), 200);
+    EXPECT_EQ(w2.Width(), 500);
+    EXPECT_EQ(w2.Height(), 300);
+
+    vbox_layout.SetStrechFactor(&w1, 0);
+
+    w1.SetPreferWidth(100);
+    w1.SetPreferHeight(100);
+    w2.SetPreferWidth(100);
+    w2.SetPreferHeight(200);
+
+    vbox_layout.Dolayout();
+
+    EXPECT_EQ(w1.X(), 200);
+    EXPECT_EQ(w1.Y(), 0);
+    EXPECT_EQ(w1.Width(), 100);
+    EXPECT_EQ(w1.Height(), 100);
+
+    EXPECT_EQ(w2.X(), 200);
+    EXPECT_EQ(w2.Y(), 200);
+    EXPECT_EQ(w2.Width(), 100);
+    EXPECT_EQ(w2.Height(), 200);
+
+    // factor > 1
+    w1.SetPreferWidth(100);
+    w1.SetPreferHeight(100);
+    w2.SetPreferWidth(100);
+    w2.SetPreferHeight(200);
+
+    vbox_layout.SetAround(&w1, 0, 0, 0, 0);
+    vbox_layout.SetAround(&w2, 0, 0, 0, 0);
+
+    vbox_layout.SetStrechFactor(&w1, 2);
+    vbox_layout.SetStrechFactor(&w2, 3);
+
+    vbox_layout.Dolayout();
+
+    EXPECT_EQ(w1.X(), 0);
+    EXPECT_EQ(w1.Y(), 0);
+    EXPECT_EQ(w1.Width(), 500);
+    EXPECT_EQ(w1.Height(), 200);
+
+    EXPECT_EQ(w2.X(), 0);
+    EXPECT_EQ(w2.Y(), 200);
+    EXPECT_EQ(w2.Width(), 500);
+    EXPECT_EQ(w2.Height(), 300);
+
+    // limit min height
+    vbox_layout.SetStrechFactor(&w1, 1);
+    vbox_layout.SetStrechFactor(&w2, 1);
+
+    w1.SetPreferWidth(100);
+    w1.SetPreferHeight(100);
+    w2.SetPreferWidth(100);
+    w2.SetPreferHeight(200);
+
+    w1.SetLimitMinHeight(500);
+
+    vbox_layout.SetAroundInValid(&w1);
+    vbox_layout.SetAroundInValid(&w2);
+
+    vbox_layout.Dolayout();
+
+    EXPECT_EQ(w1.X(), 200);
+    EXPECT_EQ(w1.Y(), 0);
+    EXPECT_EQ(w1.Width(), 100);
+    EXPECT_EQ(w1.Height(), 500);
+
+    EXPECT_EQ(w2.Height(), 0);
+
+    // limit min width
+    w1.SetLimitMinWidth(300);
+    
+    vbox_layout.Dolayout();
+
+    EXPECT_EQ(w1.X(), 100);
+    EXPECT_EQ(w1.Y(), 0);
+    EXPECT_EQ(w1.Width(), 300);
+    EXPECT_EQ(w1.Height(), 500);
+
+    EXPECT_EQ(w2.Height(), 0);
+
+    // limit max height
+    w1.SetPreferWidth(100);
+    w1.SetPreferHeight(100);
+    w2.SetPreferWidth(100);
+    w2.SetPreferHeight(200);
+
+    w1.SetLimitMinHeight(0);
+    w1.SetLimitMaxHeight(1);
+
+    vbox_layout.SetStrechFactor(&w1, 1);
+    vbox_layout.SetStrechFactor(&w2, 1);
+
+    vbox_layout.SetAround(&w1, 0, 0, 0, 0);
+    vbox_layout.SetAround(&w2, 0, 0, 0, 0);
+
+    vbox_layout.Dolayout();
+
+    EXPECT_EQ(w1.Height(), 1);
+    EXPECT_EQ(w2.Height(), 499);
+}
+
+TEST(Layout, HVBoxLayout)
+{
+    TestWidget w1, w2;
+    w1.SetPreferWidth(100);
+    w1.SetPreferHeight(100);
+    w2.SetPreferWidth(200);
+    w2.SetPreferHeight(200);
+
+    HBoxLayout hbox_layout;
+    hbox_layout.SetGeometry(0, 0, 500, 500);
+    hbox_layout.AddWidget(&w1);
+
+    VBoxLayout vbox_layout;
+    hbox_layout.AddLayout(&vbox_layout);
+    vbox_layout.AddWidget(&w2);
+
+    hbox_layout.Dolayout();
+
+    EXPECT_EQ(w1.X(), 75);
+    EXPECT_EQ(w1.Y(), 200);
+    EXPECT_EQ(w1.Width(), 100);
+    EXPECT_EQ(w1.Height(), 100);
+
+    EXPECT_EQ(w2.X(), 275);
+    EXPECT_EQ(w2.Y(), 150);
+    EXPECT_EQ(w2.Width(), 200);
+    EXPECT_EQ(w2.Height(), 200);
+
+
 }
 } // namespace ui

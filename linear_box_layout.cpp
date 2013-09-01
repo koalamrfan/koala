@@ -32,24 +32,24 @@ void LinearBoxLayout::SetWeakElastic(LayoutBaseItem* item) {
     lbli->SetWeakElastic();
 }
 
-void LinearBoxLayout::AddWidget(Widget* widget) {
-    Layout::AddItem(std::make_shared<LinearBoxLayoutItem>(widget));
+bool LinearBoxLayout::AddWidget(Widget* widget) {
+    return Layout::AddItem(std::make_shared<LinearBoxLayoutItem>(widget));
 }
 
 bool LinearBoxLayout::InsertWidget(int index, Widget *widget) {
     return Layout::InsertItem(index, std::make_shared<LinearBoxLayoutItem>(widget));
 }
     
-void LinearBoxLayout::AddLayout(Layout* layout) {
-    Layout::AddItem(std::make_shared<LinearBoxLayoutItem>(layout));
+bool LinearBoxLayout::AddLayout(Layout* layout) {
+    return Layout::AddItem(std::make_shared<LinearBoxLayoutItem>(layout));
 }
 
 bool LinearBoxLayout::InsertLayout(int index, Layout *layout) {
     return Layout::InsertItem(index, std::make_shared<LinearBoxLayoutItem>(layout));
 }
 
-void LinearBoxLayout::AddSpace(LayoutSpace* space) {
-    Layout::AddItem(std::make_shared<LinearBoxLayoutItem>(space));
+bool LinearBoxLayout::AddSpace(LayoutSpace* space) {
+    return Layout::AddItem(std::make_shared<LinearBoxLayoutItem>(space));
 }
 
 bool LinearBoxLayout::InsertSpace(int index, LayoutSpace *space) {

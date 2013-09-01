@@ -32,7 +32,7 @@ public:
                    int north_space, 
                    int east_space, 
                    int south_space);
-    
+    void SetAroundInValid();
     void SetValidGap(GapValid gap_valid, bool valid = true);
     bool IsValidGap(GapValid gap_valid) const;
 
@@ -57,6 +57,7 @@ protected:
     int CalculateY(int container_y, int container_height);
     int CalculateWidth(int container_width);
     int CalculateHeight(int container_height);
+    
 private:
     int west_space_;
     int north_space_;

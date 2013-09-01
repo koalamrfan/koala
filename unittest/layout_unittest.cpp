@@ -115,47 +115,47 @@ TEST(Layout, BoxLayoutItem)
     TestWidget w1;
     BoxLayoutItem box_item(&w1);
     box_item.CalculatePosition(0, 0, 100, 100);
-    EXPECT_EQ(box_item.X(), 50);
-    EXPECT_EQ(box_item.Y(), 50);
-    EXPECT_EQ(box_item.Width(), 0);
-    EXPECT_EQ(box_item.Height(), 0);
+    EXPECT_EQ(w1.X(), 50);
+    EXPECT_EQ(w1.Y(), 50);
+    EXPECT_EQ(w1.Width(), 0);
+    EXPECT_EQ(w1.Height(), 0);
     w1.SetPreferWidth(50);
     w1.SetPreferHeight(50);
     box_item.CalculatePosition(0, 0, 100, 100);
-    EXPECT_EQ(box_item.X(), 25);
-    EXPECT_EQ(box_item.Y(), 25);
-    EXPECT_EQ(box_item.Width(), 50);
-    EXPECT_EQ(box_item.Height(), 50);
+    EXPECT_EQ(w1.X(), 25);
+    EXPECT_EQ(w1.Y(), 25);
+    EXPECT_EQ(w1.Width(), 50);
+    EXPECT_EQ(w1.Height(), 50);
     box_item.SetAround(0, 0, 0, 0);
     box_item.CalculatePosition(0, 0, 100, 100);
-    EXPECT_EQ(box_item.X(), 0);
-    EXPECT_EQ(box_item.Y(), 0);
-    EXPECT_EQ(box_item.Width(), 100);
-    EXPECT_EQ(box_item.Height(), 100);
+    EXPECT_EQ(w1.X(), 0);
+    EXPECT_EQ(w1.Y(), 0);
+    EXPECT_EQ(w1.Width(), 100);
+    EXPECT_EQ(w1.Height(), 100);
     box_item.SetValidGap(BoxLayoutItem::GapValid::kWestValid, false);
     box_item.CalculatePosition(0, 0, 100, 100);
-    EXPECT_EQ(box_item.X(), 50);
-    EXPECT_EQ(box_item.Y(), 0);
-    EXPECT_EQ(box_item.Width(), 50);
-    EXPECT_EQ(box_item.Height(), 100);
+    EXPECT_EQ(w1.X(), 50);
+    EXPECT_EQ(w1.Y(), 0);
+    EXPECT_EQ(w1.Width(), 50);
+    EXPECT_EQ(w1.Height(), 100);
     box_item.SetValidGap(BoxLayoutItem::GapValid::kNorthValid, false);
     box_item.CalculatePosition(0, 0, 100, 100);
-    EXPECT_EQ(box_item.X(), 50);
-    EXPECT_EQ(box_item.Y(), 50);
-    EXPECT_EQ(box_item.Width(), 50);
-    EXPECT_EQ(box_item.Height(), 50);
+    EXPECT_EQ(w1.X(), 50);
+    EXPECT_EQ(w1.Y(), 50);
+    EXPECT_EQ(w1.Width(), 50);
+    EXPECT_EQ(w1.Height(), 50);
     box_item.SetValidGap(BoxLayoutItem::GapValid::kSouthValid, false);
     box_item.CalculatePosition(0, 0, 100, 100);
-    EXPECT_EQ(box_item.X(), 50);
-    EXPECT_EQ(box_item.Y(), 25);
-    EXPECT_EQ(box_item.Width(), 50);
-    EXPECT_EQ(box_item.Height(), 50);
+    EXPECT_EQ(w1.X(), 50);
+    EXPECT_EQ(w1.Y(), 25);
+    EXPECT_EQ(w1.Width(), 50);
+    EXPECT_EQ(w1.Height(), 50);
     box_item.SetValidGap(BoxLayoutItem::GapValid::kEastValid, false);
     box_item.CalculatePosition(0, 0, 100, 100);
-    EXPECT_EQ(box_item.X(), 25);
-    EXPECT_EQ(box_item.Y(), 25);
-    EXPECT_EQ(box_item.Width(), 50);
-    EXPECT_EQ(box_item.Height(), 50);
+    EXPECT_EQ(w1.X(), 25);
+    EXPECT_EQ(w1.Y(), 25);
+    EXPECT_EQ(w1.Width(), 50);
+    EXPECT_EQ(w1.Height(), 50);
     
     //  set around == set west ..
     box_item.SetAround(10, 10, 50, 50);
@@ -180,35 +180,35 @@ TEST(Layout, BoxLayoutItem)
     EXPECT_EQ(east_space, 50);
 
     box_item.CalculatePosition(0, 0, 100, 100);
-    EXPECT_EQ(box_item.X(), 10);
-    EXPECT_EQ(box_item.Y(), 10);
-    EXPECT_EQ(box_item.Width(), 40);
-    EXPECT_EQ(box_item.Height(), 40);
+    EXPECT_EQ(w1.X(), 10);
+    EXPECT_EQ(w1.Y(), 10);
+    EXPECT_EQ(w1.Width(), 40);
+    EXPECT_EQ(w1.Height(), 40);
     
     //  move
     box_item.CalculatePosition(10, 10, 100, 100);
-    EXPECT_EQ(box_item.X(), 20);
-    EXPECT_EQ(box_item.Y(), 20);
-    EXPECT_EQ(box_item.Width(), 40);
-    EXPECT_EQ(box_item.Height(), 40);
+    EXPECT_EQ(w1.X(), 20);
+    EXPECT_EQ(w1.Y(), 20);
+    EXPECT_EQ(w1.Width(), 40);
+    EXPECT_EQ(w1.Height(), 40);
 
     box_item.CalculatePosition(-10, -10, 100, 100);
-    EXPECT_EQ(box_item.X(), 0);
-    EXPECT_EQ(box_item.Y(), 0);
-    EXPECT_EQ(box_item.Width(), 40);
-    EXPECT_EQ(box_item.Height(), 40);
+    EXPECT_EQ(w1.X(), 0);
+    EXPECT_EQ(w1.Y(), 0);
+    EXPECT_EQ(w1.Width(), 40);
+    EXPECT_EQ(w1.Height(), 40);
 
     //west + east > width
     box_item.SetWestSpace(100);
     box_item.CalculatePosition(10, 10, 100, 100);
-    EXPECT_EQ(box_item.Width(), 0);
-    EXPECT_EQ(box_item.Height(), 40);
+    EXPECT_EQ(w1.Width(), 0);
+    EXPECT_EQ(w1.Height(), 40);
 
     //north + south > height
     box_item.SetNorthSpace(100);
     box_item.CalculatePosition(10, 10, 100, 100);
-    EXPECT_EQ(box_item.Width(), 0);
-    EXPECT_EQ(box_item.Height(), 0);
+    EXPECT_EQ(w1.Width(), 0);
+    EXPECT_EQ(w1.Height(), 0);
 
     // prefer size with limit
     box_item.SetAround(0, 0, 0, 0);
@@ -272,5 +272,72 @@ TEST(Layout, BoxLayoutItem)
     EXPECT_TRUE(box_item3.IsEmpty());
     layout.AddWidget(&w2);
     EXPECT_FALSE(box_item3.IsEmpty());
+}
+
+TEST(Layout, BoxLayout)
+{
+    // more items
+    BoxLayout box_layout;
+    box_layout.SetGeometry(0, 0, 200, 200);
+    TestWidget w1, w2, w3;
+    w1.SetPreferWidth(50);
+    w1.SetPreferHeight(50);
+    w2.SetPreferWidth(100);
+    w2.SetPreferHeight(100);
+
+    box_layout.AddWidget(&w1);
+    box_layout.AddWidget(&w2);
+    box_layout.AddWidget(&w3);
+
+    EXPECT_EQ(box_layout.Count(), 3);
+
+    box_layout.RemoveWidget(&w3);
+
+    EXPECT_EQ(box_layout.Count(), 2);
+
+    box_layout.Dolayout();
+
+    EXPECT_EQ(w1.X(), 75);
+    EXPECT_EQ(w1.Y(), 75);
+    EXPECT_EQ(w1.Width(), 50);
+    EXPECT_EQ(w1.Height(), 50);
+    
+    EXPECT_EQ(w2.X(), 50);
+    EXPECT_EQ(w2.Y(), 50);
+    EXPECT_EQ(w2.Width(), 100);
+    EXPECT_EQ(w2.Height(), 100);
+
+
+    // prefer width > width
+    w1.SetPreferWidth(500);
+
+    box_layout.Dolayout();
+
+    EXPECT_EQ(w1.X(), 0);
+    EXPECT_EQ(w1.Width(), 200);
+
+    // prefer width > width
+    w1.SetPreferHeight(500);
+
+    box_layout.Dolayout();
+
+    EXPECT_EQ(w1.Y(), 0);
+    EXPECT_EQ(w1.Height(), 200);
+
+    // inner layout
+    BoxLayout inner_box_layout;
+    
+    inner_box_layout.AddWidget(&w3);
+    w3.SetPreferWidth(50);
+    w3.SetPreferHeight(50);
+
+    box_layout.AddLayout(&inner_box_layout);
+
+    box_layout.Dolayout();
+
+    EXPECT_EQ(w3.X(), 75);
+    EXPECT_EQ(w3.Y(), 75);
+    EXPECT_EQ(w3.Width(), 50);
+    EXPECT_EQ(w3.Height(), 50);
 }
 } // namespace ui

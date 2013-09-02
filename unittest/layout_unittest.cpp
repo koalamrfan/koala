@@ -16,13 +16,6 @@ namespace
 class TestWidget : public Widget
 {
 public:
-    virtual void AdjustSizes() override {}
-    virtual void Relayout() override {}
-    virtual SkRect GeometryToAncestor() const override {
-        SkRect rect;
-        rect.setEmpty();
-        return rect;
-    };
     virtual void OnDraw(SkCanvas* canvas, const SkRect& clip_rect) {}
 };
 
@@ -262,10 +255,17 @@ TEST(Layout, BoxLayoutItem)
 
     // empty
     TestWidget w2;
+    w2.SetLimitMinWidth(50);
+    w2.SetLimitMaxWidth(100);
     BoxLayoutItem box_item2(&w2);
+
     EXPECT_FALSE(box_item2.IsEmpty());
     w2.Hide();
     EXPECT_TRUE(box_item2.IsEmpty());
+
+    EXPECT_EQ(box_item2.LimitMinWidth(), 0);
+    EXPECT_EQ(box_item2.LimitMaxWidth(), MAX_LENGTH);
+
     w2.Show();
     EXPECT_FALSE(box_item2.IsEmpty());
     
@@ -678,7 +678,5 @@ TEST(Layout, HVBoxLayout)
     EXPECT_EQ(w2.Y(), 150);
     EXPECT_EQ(w2.Width(), 200);
     EXPECT_EQ(w2.Height(), 200);
-
-
 }
 } // namespace ui

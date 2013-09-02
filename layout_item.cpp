@@ -60,6 +60,9 @@ void LayoutItem::SetPreferWidth(int width) {
 }
 
 int LayoutItem::PreferWidth() {
+    if(IsEmpty()) {
+        return 0;
+    }
     return layout_base_item_->PreferWidth();
 }
 
@@ -68,6 +71,9 @@ void LayoutItem::SetPreferHeight(int height) {
 }
 
 int LayoutItem::PreferHeight() {
+    if(IsEmpty()) {
+        return 0;
+    }
     return layout_base_item_->PreferHeight();
 }
 
@@ -76,6 +82,9 @@ void LayoutItem::SetLimitMinWidth(int width) {
 }
 
 int LayoutItem::LimitMinWidth() {
+    if(IsEmpty()) {
+        return 0;
+    }
     return layout_base_item_->LimitMinWidth();
 }
 
@@ -84,6 +93,9 @@ void LayoutItem::SetLimitMinHeight(int height) {
 }
 
 int LayoutItem::LimitMinHeight() {
+    if(IsEmpty()) {
+        return 0;
+    }
     return layout_base_item_->LimitMinHeight();
 }
 
@@ -92,6 +104,9 @@ void LayoutItem::SetLimitMaxWidth(int width) {
 }
 
 int LayoutItem::LimitMaxWidth() {
+    if(IsEmpty()) {
+        return MAX_LENGTH;
+    }
     return layout_base_item_->LimitMaxWidth();
 }
 
@@ -100,6 +115,9 @@ void LayoutItem::SetLimitMaxHeight(int height) {
 }
 
 int LayoutItem::LimitMaxHeight() {
+    if(IsEmpty()) {
+        return MAX_LENGTH;
+    }
     return layout_base_item_->LimitMaxHeight();
 }
 

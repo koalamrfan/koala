@@ -17,14 +17,19 @@ bool Layout::InsertItem(int index, std::shared_ptr<LayoutItem> item) {
     if(item == nullptr) {
         return false;
     }
+
     if(index < 0) {
         index += Count();
     }
-    if(index < 0 || index > Count())
+
+    if(index < 0 || index > Count()) {
         return false;
+    }
+
     if(FindItem(item->GetLayoutBaseItem())) {
         return false;
     }
+
     layout_items_.insert(layout_items_.begin()+index, item);
     if(Widget* widget = item->GetWidget()) {
         if(widget->ParentLayout()) {
@@ -41,7 +46,6 @@ bool Layout::InsertItem(int index, std::shared_ptr<LayoutItem> item) {
         layout->SetParentWidget(ParentWidget());
         layout->SetParentLayout(this);
     }
-    NotifyRelayout();
     return true;
 }
 
@@ -71,7 +75,7 @@ int Layout::Count() const {
     return layout_items_.size();
 }
 
-LayoutItem* Layout::ItemAt(int  index) {
+LayoutItem* Layout::ItemAt(int  index) const {
     if (index < 0) {
         index += Count();
     }
@@ -129,7 +133,7 @@ Layout* Layout::ParentLayout() const {
     return parent_layout_;
 }
 
-bool Layout::IsEmpty() {
+bool Layout::IsEmpty() const{
     bool empty = true;
     auto iter = layout_items_.begin();
     while(iter != layout_items_.end()) {
@@ -143,7 +147,7 @@ bool Layout::IsEmpty() {
     return empty;
 }
 
-LayoutItem* Layout::FindItem(LayoutBaseItem *item) {
+LayoutItem* Layout::FindItem(LayoutBaseItem *item) const{
     auto iter = layout_items_.begin();
     while (iter != layout_items_.end()) {
         LayoutBaseItem *bli = (*iter)->GetLayoutBaseItem();

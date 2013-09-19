@@ -9,12 +9,8 @@ namespace ui
 {
 class Widget;
 class LayoutItem;
-  
-class Layout:public LayoutBaseItem
+class Layout : public LayoutBaseItem
 {
-    friend class Widget;
-    friend class LayoutItem;
-
 public:
     virtual bool AddWidget(Widget* widget) = 0;
     virtual bool InsertWidget(int index, Widget *widget) = 0;
@@ -23,38 +19,44 @@ public:
     virtual bool AddLayout(Layout* layout) = 0;
     virtual bool InsertLayout(int index, Layout *layout) = 0;
     virtual bool RemoveLayout(Layout *layout) = 0;
+
+    virtual bool AddLayoutSpace(LayoutSpace* layout) = 0;
+    virtual bool InsertLayoutSpace(int index, LayoutSpace *layout) = 0;
+    virtual bool RemoveLayoutSpace(LayoutSpace *layout) = 0;
     
     int Count() const;
 
-    void SetParentWidget(Widget* parent);
     Widget* ParentWidget() const;
-    
-    void SetParentLayout(Layout* parent);
     Layout* ParentLayout() const;
     
     virtual SkRect GeometryToAncestor() const override;
-    bool IsEmpty();
+    bool IsEmpty() const;
     
     virtual void AdjustSizes() override;
 
 protected:
     Layout():parent_widget_(nullptr), parent_layout_(nullptr) {}
 
-    virtual bool AddItem(std::shared_ptr<LayoutItem> item);
-    virtual bool InsertItem(int index, std::shared_ptr<LayoutItem> item);
-    virtual bool RemoveItem(LayoutBaseItem *item);
-    virtual LayoutItem* ItemAt(int index);
-    virtual LayoutItem* FindItem(LayoutBaseItem *item);
+    // layout_item operator
+    bool AddItem(std::shared_ptr<LayoutItem> item);
+    bool InsertItem(int index, std::shared_ptr<LayoutItem> item);
+    bool RemoveItem(LayoutBaseItem *item);
+    LayoutItem* ItemAt(int index) const;
+    LayoutItem* FindItem(LayoutBaseItem *item) const;
 
-    virtual int CalculateLimitMinWidth() = 0;
-    virtual int CalculateLimitMinHeight() = 0;
-    virtual int CalculateLimitMaxWidth() = 0;
-    virtual int CalculateLimitMaxHeight() = 0;
-    virtual int CalculatePreferWidth() = 0;
-    virtual int CalculatePreferHeight() = 0;
+    void SetParentWidget(Widget* parent);
+    void SetParentLayout(Layout* parent);
 
-    std::vector<std::shared_ptr<LayoutItem>> layout_items_;
+    virtual int CalculateLimitMinWidth() const = 0;
+    virtual int CalculateLimitMinHeight() const = 0;
+    virtual int CalculateLimitMaxWidth() const = 0;
+    virtual int CalculateLimitMaxHeight() const = 0;
+    virtual int CalculatePreferWidth() const = 0;
+    virtual int CalculatePreferHeight() const = 0;
+
+    std::vector<std::shared_ptr<LayoutItem>>& GetLayoutItems() const;
 private:
+    std::vector<std::shared_ptr<LayoutItem>> layout_items_;
     Widget* parent_widget_;
     Layout* parent_layout_;
 };

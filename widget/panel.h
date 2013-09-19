@@ -1,0 +1,25 @@
+#ifndef PANEL_H_
+#define PANEL_H_
+
+
+#include "layout_item.h"
+#include "widget.h"
+
+namespace ui
+{
+class Event;
+class Panel:public Widget
+{
+public:
+    Panel() {
+        SetPreferWidth(200);
+        SetPreferHeight(100);
+    }
+
+    virtual void OnDraw(SkCanvas* canvas, const SkRect& clip_rect) override;
+    virtual bool DoEvent(Event* event) override;
+    
+};
+} // namespace UI
+
+#endif

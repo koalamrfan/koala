@@ -12,7 +12,7 @@ HBoxLayout::HBoxLayout() {
 
 }
 
-int HBoxLayout::CalculateLimitMinWidth() {
+int HBoxLayout::CalculateLimitMinWidth() const {
     int width = 0;
     for (auto item:layout_items_) {
         width += item->LimitMinWidth();
@@ -20,7 +20,7 @@ int HBoxLayout::CalculateLimitMinWidth() {
     return width;
 }
 
-int HBoxLayout::CalculateLimitMinHeight() {
+int HBoxLayout::CalculateLimitMinHeight() const {
     int height = 0;
     for (auto item:layout_items_) {
         if(item->LimitMinHeight() > height) {
@@ -30,7 +30,7 @@ int HBoxLayout::CalculateLimitMinHeight() {
     return height;
 }
 
-int HBoxLayout::CalculateLimitMaxWidth() {
+int HBoxLayout::CalculateLimitMaxWidth() const {
     int width = MAX_LENGTH;
     for (auto item:layout_items_) {
         if(width < MAX_LENGTH - item->LimitMaxWidth()) {
@@ -40,7 +40,7 @@ int HBoxLayout::CalculateLimitMaxWidth() {
     return width;
 }
 
-int HBoxLayout::CalculateLimitMaxHeight() {
+int HBoxLayout::CalculateLimitMaxHeight() const {
     int height = MAX_LENGTH;
     for (auto item:layout_items_) {
         if(item->LimitMaxHeight() < height) {
@@ -50,7 +50,7 @@ int HBoxLayout::CalculateLimitMaxHeight() {
     return height;
 }
 
-int HBoxLayout::CalculatePreferWidth() {
+int HBoxLayout::CalculatePreferWidth() const {
     int width = 0;
     for (auto item:layout_items_) {
         width += item->PreferWidth();
@@ -58,7 +58,7 @@ int HBoxLayout::CalculatePreferWidth() {
     return width;
 }
 
-int HBoxLayout::CalculatePreferHeight() {
+int HBoxLayout::CalculatePreferHeight() const {
     int height = 0;
     for (auto item:layout_items_) {
         if(item->PreferHeight() > height) {

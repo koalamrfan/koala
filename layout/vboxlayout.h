@@ -11,12 +11,12 @@ public:
     VBoxLayout();
 
 protected:
-    virtual int CalculateLimitMinWidth() override;
-    virtual int CalculateLimitMinHeight() override;
-    virtual int CalculateLimitMaxWidth() override;
-    virtual int CalculateLimitMaxHeight() override;
-    virtual int CalculatePreferWidth() override;
-    virtual int CalculatePreferHeight() override;
+    virtual int CalculateLimitMinWidth() const override;
+    virtual int CalculateLimitMinHeight() const override;
+    virtual int CalculateLimitMaxWidth() const override;
+    virtual int CalculateLimitMaxHeight() const override;
+    virtual int CalculatePreferWidth() const override;
+    virtual int CalculatePreferHeight() const override;
     virtual bool IsUnderPrefer() override;
     virtual void DoUnderPrefer() override;
     virtual void DoExceedPrefer() override;

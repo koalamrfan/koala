@@ -12,7 +12,7 @@ VBoxLayout::VBoxLayout() {
   
 }
 
-int VBoxLayout::CalculateLimitMinWidth() {
+int VBoxLayout::CalculateLimitMinWidth() const {
     int width = 0;
     for (auto item:layout_items_) {
         if(item->LimitMinWidth() > width) {
@@ -22,7 +22,7 @@ int VBoxLayout::CalculateLimitMinWidth() {
     return width;
 }
 
-int VBoxLayout::CalculateLimitMinHeight() {
+int VBoxLayout::CalculateLimitMinHeight() const {
     int height = 0;
     for (auto item:layout_items_) {
         height += item->LimitMinHeight();
@@ -30,7 +30,7 @@ int VBoxLayout::CalculateLimitMinHeight() {
     return height;
 }
 
-int VBoxLayout::CalculateLimitMaxWidth() {
+int VBoxLayout::CalculateLimitMaxWidth() const {
     int width = MAX_LENGTH;
     for (auto item:layout_items_) {
         if(item->LimitMaxWidth() < width) {
@@ -40,7 +40,7 @@ int VBoxLayout::CalculateLimitMaxWidth() {
     return width;
 }
 
-int VBoxLayout::CalculateLimitMaxHeight() {
+int VBoxLayout::CalculateLimitMaxHeight() const {
     int height = MAX_LENGTH;
     for (auto item:layout_items_) {
         if(height < MAX_LENGTH - item->LimitMaxHeight()) {
@@ -50,7 +50,7 @@ int VBoxLayout::CalculateLimitMaxHeight() {
     return height;
 }
 
-int VBoxLayout::CalculatePreferWidth() {
+int VBoxLayout::CalculatePreferWidth() const {
     int width = 0;
     for (auto item:layout_items_) {
         if(item->PreferWidth() > width) {
@@ -60,7 +60,7 @@ int VBoxLayout::CalculatePreferWidth() {
     return width;
 }
 
-int VBoxLayout::CalculatePreferHeight() {
+int VBoxLayout::CalculatePreferHeight() const {
     int height = 0;
     for (auto item:layout_items_) {
         height += item->PreferHeight();

@@ -89,7 +89,7 @@ bool BoxLayout::RemoveLayout(Layout *layout) {
     return Layout::RemoveItem(layout);
 }
 
-int BoxLayout::CalculateLimitMinWidth() {
+int BoxLayout::CalculateLimitMinWidth() const {
     int min_width = 0;
     auto iter = layout_items_.begin();
     while(iter != layout_items_.end()) {
@@ -106,7 +106,7 @@ int BoxLayout::CalculateLimitMinWidth() {
     return min_width;
 }
 
-int BoxLayout::CalculateLimitMinHeight() {
+int BoxLayout::CalculateLimitMinHeight() const {
     int min_height = 0;
     auto iter = layout_items_.begin();
     while(iter != layout_items_.end()) {
@@ -123,7 +123,7 @@ int BoxLayout::CalculateLimitMinHeight() {
     return min_height;
 }
 
-int BoxLayout::CalculateLimitMaxWidth() {
+int BoxLayout::CalculateLimitMaxWidth() const {
     int max_width = MAX_LENGTH;
     auto iter = layout_items_.begin();
     while(iter != layout_items_.end()) {
@@ -140,7 +140,7 @@ int BoxLayout::CalculateLimitMaxWidth() {
     return max_width;
 }
 
-int BoxLayout::CalculateLimitMaxHeight() {
+int BoxLayout::CalculateLimitMaxHeight() const {
     int max_height = MAX_LENGTH;
     auto iter = layout_items_.begin();
     while(iter != layout_items_.end()) {
@@ -157,7 +157,7 @@ int BoxLayout::CalculateLimitMaxHeight() {
     return max_height;
 }
 
-int BoxLayout::CalculatePreferWidth() {
+int BoxLayout::CalculatePreferWidth() const {
     int prefer_width = 0;
     auto iter = layout_items_.begin();
     while(iter != layout_items_.end()) {
@@ -174,7 +174,7 @@ int BoxLayout::CalculatePreferWidth() {
     return prefer_width;
 }
 
-int BoxLayout::CalculatePreferHeight() {
+int BoxLayout::CalculatePreferHeight() const {
     int prefer_height = 0;
     auto iter = layout_items_.begin();
     while(iter != layout_items_.end()) {

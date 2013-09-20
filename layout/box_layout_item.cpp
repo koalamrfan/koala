@@ -149,11 +149,15 @@ int BoxLayoutItem::PreferHeight() {
 }
 
 int BoxLayoutItem::LimitMinWidth() {
+    if(IsEmpty()) {
+        return 0;
+    }
+
     if(LayoutItem::LimitMinWidth() == 0) {
         return 0;
     }
 
-    int width = 0;
+    int width = LayoutItem::LimitMinWidth();
     if(IsValidGap(BoxLayoutItem::kWestValid) && IsValidGap(BoxLayoutItem::kEastValid)) {
         if(LayoutItem::LimitMinWidth() < MAX_LENGTH - WestSpace() - EastSpace()) {
             width = LayoutItem::LimitMinWidth() + WestSpace() + EastSpace();
@@ -166,20 +170,22 @@ int BoxLayoutItem::LimitMinWidth() {
         if(LayoutItem::LimitMinWidth() < MAX_LENGTH - EastSpace()) {
             width = LayoutItem::LimitMinWidth() + EastSpace();
         }
-    } else {
-        width = LayoutItem::LimitMinWidth();
     }
     return width;
 }
 
 int BoxLayoutItem::LimitMinHeight() {
+    if(IsEmpty()) {
+        return 0;
+    }
+
     if(LayoutItem::LimitMinHeight() == 0) {
         return 0;
     }
 
-    int height = 0;
+    int height = LayoutItem::LimitMinHeight();
     if(IsValidGap(BoxLayoutItem::kNorthValid) && IsValidGap(BoxLayoutItem::kSouthValid)) {
-        if(LayoutItem::LimitMinHeight() < MAX_LENGTH - WestSpace() - EastSpace()) {
+        if(LayoutItem::LimitMinHeight() < MAX_LENGTH - NorthSpace() - SouthSpace()) {
             height = LayoutItem::LimitMinHeight() + NorthSpace() + SouthSpace();
         }
     } else if(IsValidGap(BoxLayoutItem::kNorthValid)) {
@@ -190,13 +196,15 @@ int BoxLayoutItem::LimitMinHeight() {
         if(LayoutItem::LimitMinHeight() < MAX_LENGTH - SouthSpace()) {
             height = LayoutItem::LimitMinHeight() + SouthSpace();
         }
-    } else {
-        height = LayoutItem::LimitMinHeight();
     }
     return height;
 }
 
 int BoxLayoutItem::LimitMaxWidth() {
+    if(IsEmpty()) {
+        return MAX_LENGTH;
+    }
+
     if(LayoutItem::LimitMaxWidth() == 0) {
         return 0;
     }
@@ -219,6 +227,10 @@ int BoxLayoutItem::LimitMaxWidth() {
 }
 
 int BoxLayoutItem::LimitMaxHeight() {
+    if(IsEmpty()) {
+        return MAX_LENGTH;
+    }
+
     if(LayoutItem::LimitMaxHeight() == 0) {
         return 0;
     }

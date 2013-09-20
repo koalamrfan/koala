@@ -66,7 +66,7 @@ Widget* Widget::Parent() const {
 
 bool Widget::SetParentLayout(Layout* parent, int index) {
     if(index < 0) {
-        index += parent->Count();
+        index += parent->Count() + 1;
     }
 
     if(index < 0 || index > parent->Count()) {
@@ -74,7 +74,7 @@ bool Widget::SetParentLayout(Layout* parent, int index) {
     }
 
     if(ParentLayout()) {
-        auto brother_items = ParentLayout()->GetLayoutItems();
+        std::vector<std::shared_ptr<LayoutItem>>& brother_items = ParentLayout()->GetLayoutItems();
         bool erase = false;
         auto iter = brother_items.begin();
         while (iter != brother_items.end()) {
@@ -90,9 +90,9 @@ bool Widget::SetParentLayout(Layout* parent, int index) {
             return false;
         }
     }
-    std::shared_ptr<LayoutItem> moved_layout_item = parent->CreateLayoutItem();
-    moved_layout_item->InitWithWidget(this);
-    auto new_brother_items = parent->GetLayoutItems();
+    auto moved_layout_item = parent->CreateLayoutItem();
+    moved_layout_item->Init(this);
+    std::vector<std::shared_ptr<LayoutItem>>& new_brother_items = parent->GetLayoutItems();
     new_brother_items.insert(new_brother_items.begin()+index, moved_layout_item);
     parent_layout_ = parent;
     return true;

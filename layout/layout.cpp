@@ -16,7 +16,7 @@ bool Layout::AddWidget(Widget* widget) {
 
 bool Layout::InsertWidget(int index, Widget *widget) {
     auto layoutitem = CreateLayoutItem();
-    layoutitem->InitWithWidget(widget);
+    layoutitem->Init(widget);
     return Layout::InsertItem(index, layoutitem);
 }
 
@@ -31,7 +31,7 @@ bool Layout::AddLayout(Layout* layout) {
 
 bool Layout::InsertLayout(int index, Layout *layout) {
     auto layoutitem = CreateLayoutItem();
-    layoutitem->InitWithLayout(layout);
+    layoutitem->Init(layout);
     return Layout::InsertItem(index, layoutitem);
 }
 
@@ -45,7 +45,7 @@ bool Layout::AddLayoutSpace(LayoutSpace* layout_space) {
 
 bool Layout::InsertLayoutSpace(int index, LayoutSpace *layout_space) {
     auto layoutitem = CreateLayoutItem();
-    layoutitem->InitWithLayoutSpace(layout_space);
+    layoutitem->Init(layout_space);
     return Layout::InsertItem(index, layoutitem);
 }
 
@@ -54,7 +54,7 @@ bool Layout::RemoveLayoutSpace(LayoutSpace *layout_space) {
 }
 
 bool Layout::AddItem(std::shared_ptr<LayoutItem> item) {
-    return InsertItem(layout_items_.size(), item);
+    return InsertItem(-1, item);
 }
 
 bool Layout::InsertItem(int index, std::shared_ptr<LayoutItem> item) {
@@ -131,7 +131,7 @@ Widget* Layout::ParentWidget() const {
 
 bool Layout::SetParentLayout(Layout* parent, int index) {
     if(index < 0) {
-        index += parent->Count();
+        index += parent->Count() + 1;
     }
 
     if(index < 0 || index > parent->Count()) {
@@ -139,7 +139,7 @@ bool Layout::SetParentLayout(Layout* parent, int index) {
     }
 
     if(ParentLayout()) {
-        auto brother_items = ParentLayout()->GetLayoutItems();
+        std::vector<std::shared_ptr<LayoutItem>>& brother_items = ParentLayout()->GetLayoutItems();
         bool erase = false;
         auto iter = brother_items.begin();
         while (iter != brother_items.end()) {
@@ -158,8 +158,8 @@ bool Layout::SetParentLayout(Layout* parent, int index) {
         ParentWidget()->layout_ = nullptr;
     }
     std::shared_ptr<LayoutItem> moved_layout_item = parent->CreateLayoutItem();
-    moved_layout_item->InitWithLayout(this);
-    auto new_brother_items = parent->GetLayoutItems();
+    moved_layout_item->Init(this);
+    std::vector<std::shared_ptr<LayoutItem>>& new_brother_items = parent->GetLayoutItems();
     new_brother_items.insert(new_brother_items.begin()+index, moved_layout_item);
     parent_layout_ = parent;
     return true;

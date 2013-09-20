@@ -22,33 +22,35 @@ public:
 class TestLayout : public Layout
 {
 public:
-    virtual bool AddWidget(Widget* widget) override {return true;}
-    virtual bool InsertWidget(int index, Widget *widget) override {return true;}
-    virtual bool RemoveWidget(Widget *widget) override {return true;}
-
-    virtual bool AddLayout(Layout* layout) override {return true;}
-    virtual bool InsertLayout(int index, Layout *layout) override {return true;}
-    virtual bool RemoveLayout(Layout *layout) override {return true;}
+    virtual std::shared_ptr<LayoutItem> CreateLayoutItem() const {
+        return std::make_shared<LayoutItem>();
+    }
 
     virtual void Relayout() {}
 
-    virtual int CalculateLimitMinWidth() override {return 10;}
-    virtual int CalculateLimitMinHeight() override {return 10;}
-    virtual int CalculateLimitMaxWidth() override {return 100;}
-    virtual int CalculateLimitMaxHeight() override {return 100;}
-    virtual int CalculatePreferWidth() override {return 50;}
-    virtual int CalculatePreferHeight() override {return 50;}
+    virtual int CalculateLimitMinWidth() const override {return 10;}
+    virtual int CalculateLimitMinHeight() const override {return 10;}
+    virtual int CalculateLimitMaxWidth() const override {return 100;}
+    virtual int CalculateLimitMaxHeight() const override {return 100;}
+    virtual int CalculatePreferWidth() const override {return 50;}
+    virtual int CalculatePreferHeight() const override {return 50;}
 
     void Expect() {
         TestWidget w1, w2, w3;
         EXPECT_TRUE(IsEmpty());
         EXPECT_EQ(Count(), 0);
-        AddItem(std::make_shared<LayoutItem>(&w1));
+        auto layoutitem = std::make_shared<LayoutItem>();
+        layoutitem->Init(&w1);
+        AddItem(layoutitem);
         EXPECT_FALSE(IsEmpty());
         EXPECT_EQ(Count(), 1);
-        AddItem(std::make_shared<LayoutItem>(&w2));
+        layoutitem = std::make_shared<LayoutItem>();
+        layoutitem->Init(&w2);
+        AddItem(layoutitem);
         EXPECT_EQ(Count(), 2);
-        InsertItem(0, std::make_shared<LayoutItem>(&w3));
+        layoutitem = std::make_shared<LayoutItem>();
+        layoutitem->Init(&w3);
+        InsertItem(0, layoutitem);
         EXPECT_EQ(Count(), 3);
         EXPECT_EQ(ItemAt(0)->GetLayoutBaseItem(), &w3);
         EXPECT_EQ(ItemAt(1)->GetLayoutBaseItem(), &w1);
@@ -57,17 +59,21 @@ public:
         EXPECT_EQ(Count(), 2);
         EXPECT_EQ(ItemAt(0)->GetLayoutBaseItem(), &w1);
         EXPECT_EQ(ItemAt(1)->GetLayoutBaseItem(), &w2);
-        EXPECT_TRUE(InsertItem(2, std::make_shared<LayoutItem>(&w3)));
-        EXPECT_FALSE(InsertItem(2, std::make_shared<LayoutItem>(&w3)));
+        layoutitem = std::make_shared<LayoutItem>();
+        layoutitem->Init(&w3);
+        EXPECT_TRUE(InsertItem(2, layoutitem));
+        EXPECT_FALSE(InsertItem(2, layoutitem));
         EXPECT_EQ(Count(), 3);
         EXPECT_EQ(ItemAt(0)->GetLayoutBaseItem(), &w1);
         EXPECT_EQ(ItemAt(1)->GetLayoutBaseItem(), &w2);
         EXPECT_EQ(ItemAt(2)->GetLayoutBaseItem(), &w3);
         RemoveItem(&w3);
         EXPECT_EQ(Count(), 2);
-        EXPECT_FALSE(InsertItem(3, std::make_shared<LayoutItem>(&w3)));
+        layoutitem = std::make_shared<LayoutItem>();
+        layoutitem->Init(&w3);
+        EXPECT_FALSE(InsertItem(3, layoutitem));
         EXPECT_EQ(Count(), 2);
-        EXPECT_TRUE(InsertItem(-1, std::make_shared<LayoutItem>(&w3)));
+        EXPECT_TRUE(InsertItem(-1, layoutitem));
         EXPECT_EQ(Count(), 3);
         EXPECT_EQ(ItemAt(0)->GetLayoutBaseItem(), &w1);
         EXPECT_EQ(ItemAt(1)->GetLayoutBaseItem(), &w3);
@@ -108,7 +114,8 @@ TEST(Layout, BoxLayoutItem)
 {
     // basic
     TestWidget w1;
-    BoxLayoutItem box_item(&w1);
+    BoxLayoutItem box_item;
+    box_item.Init(&w1);
     box_item.CalculatePosition(0, 0, 100, 100);
     EXPECT_EQ(w1.X(), 50);
     EXPECT_EQ(w1.Y(), 50);
@@ -257,7 +264,8 @@ TEST(Layout, BoxLayoutItem)
     TestWidget w2;
     w2.SetLimitMinWidth(50);
     w2.SetLimitMaxWidth(100);
-    BoxLayoutItem box_item2(&w2);
+    BoxLayoutItem box_item2;
+    box_item2.Init(&w2);    
 
     EXPECT_FALSE(box_item2.IsEmpty());
     w2.Hide();
@@ -270,7 +278,8 @@ TEST(Layout, BoxLayoutItem)
     EXPECT_FALSE(box_item2.IsEmpty());
     
     BoxLayout layout;
-    BoxLayoutItem box_item3(&layout);
+    BoxLayoutItem box_item3;
+    box_item3.Init(&layout);
     EXPECT_TRUE(box_item3.IsEmpty());
     layout.AddWidget(&w2);
     EXPECT_FALSE(box_item3.IsEmpty());

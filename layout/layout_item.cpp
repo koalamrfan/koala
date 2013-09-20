@@ -11,17 +11,17 @@ LayoutItem::LayoutItem() {
 
 }
 
-void LayoutItem::InitWithWidget(Widget* widget) {
+void LayoutItem::Init(Widget* widget) {
     type_ = kWidget;
     layout_base_item_ = widget;
 }
 
-void LayoutItem::InitWithLayout(Layout* layout) {
+void LayoutItem::Init(Layout* layout) {
     type_ = kLayout;
     layout_base_item_ = layout;
 }
 
-void LayoutItem::InitWithLayoutSpace(LayoutSpace* layout_space) {
+void LayoutItem::Init(LayoutSpace* layout_space) {
     type_ = kLayoutSpace;
     layout_base_item_ = layout_space;
 }
@@ -183,7 +183,7 @@ bool LayoutItem::SetParentLayout(Layout* layout, int index) {
     }
 
     if(index < 0) {
-        index += layout->Count();
+        index += layout->Count() + 1;
     }
 
     if(index < 0 || index > layout->Count()) {
@@ -194,21 +194,20 @@ bool LayoutItem::SetParentLayout(Layout* layout, int index) {
         return false;
     }
 
-    auto brother_items = layout->GetLayoutItems();
+    std::vector<std::shared_ptr<LayoutItem>>& brother_items = layout->GetLayoutItems();
     if(GetWidget()) {
-        if(GetWidget()->ParentLayout() && GetWidget()->ParentLayout() != layout) {
-            GetWidget()->SetParent(layout->ParentWidget());
-            GetWidget()->SetParentLayout(layout);
-        } else {
+        if(GetWidget()->ParentLayout() && GetWidget()->ParentLayout() == layout) {
             return false;
-        }
+        } 
+        GetWidget()->SetParent(layout->ParentWidget());
+        GetWidget()->SetParentLayout(layout, index);
     } else if(GetLayout()) {
-        if(layout->ParentLayout()) {
-            GetLayout()->SetParentWidget(layout->ParentWidget());
-            GetLayout()->SetParentLayout(layout);
-        } else {
+        if(GetLayout()->ParentLayout() && GetWidget()->ParentLayout() == layout) {
             return false;
         }
+        GetLayout()->SetParentWidget(layout->ParentWidget());
+        GetLayout()->SetParentLayout(layout, index);
+
     }
     return true;
 }

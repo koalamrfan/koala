@@ -22,9 +22,9 @@ class LayoutItem : public std::enable_shared_from_this<LayoutItem>
 public:
     LayoutItem();
 
-    void InitWithWidget(Widget* widget);
-    void InitWithLayout(Layout* layout);
-    void InitWithLayoutSpace(LayoutSpace* layout_space);
+    void Init(Widget* widget);
+    void Init(Layout* layout);
+    void Init(LayoutSpace* layout_space);
 
     virtual ~LayoutItem() {}
 public:

@@ -15,17 +15,17 @@ class Layout : public LayoutBaseItem
     friend class Widget;
     friend class LayoutItem;
 public:
-    virtual bool AddWidget(Widget* widget) = 0;
-    virtual bool InsertWidget(int index, Widget *widget) = 0;
-    virtual bool RemoveWidget(Widget *widget) = 0;
+    virtual bool AddWidget(Widget* widget);
+    virtual bool InsertWidget(int index, Widget *widget);
+    virtual bool RemoveWidget(Widget *widget);
     
-    virtual bool AddLayout(Layout* layout) = 0;
-    virtual bool InsertLayout(int index, Layout *layout) = 0;
-    virtual bool RemoveLayout(Layout *layout) = 0;
+    virtual bool AddLayout(Layout* layout);
+    virtual bool InsertLayout(int index, Layout *layout);
+    virtual bool RemoveLayout(Layout *layout);
 
-    virtual bool AddLayoutSpace(LayoutSpace* layout) = 0;
-    virtual bool InsertLayoutSpace(int index, LayoutSpace *layout_space) = 0;
-    virtual bool RemoveLayoutSpace(LayoutSpace *layout_space) = 0;
+    virtual bool AddLayoutSpace(LayoutSpace* layout);
+    virtual bool InsertLayoutSpace(int index, LayoutSpace *layout_space);
+    virtual bool RemoveLayoutSpace(LayoutSpace *layout_space);
     
     int Count() const;
 

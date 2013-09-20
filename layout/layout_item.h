@@ -3,6 +3,7 @@
 
 #include "stdint.h"
 #include "layout_base_item.h"
+#include <memory>
 
 namespace ui
 {
@@ -10,7 +11,7 @@ class Widget;
 class Layout;
 class LayoutSpace;
 
-class LayoutItem
+class LayoutItem : public std::enable_shared_from_this<LayoutItem>
 {
     enum ItemType
     {
@@ -18,12 +19,13 @@ class LayoutItem
       kLayout,
       kLayoutSpace
     };
-    
 public:
-    LayoutItem(Widget* widget);
-    LayoutItem(Layout* layout);
-    LayoutItem(LayoutSpace* layout_space);
-    
+    LayoutItem();
+
+    void InitWithWidget(Widget* widget);
+    void InitWithLayout(Layout* layout);
+    void InitWithLayoutSpace(LayoutSpace* layout_space);
+
     virtual ~LayoutItem() {}
 public:
     virtual void Move(int x, int y) ;
@@ -53,7 +55,10 @@ public:
     virtual void UpNotifyRelayout();
     virtual void RelayoutToAdapt();
 
-    bool IsEmpty();
+    bool IsEmpty() const;
+
+    bool SetParentLayout(Layout* layout, int index = -1);
+    Layout* ParentLayout() const;
 public:    
     Widget* GetWidget() const;
     Layout* GetLayout() const;

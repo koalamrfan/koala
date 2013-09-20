@@ -12,7 +12,7 @@ class LayoutBaseItem;
 class LinearBoxLayoutItem;
 
 class BoxLayout:public Layout
-{  
+{
 public:
     BoxLayout();
 

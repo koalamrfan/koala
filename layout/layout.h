@@ -8,9 +8,12 @@
 namespace ui
 {
 class Widget;
+class LayoutSpace;
 class LayoutItem;
 class Layout : public LayoutBaseItem
 {
+    friend class Widget;
+    friend class LayoutItem;
 public:
     virtual bool AddWidget(Widget* widget) = 0;
     virtual bool InsertWidget(int index, Widget *widget) = 0;
@@ -34,6 +37,7 @@ public:
     
     virtual void AdjustSizes() override;
 
+    virtual std::shared_ptr<LayoutItem> CreateLayoutItem() const = 0;
 protected:
     Layout():parent_widget_(nullptr), parent_layout_(nullptr) {}
 
@@ -45,7 +49,7 @@ protected:
     LayoutItem* FindItem(LayoutBaseItem *item) const;
 
     void SetParentWidget(Widget* parent);
-    void SetParentLayout(Layout* parent);
+    bool SetParentLayout(Layout* parent, int index = -1);
 
     virtual int CalculateLimitMinWidth() const = 0;
     virtual int CalculateLimitMinHeight() const = 0;
@@ -54,9 +58,9 @@ protected:
     virtual int CalculatePreferWidth() const = 0;
     virtual int CalculatePreferHeight() const = 0;
 
-    std::vector<std::shared_ptr<LayoutItem>>& GetLayoutItems() const;
-private:
+    std::vector<std::shared_ptr<LayoutItem>>& GetLayoutItems();
     std::vector<std::shared_ptr<LayoutItem>> layout_items_;
+private:
     Widget* parent_widget_;
     Layout* parent_layout_;
 };

@@ -26,6 +26,7 @@ enum class HitRegionMode
 
 class Widget:public LayoutBaseItem
 {
+    friend class Layout;
 public:
     Widget();
     virtual ~Widget();
@@ -34,7 +35,7 @@ public:
     int ChildrenNum() const;
     void SetParent(Widget* parent);
     Widget* Parent() const;
-    void SetParentLayout(Layout* parent);
+    bool SetParentLayout(Layout* parent, int index = -1);
     Layout* ParentLayout() const;
     Layout* BaseLayout() const;
 

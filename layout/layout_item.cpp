@@ -7,16 +7,23 @@
 
 namespace ui
 {
-LayoutItem::LayoutItem(Widget* widget):layout_base_item_(widget) {
+LayoutItem::LayoutItem() {
+
+}
+
+void LayoutItem::InitWithWidget(Widget* widget) {
     type_ = kWidget;
+    layout_base_item_ = widget;
 }
 
-LayoutItem::LayoutItem(Layout* layout):layout_base_item_(layout) {
+void LayoutItem::InitWithLayout(Layout* layout) {
     type_ = kLayout;
+    layout_base_item_ = layout;
 }
 
-LayoutItem::LayoutItem(LayoutSpace* layout_space):layout_base_item_(layout_space) {
+void LayoutItem::InitWithLayoutSpace(LayoutSpace* layout_space) {
     type_ = kLayoutSpace;
+    layout_base_item_ = layout_space;
 }
 
 void LayoutItem::Relayout() {
@@ -136,7 +143,7 @@ void LayoutItem::RelayoutToAdapt() {
 
 }
 
-bool LayoutItem::IsEmpty() {
+bool LayoutItem::IsEmpty() const {
     if(GetWidget() && GetWidget()->IsVisible()) {
         return false;
     } else if(GetLayout() && !GetLayout()->IsEmpty()) {
@@ -145,5 +152,55 @@ bool LayoutItem::IsEmpty() {
         return false;
     }
     return true;
+}
+
+bool LayoutItem::SetParentLayout(Layout* layout, int index) {
+    if(layout == nullptr) {
+        if(GetWidget()) {
+            GetWidget()->SetParentLayout(nullptr);
+        } else if(GetLayout()) {
+            GetLayout()->SetParentLayout(nullptr);
+        }
+        return true;
+    }
+
+    if(index < 0) {
+        index += layout->Count();
+    }
+
+    if(index < 0 || index > layout->Count()) {
+        return false;
+    }
+
+    if(layout->FindItem(GetLayoutBaseItem())) {
+        return false;
+    }
+
+    auto brother_items = layout->GetLayoutItems();
+    if(GetWidget()) {
+        if(GetWidget()->ParentLayout() && GetWidget()->ParentLayout() != layout) {
+            GetWidget()->SetParent(layout->ParentWidget());
+            GetWidget()->SetParentLayout(layout);
+        } else {
+            return false;
+        }
+    } else if(GetLayout()) {
+        if(layout->ParentLayout()) {
+            GetLayout()->SetParentWidget(layout->ParentWidget());
+            GetLayout()->SetParentLayout(layout);
+        } else {
+            return false;
+        }
+    }
+    return true;
+}
+
+Layout* LayoutItem::ParentLayout() const {
+    if(GetWidget()) {
+        return GetWidget()->ParentLayout();
+    } else if(GetLayout()) {
+        GetLayout()->ParentLayout();
+    }
+    return nullptr;
 }
 } // namespace ui

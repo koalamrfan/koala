@@ -2,6 +2,7 @@
 #include "app.h"
 #include "SkBitmap.h"
 #include "layout_adapt_manager.h"
+#include "layout_item.h"
 #include <vector>
 
 
@@ -63,8 +64,38 @@ Widget* Widget::Parent() const {
     return parent_;
 }
 
-void Widget::SetParentLayout(Layout* parent) {
+bool Widget::SetParentLayout(Layout* parent, int index) {
+    if(index < 0) {
+        index += parent->Count();
+    }
+
+    if(index < 0 || index > parent->Count()) {
+        return false;
+    }
+
+    if(ParentLayout()) {
+        auto brother_items = ParentLayout()->GetLayoutItems();
+        bool erase = false;
+        auto iter = brother_items.begin();
+        while (iter != brother_items.end()) {
+            if((*iter)->GetLayoutBaseItem() == this) {
+                erase = true;
+                brother_items.erase(iter);
+                break;
+            }
+            iter++;
+        }
+
+        if(!erase) {
+            return false;
+        }
+    }
+    std::shared_ptr<LayoutItem> moved_layout_item = parent->CreateLayoutItem();
+    moved_layout_item->InitWithWidget(this);
+    auto new_brother_items = parent->GetLayoutItems();
+    new_brother_items.insert(new_brother_items.begin()+index, moved_layout_item);
     parent_layout_ = parent;
+    return true;
 }
 
 Layout* Widget::ParentLayout() const {

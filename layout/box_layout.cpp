@@ -86,7 +86,6 @@ bool BoxLayout::InsertLayout(int index, Layout *layout) {
 }
 
 bool BoxLayout::RemoveLayout(Layout *layout) {
-    layout->SetParentWidget(nullptr);
     return Layout::RemoveItem(layout);
 }
 

@@ -4,6 +4,7 @@
 #include "layout_base_item.h"
 #include "app.h"
 #include "layout_adapt_manager.h"
+#include "layout_space.h"
 #include <cassert>
 
 
@@ -14,39 +15,7 @@ bool Layout::AddItem(std::shared_ptr<LayoutItem> item) {
 }
 
 bool Layout::InsertItem(int index, std::shared_ptr<LayoutItem> item) {
-    if(item == nullptr) {
-        return false;
-    }
-
-    if(index < 0) {
-        index += Count();
-    }
-
-    if(index < 0 || index > Count()) {
-        return false;
-    }
-
-    if(FindItem(item->GetLayoutBaseItem())) {
-        return false;
-    }
-
-    layout_items_.insert(layout_items_.begin()+index, item);
-    if(Widget* widget = item->GetWidget()) {
-        if(widget->ParentLayout()) {
-            auto result = widget->ParentLayout()->RemoveWidget(widget);
-            assert(result);
-        }
-        widget->SetParent(ParentWidget());
-        widget->SetParentLayout(this);
-    } else if(Layout* layout = item->GetLayout()) {
-        if(layout->ParentLayout()) {
-            auto result = layout->ParentLayout()->RemoveLayout(layout);
-            assert(result);
-        }
-        layout->SetParentWidget(ParentWidget());
-        layout->SetParentLayout(this);
-    }
-    return true;
+    return item->SetParentLayout(this, index);
 }
 
 bool Layout::RemoveItem(LayoutBaseItem *item) {
@@ -56,18 +25,10 @@ bool Layout::RemoveItem(LayoutBaseItem *item) {
     auto iter = layout_items_.begin();
     while (iter != layout_items_.end()) {
         if((*iter)->GetLayoutBaseItem() == item) {
-            if((*iter)->GetWidget()) {
-                (*iter)->GetWidget()->SetParentLayout(nullptr);
-            } else if((*iter)->GetLayout()) {
-                (*iter)->GetLayout()->SetParentLayout(nullptr);
-            }
-            layout_items_.erase(iter);
-            NotifyRelayout();
-            return true;
+            return (*iter)->SetParentLayout(nullptr);
         }
         iter++;
     }
-    NotifyRelayout();
     return false;
 }
 
@@ -125,8 +86,40 @@ Widget* Layout::ParentWidget() const {
     return parent_widget_;
 }
 
-void Layout::SetParentLayout(Layout* parent) {
+bool Layout::SetParentLayout(Layout* parent, int index) {
+    if(index < 0) {
+        index += parent->Count();
+    }
+
+    if(index < 0 || index > parent->Count()) {
+        return false;
+    }
+
+    if(ParentLayout()) {
+        auto brother_items = ParentLayout()->GetLayoutItems();
+        bool erase = false;
+        auto iter = brother_items.begin();
+        while (iter != brother_items.end()) {
+            if((*iter)->GetLayoutBaseItem() == this) {
+               erase = true;
+               brother_items.erase(iter);
+               break;
+            }
+            iter++;
+        }
+
+        if(!erase) {
+            return false;
+        }
+    } else if(ParentWidget()) {
+        ParentWidget()->layout_ = nullptr;
+    }
+    std::shared_ptr<LayoutItem> moved_layout_item = parent->CreateLayoutItem();
+    moved_layout_item->InitWithLayout(this);
+    auto new_brother_items = parent->GetLayoutItems();
+    new_brother_items.insert(new_brother_items.begin()+index, moved_layout_item);
     parent_layout_ = parent;
+    return true;
 }
 
 Layout* Layout::ParentLayout() const {
@@ -173,5 +166,9 @@ SkRect Layout::GeometryToAncestor() const {
         SkIntToScalar(Width()), 
         SkIntToScalar(Height())
         );
+}
+
+std::vector<std::shared_ptr<LayoutItem>>& Layout::GetLayoutItems(){
+    return layout_items_;
 }
 } // namespace ui

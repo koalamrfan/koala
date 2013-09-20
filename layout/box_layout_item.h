@@ -12,9 +12,7 @@ class LayoutSpace;
 class BoxLayoutItem:public LayoutItem
 {
 public:
-    BoxLayoutItem(Widget* widget);
-    BoxLayoutItem(Layout* layout);
-    BoxLayoutItem(LayoutSpace* layout_space);
+    BoxLayoutItem();
 
     enum GapValid {
         kInValid   =  0,

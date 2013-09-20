@@ -13,9 +13,7 @@ class LayoutSpace;
 class LinearBoxLayoutItem:public BoxLayoutItem
 {
 public:
-    LinearBoxLayoutItem(Widget* widget);
-    LinearBoxLayoutItem(Layout* layout);
-    LinearBoxLayoutItem(LayoutSpace* layout_space);
+    LinearBoxLayoutItem();
     
     void SetStrechFactor(int strech_factor);
     int StrechFactor() const;

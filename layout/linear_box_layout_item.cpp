@@ -6,27 +6,10 @@
 
 namespace ui
 {
-
-LinearBoxLayoutItem::LinearBoxLayoutItem(Widget* widget):
-    BoxLayoutItem(widget),
+LinearBoxLayoutItem::LinearBoxLayoutItem():
     strech_factor_(1),
     strong_elastic_(false) {
-}
 
-LinearBoxLayoutItem::LinearBoxLayoutItem(Layout* layout):
-    BoxLayoutItem(layout),
-    strech_factor_(1),
-    strong_elastic_(false) {
-      
-    SetAround(0, 0, 0, 0);  
-}
-
-LinearBoxLayoutItem::LinearBoxLayoutItem(LayoutSpace* layout_space):
-    BoxLayoutItem(layout_space),
-    strech_factor_(1),
-    strong_elastic_(false){
-    
-    SetAround(0, 0, 0, 0);  
 }
 
 void LinearBoxLayoutItem::SetStrechFactor(int strech_factor) {

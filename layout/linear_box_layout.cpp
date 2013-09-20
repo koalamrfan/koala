@@ -26,40 +26,6 @@ void LinearBoxLayout::SetStrongElastic(LayoutBaseItem* item) {
     lbli->SetStrongElastic();
 }
 
-void LinearBoxLayout::SetWeakElastic(LayoutBaseItem* item) {
-    LinearBoxLayoutItem *lbli = reinterpret_cast<LinearBoxLayoutItem *>(FindItem(item));
-    assert(lbli);
-    lbli->SetWeakElastic();
-}
-
-bool LinearBoxLayout::AddWidget(Widget* widget) {
-    return Layout::AddItem(std::make_shared<LinearBoxLayoutItem>(widget));
-}
-
-bool LinearBoxLayout::InsertWidget(int index, Widget *widget) {
-    return Layout::InsertItem(index, std::make_shared<LinearBoxLayoutItem>(widget));
-}
-    
-bool LinearBoxLayout::AddLayout(Layout* layout) {
-    return Layout::AddItem(std::make_shared<LinearBoxLayoutItem>(layout));
-}
-
-bool LinearBoxLayout::InsertLayout(int index, Layout *layout) {
-    return Layout::InsertItem(index, std::make_shared<LinearBoxLayoutItem>(layout));
-}
-
-bool LinearBoxLayout::AddSpace(LayoutSpace* space) {
-    return Layout::AddItem(std::make_shared<LinearBoxLayoutItem>(space));
-}
-
-bool LinearBoxLayout::InsertSpace(int index, LayoutSpace *space) {
-    return Layout::InsertItem(index, std::make_shared<LinearBoxLayoutItem>(space));
-}
-
-bool LinearBoxLayout::RemoveSpace(LayoutSpace *space) {
-    return BoxLayout::RemoveItem(space);
-}
-
 LinearBoxLayout::~LinearBoxLayout() {
     
 }
@@ -117,5 +83,9 @@ void LinearBoxLayout::ResetTempAllocToNoAlloc() {
         }
         iter++;
     }
+}
+
+std::shared_ptr<LayoutItem> LinearBoxLayout::CreateLayoutItem() const {
+    return std::make_shared<LinearBoxLayoutItem>();
 }
 } // namespace ui

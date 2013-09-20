@@ -29,15 +29,11 @@ public:
     void SetValidGap(LayoutBaseItem *item,
                      BoxLayoutItem::GapValid gap_valid, 
                      bool valid = true);
-    
-    virtual bool AddWidget(Widget* widget) override ;
-    virtual bool InsertWidget(int index, Widget *widget) override ;
-    virtual bool RemoveWidget(Widget *widget) override ;
-    
-    virtual bool AddLayout(Layout* layout) override ;
-    virtual bool InsertLayout(int index, Layout *layout) override ;
-    virtual bool RemoveLayout(Layout *layout) override ;
+    virtual bool AddLayoutSpace(LayoutSpace* layout) override;
+    virtual bool InsertLayoutSpace(int index, LayoutSpace *layout_space) override;
+    virtual bool RemoveLayoutSpace(LayoutSpace *layout_space) override;
 
+    virtual std::shared_ptr<LayoutItem> CreateLayoutItem() const override;
 protected:
     virtual int CalculateLimitMinWidth() const override;
     virtual int CalculateLimitMinHeight() const override;

@@ -24,8 +24,8 @@ public:
     virtual bool RemoveLayout(Layout *layout) = 0;
 
     virtual bool AddLayoutSpace(LayoutSpace* layout) = 0;
-    virtual bool InsertLayoutSpace(int index, LayoutSpace *layout) = 0;
-    virtual bool RemoveLayoutSpace(LayoutSpace *layout) = 0;
+    virtual bool InsertLayoutSpace(int index, LayoutSpace *layout_space) = 0;
+    virtual bool RemoveLayoutSpace(LayoutSpace *layout_space) = 0;
     
     int Count() const;
 

@@ -64,29 +64,16 @@ void BoxLayout::SetValidGap(LayoutBaseItem *item,
     bli->SetValidGap(gap_valid, valid);
 }
 
-bool BoxLayout::AddWidget(Widget* widget) {
-    return Layout::AddItem(std::make_shared<BoxLayoutItem>(widget));
+bool BoxLayout::AddLayoutSpace(LayoutSpace* layout) {
+    return false;
 }
 
-bool BoxLayout::InsertWidget(int index, Widget *widget) {
-    return Layout::InsertItem(index, std::make_shared<BoxLayoutItem>(widget));
+bool BoxLayout::InsertLayoutSpace(int index, LayoutSpace *layout) {
+    return false;
 }
 
-bool BoxLayout::RemoveWidget(Widget *widget) {
-    widget->SetParent(nullptr);
-    return Layout::RemoveItem(widget);
-}
-    
-bool BoxLayout::AddLayout(Layout* layout) {
-    return Layout::AddItem(std::make_shared<BoxLayoutItem>(layout));
-}
-
-bool BoxLayout::InsertLayout(int index, Layout *layout) {
-    return Layout::InsertItem(index, std::make_shared<BoxLayoutItem>(layout));
-}
-
-bool BoxLayout::RemoveLayout(Layout *layout) {
-    return Layout::RemoveItem(layout);
+bool BoxLayout::RemoveLayoutSpace(LayoutSpace *layout) {
+    return false;
 }
 
 int BoxLayout::CalculateLimitMinWidth() const {
@@ -201,5 +188,9 @@ void BoxLayout::Relayout() {
         }
         iter++;
     }
+}
+
+std::shared_ptr<LayoutItem> BoxLayout::CreateLayoutItem() const {
+    return std::make_shared<BoxLayoutItem>();
 }
 } // namespace ui

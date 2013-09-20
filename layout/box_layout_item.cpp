@@ -4,34 +4,12 @@
 
 namespace ui
 {
-BoxLayoutItem::BoxLayoutItem(Widget* widget):
+BoxLayoutItem::BoxLayoutItem():
     west_space_(0),
     north_space_(0),
     east_space_(0),
     south_space_(0),
     gap_valid_(0) {
-
-    InitWithWidget(widget);
-}
-    
-BoxLayoutItem::BoxLayoutItem(Layout* layout):
-    west_space_(0),
-    north_space_(0),
-    east_space_(0),
-    south_space_(0),
-    gap_valid_(0) {
-
-    InitWithLayout(layout);
-}
-
-BoxLayoutItem::BoxLayoutItem(LayoutSpace* layout_space):
-    west_space_(0),
-    north_space_(0),
-    east_space_(0),
-    south_space_(0),
-    gap_valid_(0) {
-
-    InitWithLayoutSpace(layout_space);
 }
 
 void BoxLayoutItem::SetWestSpace(int west_space) {

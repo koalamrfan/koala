@@ -10,6 +10,49 @@
 
 namespace ui
 {
+bool Layout::AddWidget(Widget* widget) {
+    return InsertWidget(-1, widget);
+}
+
+bool Layout::InsertWidget(int index, Widget *widget) {
+    auto layoutitem = CreateLayoutItem();
+    layoutitem->InitWithWidget(widget);
+    return Layout::InsertItem(index, layoutitem);
+}
+
+bool Layout::RemoveWidget(Widget *widget) {
+    widget->SetParent(nullptr);
+    return Layout::RemoveItem(widget);
+}
+
+bool Layout::AddLayout(Layout* layout) {
+    return InsertLayout(-1, layout);
+}
+
+bool Layout::InsertLayout(int index, Layout *layout) {
+    auto layoutitem = CreateLayoutItem();
+    layoutitem->InitWithLayout(layout);
+    return Layout::InsertItem(index, layoutitem);
+}
+
+bool Layout::RemoveLayout(Layout *layout) {
+    return Layout::RemoveItem(layout);
+}
+
+bool Layout::AddLayoutSpace(LayoutSpace* layout_space) {
+    return InsertLayoutSpace(-1, layout_space);
+}
+
+bool Layout::InsertLayoutSpace(int index, LayoutSpace *layout_space) {
+    auto layoutitem = CreateLayoutItem();
+    layoutitem->InitWithLayoutSpace(layout_space);
+    return Layout::InsertItem(index, layoutitem);
+}
+
+bool Layout::RemoveLayoutSpace(LayoutSpace *layout_space) {
+    return Layout::RemoveItem(layout_space);
+}
+
 bool Layout::AddItem(std::shared_ptr<LayoutItem> item) {
     return InsertItem(layout_items_.size(), item);
 }

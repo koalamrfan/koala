@@ -12,10 +12,8 @@ LayoutItem::LayoutItem():layout_base_item_(nullptr) {
 }
 
 LayoutItem::~LayoutItem() {
-    if(GetLayout()) {
-        delete layout_base_item_;
-        layout_base_item_ = nullptr;
-    }
+    delete layout_base_item_;
+    layout_base_item_ = nullptr;
 }
 
 void LayoutItem::Init(Widget* widget) {

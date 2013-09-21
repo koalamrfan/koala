@@ -40,7 +40,7 @@ public:
     virtual std::shared_ptr<LayoutItem> CreateLayoutItem() const = 0;
 protected:
     Layout():parent_widget_(nullptr), parent_layout_(nullptr) {}
-
+    
     // layout_item operator
     bool AddItem(std::shared_ptr<LayoutItem> item);
     bool InsertItem(int index, std::shared_ptr<LayoutItem> item);

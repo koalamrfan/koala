@@ -18,7 +18,16 @@ Widget::Widget():parent_(nullptr),
 }
 
 Widget::~Widget() {
-
+    auto iter = children_.begin();
+    while (iter != children_.end()) {
+        auto delete_widget = *iter; 
+        iter++;
+        delete delete_widget;
+    }
+    if(BaseLayout()) {
+        delete layout_;
+        layout_ = nullptr;
+    }
 }
 
 void Widget::AddChild(Widget* widget) {

@@ -4,7 +4,7 @@
 #include "layout_adapt_manager.h"
 #include "layout_item.h"
 #include <vector>
-
+#include <cassert>
 
 namespace ui
 {
@@ -18,15 +18,18 @@ Widget::Widget():parent_(nullptr),
 }
 
 Widget::~Widget() {
+    if(BaseLayout()) {
+        delete layout_;
+        layout_ = nullptr;
+    }
+
+    SetParent(nullptr);
+
     auto iter = children_.begin();
     while (iter != children_.end()) {
         auto delete_widget = *iter; 
         iter++;
         delete delete_widget;
-    }
-    if(BaseLayout()) {
-        delete layout_;
-        layout_ = nullptr;
     }
 }
 
@@ -66,6 +69,11 @@ void Widget::SetParent(Widget* parent) {
     if(parent !=  nullptr) {
         parent->AddChild(this);
     }
+    if(parent_ != nullptr){
+        auto iter = std::find(parent_->children_.begin(), parent_->children_.end(), this);
+        assert(iter != parent_->children_.end());
+        parent_->children_.erase(iter);
+    }
     parent_ = parent;
 }
 
@@ -74,6 +82,22 @@ Widget* Widget::Parent() const {
 }
 
 bool Widget::SetParentLayout(Layout* parent, int index) {
+    if(parent == nullptr) {
+        if(ParentLayout() != nullptr) {
+            std::vector<std::shared_ptr<LayoutItem>>& bother_items = ParentLayout()->GetLayoutItems();
+            auto iter = bother_items.begin();
+            while (iter != bother_items.end()) {
+                if((*iter)->GetWidget() == this) {
+                    bother_items.erase(iter);
+                    parent_layout_ = nullptr;
+                    return true;
+                }
+                iter++;
+            }
+        }
+        return false;
+    }
+
     if(index < 0) {
         index += parent->Count() + 1;
     }
@@ -131,8 +155,17 @@ bool Widget::IsVisible() const{
 }
 
 void Widget::SetLayout(Layout* layout) {
+    if(layout == layout_) {
+        return ;
+    }
+    if(layout_) {
+        delete layout_;
+    }
     layout_ = layout;
-    layout_->SetParentWidget(this);
+    if(layout_ != nullptr) {
+        layout_->SetParentLayout(nullptr);
+        layout_->SetParentWidget(this);
+    }
 }
 
 void Widget::AdjustSizes() {

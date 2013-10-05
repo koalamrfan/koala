@@ -181,11 +181,7 @@ bool LayoutItem::IsEmpty() const {
 
 bool LayoutItem::SetParentLayout(Layout* layout, int index) {
     if(layout == nullptr) {
-        if(GetWidget()) {
-            GetWidget()->SetParentLayout(nullptr);
-        } else if(GetLayout()) {
-            GetLayout()->SetParentLayout(nullptr);
-        }
+        delete this;
         return true;
     }
 
@@ -201,21 +197,21 @@ bool LayoutItem::SetParentLayout(Layout* layout, int index) {
         return false;
     }
 
-    std::vector<std::shared_ptr<LayoutItem>>& brother_items = layout->GetLayoutItems();
     if(GetWidget()) {
         if(GetWidget()->ParentLayout() && GetWidget()->ParentLayout() == layout) {
             return false;
         } 
         GetWidget()->SetParent(layout->ParentWidget());
-        GetWidget()->SetParentLayout(layout, index);
+        GetWidget()->parent_layout_ = layout;
     } else if(GetLayout()) {
         if(GetLayout()->ParentLayout() && GetWidget()->ParentLayout() == layout) {
             return false;
         }
         GetLayout()->SetParentWidget(layout->ParentWidget());
-        GetLayout()->SetParentLayout(layout, index);
-
+        GetLayout()->parent_layout_ = layout;
     }
+    std::vector<std::shared_ptr<LayoutItem>>& new_brother_items = layout->GetLayoutItems();
+    new_brother_items.insert(new_brother_items.begin()+index, shared_from_this());
     return true;
 }
 

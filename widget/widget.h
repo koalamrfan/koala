@@ -4,6 +4,7 @@
 #include "layout_base_item.h"
 #include "event.h"
 #include "layout.h"
+#include "layout_item.h"
 #include "texture_pool.h"
 #include "SkRegion.h"
 #include <string>
@@ -26,6 +27,7 @@ enum class HitRegionMode
 
 class Widget:public LayoutBaseItem
 {
+    friend class LayoutItem;
     friend class Layout;
 public:
     Widget();

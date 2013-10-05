@@ -58,6 +58,9 @@ bool Layout::AddItem(std::shared_ptr<LayoutItem> item) {
 }
 
 bool Layout::InsertItem(int index, std::shared_ptr<LayoutItem> item) {
+    if(item == nullptr) {
+        return false;
+    }
     return item->SetParentLayout(this, index);
 }
 
@@ -68,7 +71,8 @@ bool Layout::RemoveItem(LayoutBaseItem *item) {
     auto iter = layout_items_.begin();
     while (iter != layout_items_.end()) {
         if((*iter)->GetLayoutBaseItem() == item) {
-            return (*iter)->SetParentLayout(nullptr);
+            layout_items_.erase(iter);
+            return true;
         }
         iter++;
     }
@@ -130,6 +134,22 @@ Widget* Layout::ParentWidget() const {
 }
 
 bool Layout::SetParentLayout(Layout* parent, int index) {
+    if(parent == nullptr) {
+        if(ParentLayout() != nullptr) {
+            std::vector<std::shared_ptr<LayoutItem>>& bother_items = ParentLayout()->GetLayoutItems();
+            auto iter = bother_items.begin();
+            while (iter != bother_items.end()) {
+                if((*iter)->GetLayout() == this) {
+                    bother_items.erase(iter);
+                    parent_layout_ = nullptr;
+                    return true;
+                }
+                iter++;
+            }
+        }
+        return false;
+    }
+
     if(index < 0) {
         index += parent->Count() + 1;
     }

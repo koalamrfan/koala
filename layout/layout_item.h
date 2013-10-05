@@ -25,8 +25,6 @@ public:
     void Init(Widget* widget);
     void Init(Layout* layout);
     void Init(LayoutSpace* layout_space);
-
-    virtual ~LayoutItem() {}
 public:
     virtual void Move(int x, int y) ;
     virtual void ReSize(int width, int height) ;
